@@ -1,5 +1,6 @@
 {
-  "name": "react-example",
+  "name": "infinite-colour-craft",
+  "description": "An interactive color alchemy workspace and professional 2D digital painting studio built with React, Vite, and WebAudio API.",
   "private": true,
   "version": "0.0.0",
   "type": "module",
