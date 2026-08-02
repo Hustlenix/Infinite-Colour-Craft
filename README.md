@@ -24,7 +24,7 @@ Combine primitive pigments and create new pigments, discover millions of unique 
 
 ---
 
-## 🕹️ Quick Shortcuts
+## 🕹️ Quick Shortcuts For plaing effectively
 
 | Key | Action |
 | --- | --- |
@@ -41,3 +41,7 @@ Combine primitive pigments and create new pigments, discover millions of unique 
 
 ## Try it out! 
 https://hustlenix.github.io/Infinite-Colour-Craft/
+
+### How I made this
+
+This was just a simple online only art and to pull this off i got a inspiration from https://neal.fun/infinite-craft/ but in this we mix real life things and make new things for no reason, where as in this we create new colour pigments and make master peice in paint canvas pgae
