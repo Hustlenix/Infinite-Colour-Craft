@@ -1,0 +1,131 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+html, body {
+  overscroll-behavior: none;
+  overscroll-behavior-y: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+@layer utilities {
+  /* Target merge hover pulse & glowing aura */
+  @keyframes alchemy-target-pulse {
+    0%, 100% {
+      transform: scale(1.06) translateY(-2px);
+      box-shadow: 0 0 20px 4px rgba(253, 224, 71, 0.9), 6px 6px 0px 0px #000;
+    }
+    50% {
+      transform: scale(1.12) translateY(-4px);
+      box-shadow: 0 0 32px 10px rgba(253, 224, 71, 1), 8px 8px 0px 0px #000;
+    }
+  }
+
+  /* Central chromatic color flare explosion */
+  @keyframes alchemy-color-flare {
+    0% {
+      transform: scale(0.1);
+      opacity: 1;
+      filter: brightness(1.8);
+    }
+    50% {
+      transform: scale(1.6);
+      opacity: 0.9;
+      filter: brightness(1.3);
+    }
+    100% {
+      transform: scale(2.8);
+      opacity: 0;
+      filter: brightness(1);
+    }
+  }
+
+  /* Expanding shockwave ring */
+  @keyframes alchemy-shockwave-ring {
+    0% {
+      transform: scale(0.1);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(3.2);
+      opacity: 0;
+    }
+  }
+
+  /* Floating recipe discovery banner */
+  @keyframes alchemy-float-banner {
+    0% {
+      transform: translateY(12px) scale(0.7);
+      opacity: 0;
+    }
+    20% {
+      transform: translateY(-8px) scale(1.1);
+      opacity: 1;
+    }
+    80% {
+      transform: translateY(-35px) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-55px) scale(0.9);
+      opacity: 0;
+    }
+  }
+
+  /* Rubber-band tactile tile spawn animation */
+  @keyframes tile-rubber-pop {
+    0% {
+      transform: scale(0.1) rotate(-8deg);
+      opacity: 0;
+    }
+    50% {
+      transform: scale(1.18) rotate(2deg);
+      opacity: 1;
+    }
+    75% {
+      transform: scale(0.94) rotate(-1deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1) rotate(0deg);
+      opacity: 1;
+    }
+  }
+
+  /* 12-Direction Radial Spark Burst Paths */
+  @keyframes spark-p0 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(65px, 0px) scale(0); opacity:0; } }
+  @keyframes spark-p1 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(56px, 32px) scale(0); opacity:0; } }
+  @keyframes spark-p2 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(32px, 56px) scale(0); opacity:0; } }
+  @keyframes spark-p3 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(0px, 65px) scale(0); opacity:0; } }
+  @keyframes spark-p4 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(-32px, 56px) scale(0); opacity:0; } }
+  @keyframes spark-p5 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(-56px, 32px) scale(0); opacity:0; } }
+  @keyframes spark-p6 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(-65px, 0px) scale(0); opacity:0; } }
+  @keyframes spark-p7 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(-56px, -32px) scale(0); opacity:0; } }
+  @keyframes spark-p8 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(-32px, -56px) scale(0); opacity:0; } }
+  @keyframes spark-p9 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(0px, -65px) scale(0); opacity:0; } }
+  @keyframes spark-p10 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(32px, -56px) scale(0); opacity:0; } }
+  @keyframes spark-p11 { 0% { transform: translate(0,0) scale(1); opacity:1; } 100% { transform: translate(56px, -32px) scale(0); opacity:0; } }
+
+  .animate-alchemy-target {
+    animation: alchemy-target-pulse 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .animate-alchemy-flare {
+    animation: alchemy-color-flare 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+
+  .animate-alchemy-shockwave {
+    animation: alchemy-shockwave-ring 0.65s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  }
+
+  .animate-alchemy-banner {
+    animation: alchemy-float-banner 0.9s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+
+  .animate-tile-spawn {
+    animation: tile-rubber-pop 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  }
+}
+
+

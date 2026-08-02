@@ -1,0 +1,6 @@
+{
+  "name": "Infinite Colour Craft",
+  "description": "A gamified color alchemy studio & tactical 2D paint engine where players combine pigments to discover new colors and create expressive digital artwork with real-time acoustic brush feedback.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
