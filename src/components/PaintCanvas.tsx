@@ -493,10 +493,11 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       // Smudge / Wet Paint Blender: samples pixels from p1 and blends/smears them to p2
       try {
         const dpr = window.devicePixelRatio || 1;
-        const radius = Math.max(4, Math.floor(size * 0.8));
-        const sampleX = Math.floor(p1.x * dpr - radius);
-        const sampleY = Math.floor(p1.y * dpr - radius);
-        const sampleSize = radius * 2;
+        const cssRadius = Math.max(4, size * 0.8);
+        const pixelRadius = Math.floor(cssRadius * dpr);
+        const sampleX = Math.floor(p1.x * dpr - pixelRadius);
+        const sampleY = Math.floor(p1.y * dpr - pixelRadius);
+        const sampleSize = pixelRadius * 2;
 
         if (sampleX >= 0 && sampleY >= 0 && sampleX + sampleSize <= ctx.canvas.width && sampleY + sampleSize <= ctx.canvas.height) {
           const sampledData = ctx.getImageData(sampleX, sampleY, sampleSize, sampleSize);
@@ -504,7 +505,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
           ctx.globalCompositeOperation = 'source-over';
           ctx.globalAlpha = opacity * 0.65;
           ctx.beginPath();
-          ctx.arc(p2.x, p2.y, radius, 0, Math.PI * 2);
+          ctx.arc(p2.x, p2.y, cssRadius, 0, Math.PI * 2);
           ctx.clip();
           
           // Create temporary offscreen buffer to draw sampled smudge dab
@@ -514,7 +515,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
           const tempCtx = tempCanvas.getContext('2d');
           if (tempCtx) {
             tempCtx.putImageData(sampledData, 0, 0);
-            ctx.drawImage(tempCanvas, p2.x - radius, p2.y - radius, sampleSize, sampleSize);
+            ctx.drawImage(tempCanvas, p2.x - cssRadius, p2.y - cssRadius, cssRadius * 2, cssRadius * 2);
           }
           ctx.restore();
         }
