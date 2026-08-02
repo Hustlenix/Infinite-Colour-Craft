@@ -5,6 +5,8 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
+    // Base path for GitHub Pages project site (https://Hustlenix.github.io/Infinite-Colour-Craft/)
+    base: '/Infinite-Colour-Craft/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {

@@ -13,12 +13,10 @@ import { PaletteBuilder } from './components/PaletteBuilder';
 import { QuestsModal } from './components/QuestsModal';
 import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { HowToPlayModal } from './components/HowToPlayModal';
-import { EasterEggModal } from './components/EasterEggModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
-  const [showEasterEgg, setShowEasterEgg] = useState<boolean>(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     try {
       const savedTheme = localStorage.getItem('theme');
@@ -459,7 +457,6 @@ export default function App() {
         hasUnclaimedDaily={dailyState.completed && !dailyState.claimed}
         isDarkMode={isDarkMode}
         onToggleTheme={toggleTheme}
-        onTriggerEasterEgg={() => setShowEasterEgg(true)}
       />
 
       {/* Main Content Area */}
@@ -584,17 +581,6 @@ export default function App() {
           }}
         />
       )}
-
-      {/* Secret Easter Egg Discovery Modal */}
-      <EasterEggModal
-        isOpen={showEasterEgg}
-        onClose={() => setShowEasterEgg(false)}
-        onJumpToPaintWithTemplate={() => {
-          setShowEasterEgg(false);
-          setActiveTab('studio');
-        }}
-        isDarkMode={isDarkMode}
-      />
     </div>
   );
 }

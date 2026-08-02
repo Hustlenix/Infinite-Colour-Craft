@@ -26,7 +26,6 @@ interface NavbarProps {
   hasUnclaimedDaily?: boolean;
   isDarkMode: boolean;
   onToggleTheme: () => void;
-  onTriggerEasterEgg?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -41,37 +40,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   boardTileCount,
   isDarkMode,
   onToggleTheme,
-  onTriggerEasterEgg,
 }) => {
-  const logoClickRef = React.useRef<{ count: number; timer: NodeJS.Timeout | null }>({ count: 0, timer: null });
-
-  const handleLogoClick = () => {
-    setActiveTab('board');
-
-    if (logoClickRef.current.timer) {
-      clearTimeout(logoClickRef.current.timer);
-    }
-
-    logoClickRef.current.count += 1;
-
-    if (logoClickRef.current.count >= 5) {
-      logoClickRef.current.count = 0;
-      if (onTriggerEasterEgg) {
-        onTriggerEasterEgg();
-      }
-    } else {
-      logoClickRef.current.timer = setTimeout(() => {
-        logoClickRef.current.count = 0;
-      }, 3000);
-    }
-  };
-
   return (
     <header className={`${isDarkMode ? 'bg-slate-900 border-slate-700 text-white shadow-[0_2px_0_0_#334155]' : 'bg-white border-black text-black shadow-[0_2px_0_0_#000]'} border-b-2 sticky top-0 z-30 select-none`}>
       <div className="max-w-7xl mx-auto px-4 h-14 md:h-16 flex items-center justify-between gap-2">
         
         {/* Logo & Title */}
-        <div className="flex items-center gap-2 cursor-pointer group" onClick={handleLogoClick}>
+        <div className="flex items-center gap-2 cursor-pointer group" onClick={() => setActiveTab('board')}>
           <div className="w-8 h-8 md:w-9 md:h-9 bg-yellow-300 border-2 border-black flex items-center justify-center shadow-[2px_2px_0px_0px_#000] group-hover:bg-yellow-400 transition-all">
             <Sparkles className="w-5 h-5 text-black fill-black" />
           </div>
