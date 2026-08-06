@@ -65,7 +65,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
               </h2>
             </div>
             <p className={`text-xs font-black uppercase font-mono ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
-              📅 {challenge.dateFormatted} • Fresh alchemy goal every midnight!
+              📅 {challenge.dateFormatted} • A fresh challenge every midnight!
             </p>
           </div>
 

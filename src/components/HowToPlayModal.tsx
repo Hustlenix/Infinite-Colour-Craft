@@ -79,7 +79,7 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose, onSpawn
             <div>
               <h4 className="font-black text-xs uppercase text-black">3. Infinite Discoveries</h4>
               <p className="text-[11px] text-slate-700 font-medium leading-tight mt-0.5">
-                Discover 100+ fun recipes ranging from Cyberpunk Neon to Dragon Gold & Cosmic Void, or draw in the Paint Studio!
+                Discover 100+ recipes, from classics like Orange and Purple to hidden gems like Gold and Silver, or draw in the Paint Studio!
               </p>
             </div>
           </div>

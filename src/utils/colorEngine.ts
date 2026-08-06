@@ -1,4 +1,5 @@
 import { ColorItem, ColorCategory, HSL, Rarity, RGB } from '../types';
+import { REAL_COLOR_NAMES } from '../data/realColors';
 
 // Convert Hex to RGB
 export function hexToRgb(hex: string): RGB {
@@ -207,7 +208,7 @@ export const BASE_COLORS: ColorItem[] = [
     discoveredAt: Date.now(),
     rarity: 'Common',
     category: 'Base',
-    description: 'The fundamental primary element of warmth, passion, and fire.',
+    description: 'The primary red paint.',
   },
   {
     id: '#00FF00',
@@ -221,7 +222,7 @@ export const BASE_COLORS: ColorItem[] = [
     discoveredAt: Date.now(),
     rarity: 'Common',
     category: 'Base',
-    description: 'The fundamental vibrant pigment of flora, nature, and vitality.',
+    description: 'The primary green paint.',
   },
   {
     id: '#0000FF',
@@ -235,7 +236,7 @@ export const BASE_COLORS: ColorItem[] = [
     discoveredAt: Date.now(),
     rarity: 'Common',
     category: 'Base',
-    description: 'The deep elemental pigment of the oceans, sky, and serenity.',
+    description: 'The primary blue paint.',
   },
   {
     id: '#FFFFFF',
@@ -249,7 +250,7 @@ export const BASE_COLORS: ColorItem[] = [
     discoveredAt: Date.now(),
     rarity: 'Common',
     category: 'Base',
-    description: 'The pure reflective light element that softens and brightens pigments.',
+    description: 'The bright white paint.',
   },
   {
     id: '#000000',
@@ -263,7 +264,7 @@ export const BASE_COLORS: ColorItem[] = [
     discoveredAt: Date.now(),
     rarity: 'Common',
     category: 'Base',
-    description: 'The total absorbent shade that creates depth, shadows, and darkness.',
+    description: 'The dark black paint.',
   },
 ];
 
@@ -290,7 +291,7 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🩷',
     rarity: 'Uncommon',
     category: 'Secondary',
-    description: 'A vivid fusion of pure Red and Blue light.',
+    description: 'A mix of Red and Blue.',
   },
   [makeRecipeKey('#00FF00', '#0000FF')]: {
     name: 'Cyan',
@@ -298,7 +299,7 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🩵',
     rarity: 'Uncommon',
     category: 'Secondary',
-    description: 'An electric aqua pigment born from Green and Blue.',
+    description: 'A mix of Green and Blue.',
   },
   [makeRecipeKey('#FF0000', '#00FF00')]: {
     name: 'Yellow',
@@ -306,15 +307,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '💛',
     rarity: 'Uncommon',
     category: 'Secondary',
-    description: 'A radiant sunny hue synthesized by combining Red and Green.',
+    description: 'A mix of Red and Green.',
   },
   [makeRecipeKey('#FF0000', '#FFFFFF')]: {
-    name: 'Pink',
+    name: 'Light Pink',
     hex: '#FFB6C1',
     emoji: '🌸',
     rarity: 'Common',
     category: 'Pastel',
-    description: 'A delicate pastel shade of Red lightened by White.',
+    description: 'Red lightened with White.',
   },
   [makeRecipeKey('#0000FF', '#FFFFFF')]: {
     name: 'Sky Blue',
@@ -322,7 +323,7 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '☁️',
     rarity: 'Common',
     category: 'Pastel',
-    description: 'An airy, tranquil blue tint reminiscent of clear afternoon skies.',
+    description: 'Blue lightened with White.',
   },
   [makeRecipeKey('#00FF00', '#FFFFFF')]: {
     name: 'Mint Green',
@@ -330,31 +331,31 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🌿',
     rarity: 'Common',
     category: 'Pastel',
-    description: 'A refreshing light pastel green.',
+    description: 'Green lightened with White.',
   },
   [makeRecipeKey('#000000', '#FFFFFF')]: {
-    name: 'Slate Gray',
+    name: 'Gray',
     hex: '#808080',
     emoji: '🩶',
     rarity: 'Common',
     category: 'Base',
-    description: 'A neutral balance between light and darkness.',
+    description: 'An even mix of White and Black.',
   },
   [makeRecipeKey('#FF0000', '#000000')]: {
-    name: 'Crimson',
+    name: 'Maroon',
     hex: '#800000',
     emoji: '🍷',
     rarity: 'Uncommon',
     category: 'Dark',
-    description: 'A rich, dark blood-red tone forged in shadow.',
+    description: 'Red darkened with Black.',
   },
   [makeRecipeKey('#0000FF', '#000000')]: {
-    name: 'Midnight Blue',
+    name: 'Navy Blue',
     hex: '#000080',
     emoji: '🌌',
     rarity: 'Uncommon',
     category: 'Dark',
-    description: 'The deep, mysterious color of the nocturnal sky.',
+    description: 'Blue darkened with Black.',
   },
   [makeRecipeKey('#00FF00', '#000000')]: {
     name: 'Forest Green',
@@ -362,7 +363,7 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🌲',
     rarity: 'Uncommon',
     category: 'Dark',
-    description: 'A deep, dense evergreen hue.',
+    description: 'Green darkened with Black.',
   },
 
   // Secondary Combinations
@@ -372,31 +373,31 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🍊',
     rarity: 'Uncommon',
     category: 'Secondary',
-    description: 'A warm, energetic citrus blend of Yellow and Red.',
+    description: 'A mix of Yellow and Red.',
   },
   [makeRecipeKey('#00FFFF', '#FF00FF')]: {
-    name: 'Electric Violet',
+    name: 'Blue Violet',
     hex: '#8A2BE2',
     emoji: '🔮',
     rarity: 'Rare',
     category: 'Neon',
-    description: 'A vibrant magical purple synthesized from Cyan and Magenta.',
+    description: 'A mix of Cyan and Magenta.',
   },
   [makeRecipeKey('#FFFF00', '#0000FF')]: {
-    name: 'Emerald Green',
+    name: 'Jade',
     hex: '#00A86B',
     emoji: '🥦',
     rarity: 'Rare',
     category: 'Earth',
-    description: 'A rich jewel-toned green crafted by blending Yellow and Blue paint.',
+    description: 'A mix of Yellow and Blue.',
   },
   [makeRecipeKey('#FF00FF', '#FFFF00')]: {
-    name: 'Coral Rose',
+    name: 'Coral',
     hex: '#FF6F61',
     emoji: '🪸',
     rarity: 'Rare',
     category: 'Secondary',
-    description: 'A tropical oceanic reef pigment combining Magenta and Yellow.',
+    description: 'A mix of Magenta and Yellow.',
   },
   [makeRecipeKey('#808080', '#FF0000')]: {
     name: 'Terracotta',
@@ -404,15 +405,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🧱',
     rarity: 'Rare',
     category: 'Earth',
-    description: 'A warm clay earthenware pigment made with Red and Slate.',
+    description: 'A mix of Red and Gray.',
   },
   [makeRecipeKey('#808080', '#FFFF00')]: {
-    name: 'Amber Gold',
+    name: 'Amber',
     hex: '#FFBF00',
     emoji: '🪙',
     rarity: 'Rare',
     category: 'Metallic',
-    description: 'A lustrous golden metallic pigment.',
+    description: 'A mix of Yellow and Gray.',
   },
   [makeRecipeKey('#800000', '#FFFF00')]: {
     name: 'Burnt Sienna',
@@ -420,7 +421,7 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🍂',
     rarity: 'Rare',
     category: 'Earth',
-    description: 'An earthy reddish-brown pigment prized by classical painters.',
+    description: 'A mix of Maroon and Yellow.',
   },
   [makeRecipeKey('#FF00FF', '#FFFFFF')]: {
     name: 'Lavender',
@@ -428,15 +429,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🪻',
     rarity: 'Uncommon',
     category: 'Pastel',
-    description: 'A soft floral purple bloom lightened with White.',
+    description: 'Magenta lightened with White.',
   },
   [makeRecipeKey('#00FFFF', '#FFFFFF')]: {
-    name: 'Ice Aqua',
+    name: 'Light Cyan',
     hex: '#E0FFFF',
     emoji: '🧊',
     rarity: 'Uncommon',
     category: 'Pastel',
-    description: 'A crisp, freezing pale aqua tone.',
+    description: 'Cyan lightened with White.',
   },
   [makeRecipeKey('#FFA500', '#FFFFFF')]: {
     name: 'Peach',
@@ -444,15 +445,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🍑',
     rarity: 'Uncommon',
     category: 'Pastel',
-    description: 'A soft, velvety pastel fruit pigment.',
+    description: 'Orange lightened with White.',
   },
   [makeRecipeKey('#FFA500', '#000000')]: {
-    name: 'Chocolate Brown',
+    name: 'Chocolate',
     hex: '#7B3F00',
     emoji: '🍫',
     rarity: 'Uncommon',
     category: 'Earth',
-    description: 'A rich cocoa brown resulting from darkening Orange.',
+    description: 'Orange darkened with Black.',
   },
   [makeRecipeKey('#8A2BE2', '#FFFFFF')]: {
     name: 'Periwinkle',
@@ -460,15 +461,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🪻',
     rarity: 'Rare',
     category: 'Pastel',
-    description: 'An ethereal pastel violet-blue shade.',
+    description: 'Blue Violet lightened with White.',
   },
   [makeRecipeKey('#8A2BE2', '#000000')]: {
-    name: 'Deep Obsidian Purple',
+    name: 'Deep Purple',
     hex: '#301934',
     emoji: '🔮',
     rarity: 'Epic',
     category: 'Dark',
-    description: 'A shadowy, mystical violet bordering dark void.',
+    description: 'Blue Violet darkened with Black.',
   },
   [makeRecipeKey('#00A86B', '#00FFFF')]: {
     name: 'Turquoise',
@@ -476,15 +477,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '💎',
     rarity: 'Rare',
     category: 'Cosmic',
-    description: 'A prized gemstone color sparkling between emerald and cyan.',
+    description: 'A mix of Jade and Cyan.',
   },
   [makeRecipeKey('#FFBF00', '#800000')]: {
-    name: 'Copper Bronze',
+    name: 'Copper',
     hex: '#B87333',
     emoji: '🥉',
     rarity: 'Epic',
     category: 'Metallic',
-    description: 'An ancient metallic alloy sheen blending gold and crimson.',
+    description: 'A mix of Amber and Maroon.',
   },
   [makeRecipeKey('#00FFFF', '#0000FF')]: {
     name: 'Cobalt Blue',
@@ -492,15 +493,15 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '🌊',
     rarity: 'Rare',
     category: 'Secondary',
-    description: 'An intense, deep ceramic blue.',
+    description: 'A mix of Cyan and Blue.',
   },
   [makeRecipeKey('#FFFF00', '#00FF00')]: {
-    name: 'Chartreuse Lime',
+    name: 'Chartreuse',
     hex: '#7FFF00',
     emoji: '🍋',
     rarity: 'Uncommon',
     category: 'Neon',
-    description: 'An electric zesty yellow-green.',
+    description: 'A mix of Yellow and Green.',
   },
   [makeRecipeKey('#FF00FF', '#FF0000')]: {
     name: 'Vermilion',
@@ -508,122 +509,122 @@ const KNOWN_RECIPES: Record<string, {
     emoji: '💥',
     rarity: 'Rare',
     category: 'Secondary',
-    description: 'A fiery scarlet red with strong magenta undertones.',
+    description: 'A mix of Magenta and Red.',
   },
   [makeRecipeKey('#00A86B', '#FFFFFF')]: {
-    name: 'Seafoam Green',
+    name: 'Seafoam',
     hex: '#9FE2BF',
     emoji: '🌊',
     rarity: 'Rare',
     category: 'Pastel',
-    description: 'A soothing oceanic foam color.',
+    description: 'Jade lightened with White.',
   },
   [makeRecipeKey('#40E0D0', '#8A2BE2')]: {
-    name: 'Cosmic Nebula Indigo',
+    name: 'Indigo',
     hex: '#4B0082',
     emoji: '🌌',
     rarity: 'Legendary',
     category: 'Cosmic',
-    description: 'A deep celestial violet discovered by fusing Turquoise and Electric Violet.',
+    description: 'A mix of Turquoise and Blue Violet.',
   },
   [makeRecipeKey('#FFBF00', '#FFFFFF')]: {
-    name: 'Radiant Ivory Gold',
+    name: 'Cream',
     hex: '#FFFDD0',
     emoji: '🍦',
     rarity: 'Epic',
     category: 'Metallic',
-    description: 'A warm, luxurious cream gold sheen.',
+    description: 'Amber lightened with White.',
   },
   // God Tier Pigments - Gold and Silver
   [makeRecipeKey('#FFFF00', '#FFBF00')]: {
-    name: 'Pure Gold',
+    name: 'Gold',
     hex: '#FFD700',
     emoji: '🥇',
     rarity: 'God',
     category: 'Metallic',
-    description: 'The supreme, radiant divine gold pigment of absolute alchemy.',
+    description: 'A mix of Yellow and Amber.',
   },
   [makeRecipeKey('#808080', '#FFFFFF')]: {
-    name: 'Sterling Silver',
+    name: 'Silver',
     hex: '#C0C0C0',
     emoji: '🥈',
     rarity: 'God',
     category: 'Metallic',
-    description: 'The supreme, brilliant divine silver pigment of absolute alchemy.',
+    description: 'A mix of Gray and White.',
   },
 
   // Fun Whimsical Craft Discoveries
   [makeRecipeKey('#FFB6C1', '#FFFFFF')]: {
-    name: 'Unicorn Cotton Candy',
+    name: 'Cotton Candy',
     hex: '#FFD1DC',
     emoji: '🦄',
     rarity: 'Epic',
     category: 'Pastel',
-    description: 'A fluffy magical pastel cloud spun from pure pink & white energy.',
+    description: 'Light Pink lightened with White.',
   },
   [makeRecipeKey('#FFA500', '#FFB6C1')]: {
-    name: 'Tropical Sunset',
+    name: 'Sunset Orange',
     hex: '#FD5E53',
     emoji: '🌅',
     rarity: 'Rare',
     category: 'Secondary',
-    description: 'The breathtaking warm glow of a summer horizon.',
+    description: 'A mix of Orange and Light Pink.',
   },
   [makeRecipeKey('#7FFF00', '#000000')]: {
-    name: 'Toxic Slime',
+    name: 'Neon Green',
     hex: '#39FF14',
     emoji: '🧪',
     rarity: 'Rare',
     category: 'Neon',
-    description: 'A glowing bio-hazardous radioactive pigment.',
+    description: 'Chartreuse darkened with Black.',
   },
   [makeRecipeKey('#FFD700', '#800000')]: {
-    name: 'Phoenix Flame',
+    name: 'Orange Red',
     hex: '#FF4500',
     emoji: '🔥',
     rarity: 'Legendary',
     category: 'Neon',
-    description: 'An immortal incandescent scarlet fire born from gold and crimson.',
+    description: 'A mix of Gold and Maroon.',
   },
   [makeRecipeKey('#FFD700', '#00A86B')]: {
-    name: 'Dragon Scale Gold',
+    name: 'Metallic Gold',
     hex: '#D4AF37',
     emoji: '🐉',
     rarity: 'God',
     category: 'Metallic',
-    description: 'An ancient metallic dragon skin luster forged in dragonfire.',
+    description: 'A mix of Gold and Jade.',
   },
   [makeRecipeKey('#C0C0C0', '#000080')]: {
-    name: 'Moonlight Silver',
+    name: 'Lavender Mist',
     hex: '#E6E6FA',
     emoji: '🌙',
     rarity: 'Epic',
     category: 'Cosmic',
-    description: 'A serene silvery moonlight beam reflected on nocturnal waters.',
+    description: 'A mix of Silver and Navy Blue.',
   },
   [makeRecipeKey('#87CEEB', '#FFB6C1')]: {
-    name: 'Rainbow Prism',
+    name: 'Baby Pink',
     hex: '#F4C2C2',
     emoji: '🌈',
     rarity: 'Legendary',
     category: 'Cosmic',
-    description: 'Refracted multi-spectral light shining through morning dew.',
+    description: 'A mix of Sky Blue and Light Pink.',
   },
   [makeRecipeKey('#FFD700', '#FF00FF')]: {
-    name: 'Hyperdrive Cyberpunk',
+    name: 'Deep Pink',
     hex: '#FF1493',
     emoji: '⚡',
     rarity: 'God',
     category: 'Neon',
-    description: 'The ultimate synthwave glow blending golden solar power and magenta.',
+    description: 'A mix of Gold and Magenta.',
   },
   [makeRecipeKey('#000000', '#4B0082')]: {
-    name: 'Black Hole Void',
+    name: 'Eerie Black',
     hex: '#0B0B12',
     emoji: '🕳️',
     rarity: 'God',
     category: 'Dark',
-    description: 'An infinite gravitational singularity absorbing all visible spectrum light.',
+    description: 'Black darkened with Indigo.',
   },
 };
 
@@ -668,6 +669,37 @@ export function getProceduralEmoji(hsl: HSL): string {
   return '🎨';
 }
 
+// Find the closest real color name for a given RGB color.
+// Compares in HSL space so the hue match dominates the result:
+// a bright red always gets a red name, a dark teal gets a teal name, etc.
+export function nearestRealColorName(rgb: RGB): string {
+  const target = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+  let bestName = REAL_COLOR_NAMES[0].name;
+  let bestDistance = Infinity;
+
+  for (const real of REAL_COLOR_NAMES) {
+    const realRgb = hexToRgb(real.hex);
+    const realHsl = rgbToHsl(realRgb.r, realRgb.g, realRgb.b);
+
+    let hueDiff = Math.abs(target.h - realHsl.h);
+    hueDiff = Math.min(hueDiff, 360 - hueDiff) / 180; // 0..1, circular
+
+    const satDiff = Math.abs(target.s - realHsl.s) / 100;
+    const lightDiff = Math.abs(target.l - realHsl.l) / 100;
+
+    // Hue matters most, then lightness, then saturation.
+    const distance = hueDiff * 3 + lightDiff * 2 + satDiff;
+
+    if (distance < bestDistance) {
+      bestDistance = distance;
+      bestName = real.name;
+    }
+  }
+
+  return bestName;
+}
+
 // Procedural Name Generator
 export function generateProceduralName(hsl: HSL): {
   name: string;
@@ -677,55 +709,9 @@ export function generateProceduralName(hsl: HSL): {
 } {
   const { h, s, l } = hsl;
 
-  // Prefix based on Lightness & Saturation
-  let prefix = '';
-  if (s > 85 && l > 45 && l < 65) prefix = 'Vibrant ';
-  else if (s > 90 && l >= 65) prefix = 'Neon ';
-  else if (l >= 80 && s > 20) prefix = 'Pastel ';
-  else if (l >= 88) prefix = 'Ethereal ';
-  else if (l <= 20) prefix = 'Obsidian ';
-  else if (l <= 35) prefix = 'Deep ';
-  else if (s <= 25 && l > 35) prefix = 'Dusty ';
-  else if (s <= 40 && l <= 35) prefix = 'Shadow ';
-  else if (h >= 230 && h <= 290 && l < 45) prefix = 'Mystic ';
-  else if (h >= 30 && h <= 70 && s > 70) prefix = 'Luminous ';
-  else prefix = 'Radiant ';
-
-  // Hue Base Noun
-  let baseNoun = 'Spectrum';
-  let category: ColorCategory = 'Secondary';
-
-  if (l <= 15) {
-    baseNoun = 'Void Shadow';
-    category = 'Dark';
-  } else if (l >= 90 && s <= 15) {
-    baseNoun = 'Moonlight';
-    category = 'Pastel';
-  } else if (s <= 15) {
-    baseNoun = 'Ashen Slate';
-    category = 'Earth';
-  } else if (h >= 345 || h < 15) {
-    baseNoun = l < 35 ? 'Maroon Crimson' : l > 75 ? 'Rose Petal' : 'Fiery Scarlet';
-  } else if (h >= 15 && h < 45) {
-    baseNoun = l < 40 ? 'Burnt Umber' : l > 75 ? 'Peach Blossom' : 'Amber Flame';
-    category = 'Earth';
-  } else if (h >= 45 && h < 70) {
-    baseNoun = l > 80 ? 'Cream Chiffon' : 'Sunburst Gold';
-    category = 'Metallic';
-  } else if (h >= 70 && h < 150) {
-    baseNoun = l < 35 ? 'Jade Forest' : l > 75 ? 'Mint Dew' : 'Verdant Meadow';
-  } else if (h >= 150 && h < 200) {
-    baseNoun = l > 75 ? 'Arctic Breeze' : 'Cerulean Tide';
-  } else if (h >= 200 && h < 250) {
-    baseNoun = l < 35 ? 'Abyssal Blue' : l > 75 ? 'Sky Horizon' : 'Sapphire Wave';
-  } else if (h >= 250 && h < 310) {
-    baseNoun = l < 35 ? 'Midnight Amethyst' : l > 75 ? 'Soft Lavender' : 'Cosmic Violet';
-    category = 'Cosmic';
-  } else {
-    baseNoun = l > 75 ? 'Blush Blossom' : 'Fuchsia Spark';
-  }
-
-  const fullName = `${prefix}${baseNoun}`.trim();
+  // Match the mixed color to the closest real color name
+  const rgb = hslToRgb(h, s, l);
+  const name = nearestRealColorName(rgb);
 
   // Determine Rarity
   let rarity: Rarity = 'Uncommon';
@@ -733,10 +719,20 @@ export function generateProceduralName(hsl: HSL): {
   if ((h >= 260 && h <= 290) || (h >= 160 && h <= 180 && s > 80)) rarity = 'Epic';
   if (s > 95 && (l < 15 || l > 90)) rarity = 'Legendary';
 
-  const description = `A vibrant ${category.toLowerCase()} pigment with a unique ${rarity.toLowerCase()} shade.`;
+  // Determine Category from lightness & hue
+  let category: ColorCategory = 'Secondary';
+  if (l <= 20) category = 'Dark';
+  else if (l >= 80) category = 'Pastel';
+  else if (s <= 15) category = 'Earth';
+  else if (s > 90 && l > 55) category = 'Neon';
+  else if (h >= 45 && h <= 70 && s > 60 && l > 25 && l <= 65) category = 'Metallic';
+  else if (h >= 230 && h <= 310 && s > 50 && l <= 45) category = 'Cosmic';
+
+  const article = /^[aeiou]/i.test(rarity) ? 'An' : 'A';
+  const description = `${article} ${rarity.toLowerCase()} ${category.toLowerCase()} shade.`;
 
   return {
-    name: fullName,
+    name,
     category,
     rarity,
     description,
