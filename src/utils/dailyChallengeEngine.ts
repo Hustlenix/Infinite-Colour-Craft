@@ -168,9 +168,11 @@ export function getTodayDateString(): string {
   return `${year}-${month}-${day}`;
 }
 
-export function formatTodayDateReadable(): string {
+export function formatTodayDateReadable(dateStr = getTodayDateString()): string {
+  const [year, month, day] = dateStr.split('-').map(Number);
+  const date = new Date(year, month - 1, day);
   const options: Intl.DateTimeFormatOptions = { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' };
-  return new Date().toLocaleDateString(undefined, options);
+  return date.toLocaleDateString(undefined, options);
 }
 
 export function generateDailyChallenge(dateStr = getTodayDateString()): DailyChallenge {
@@ -184,7 +186,7 @@ export function generateDailyChallenge(dateStr = getTodayDateString()): DailyCha
 
   return {
     id: dateStr,
-    dateFormatted: formatTodayDateReadable(),
+    dateFormatted: formatTodayDateReadable(dateStr),
     title: template.title,
     description: template.description,
     hint: template.hint,
