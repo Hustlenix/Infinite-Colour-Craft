@@ -1,5 +1,6 @@
 {
   "name": "infinite-colour-craft",
+  "description": "An interactive color alchemy workspace and 2D digital painting studio built with React, Vite, and the Web Audio API.",
   "private": true,
   "version": "1.0.0",
   "type": "module",

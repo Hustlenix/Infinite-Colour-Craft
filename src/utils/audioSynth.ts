@@ -11,7 +11,8 @@ export type StrokeTool =
   | 'stamp'
   | 'bucket'
   | 'eyedropper'
-  | 'eraser';
+  | 'eraser'
+  | 'smudge';
 
 export interface PaintStrokeOptions {
   rgb: { r: number; g: number; b: number };
@@ -315,10 +316,10 @@ class AudioSynth {
     const speed = Math.max(1, Math.min(60, opts.speed));
     const opacity = opts.brushOpacity ?? 1;
 
-    if (tool === 'eraser') {
-      const bandpassFreq = Math.max(350, Math.min(1200, 650 - brushSize * 3 + speed * 10));
-      const lowpassFreq = 1600;
-      const qFactor = 1.8;
+    if (tool === 'eraser' || tool === 'smudge') {
+      const bandpassFreq = Math.max(350, Math.min(1200, 550 - brushSize * 2 + speed * 12));
+      const lowpassFreq = 1800;
+      const qFactor = 1.6;
       const targetGain = Math.min(0.2, 0.04 + (speed / 35) * 0.14);
       return { bandpassFreq, lowpassFreq, qFactor, targetGain, filterType: 'bandpass' as BiquadFilterType };
     }

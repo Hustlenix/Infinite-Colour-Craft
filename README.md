@@ -21,11 +21,24 @@ You start with five paints — Red, Green, Blue, White and Black. Drag two color
 - **Crafting board** — drag colors together to mix new ones and unlock them permanently.
 - **Daily challenge** — one new goal every day, plus a streak counter and a unique reward color.
 - **Quests** — milestone goals that unlock bonus colors and badges.
-- **Paint studio** — a canvas with brush, pen, marker, spray, bucket fill, eyedropper and more, plus symmetry modes, outline templates, undo/redo, and PNG export.
+- **Paint studio** — eleven tools (Brush, Pen, Marker, Spray, Chisel, Smudge, Rainbow, Stamp, Fill, Picker, Eraser) with a stroke stabilizer, speed-responsive dynamics (fast strokes taper, slow strokes lay down more paint), blend modes (Multiply, Screen, Overlay, Color Dodge), instant canvas flipping, symmetry and stencil modes, undo/redo, and PNG export.
 - **Recipe book** — see how each color you discovered was made.
 - **Palette builder** — save your own palettes from colors you've unlocked.
 - **Procedural audio** — mixing and painting sounds are synthesized live with Web Audio, so there are no audio files to load.
 - **Dark / light mode**, and your progress is saved in the browser.
+
+## Keyboard shortcuts
+
+| Key | Action |
+|---|---|
+| `B` / `P` / `M` / `S` | Brush / Pen / Marker / Spray |
+| `C` / `U` | Chisel / Smudge |
+| `R` / `G` | Rainbow / Stamp |
+| `F` / `I` / `E` | Fill / Picker / Eraser |
+| `H` / `V` | Flip canvas horizontally / vertically |
+| `X` | Quick-swap brush & eraser |
+| `[` / `]` | Adjust brush size |
+| `Ctrl+Z` / `Ctrl+Y` | Undo / Redo |
 
 ## Run locally
 
@@ -72,3 +85,7 @@ src/
     dailyChallengeEngine.ts# Deterministic daily challenge generator
   types.ts
 ```
+
+## How I made this
+
+This was just a fun little browser project. I got the idea from [neal.fun/infinite-craft](https://neal.fun/infinite-craft), though that game mixes random real-world objects into new ones just because it's fun, while this one mixes color pigments into new shades and actually gives you somewhere to use them: a full canvas to paint on.

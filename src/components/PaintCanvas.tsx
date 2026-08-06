@@ -27,7 +27,13 @@ import {
   Wand2,
   Brush,
   Sun,
-  Moon
+  Moon,
+  FlipHorizontal,
+  FlipVertical,
+  Sliders,
+  Hand,
+  Zap,
+  Eye
 } from 'lucide-react';
 
 interface PaintCanvasProps {
@@ -65,6 +71,14 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
   const [selectedTemplate, setSelectedTemplate] = useState<CanvasTemplate>(CANVAS_TEMPLATES[0]);
   const [selectedStamp, setSelectedStamp] = useState<string>('⭐');
   const [rainbowHue, setRainbowHue] = useState<number>(0);
+
+  // Pro 2D Brush Engine States (Inspired by 2D Painting Software Compendium)
+  const [strokeBlendMode, setStrokeBlendMode] = useState<GlobalCompositeOperation>('source-over');
+  const [smoothingLevel, setSmoothingLevel] = useState<'off' | 'low' | 'medium' | 'high'>('low');
+  const [speedDynamics, setSpeedDynamics] = useState<boolean>(true);
+  const [flipX, setFlipX] = useState<boolean>(false);
+  const [flipY, setFlipY] = useState<boolean>(false);
+  const [showNavigator, setShowNavigator] = useState<boolean>(false);
 
   // Custom Color State
   const [customHex, setCustomHex] = useState<string>(activeColor.hex);
@@ -424,16 +438,23 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     pushUndoState();
   }, [brushSize, pushUndoState, selectedStamp]);
 
-  // Get Point Coordinates from Event
+  // Get Point Coordinates from Event (accounting for flip view transforms)
   const getCanvasCoords = useCallback((e: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return { x: 0, y: 0 };
     const rect = canvas.getBoundingClientRect();
-    return {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-    };
-  }, []);
+    let x = e.clientX - rect.left;
+    let y = e.clientY - rect.top;
+
+    if (flipX) {
+      x = rect.width - x;
+    }
+    if (flipY) {
+      y = rect.height - y;
+    }
+
+    return { x, y };
+  }, [flipX, flipY]);
 
   // Draw Segment between points with Tool Specific rendering
   const drawSegment = useCallback((
@@ -442,10 +463,18 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     p2: { x: number; y: number },
     tool: StrokeTool,
     colorHex: string,
-    size: number,
+    baseSize: number,
     opacity: number
   ) => {
     ctx.save();
+
+    const dx = p2.x - p1.x;
+    const dy = p2.y - p1.y;
+    const dist = Math.hypot(dx, dy);
+
+    // Speed / Velocity Taper Dynamics: fast strokes taper thinner, slow strokes remain thick
+    const dynScale = speedDynamics ? Math.max(0.35, Math.min(1.8, 1.4 - dist / 35)) : 1;
+    const size = Math.max(1, baseSize * dynScale);
 
     const midX = (p1.x + p2.x) / 2;
     const midY = (p1.y + p2.y) / 2;
@@ -460,8 +489,49 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       ctx.moveTo(p1.x, p1.y);
       ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
       ctx.stroke();
+    } else if (tool === 'smudge') {
+      // Smudge / Wet Paint Blender: samples pixels from p1 and blends/smears them to p2
+      try {
+        const dpr = window.devicePixelRatio || 1;
+        const cssRadius = Math.max(4, size * 0.8);
+        const pixelRadius = Math.floor(cssRadius * dpr);
+        const sampleX = Math.floor(p1.x * dpr - pixelRadius);
+        const sampleY = Math.floor(p1.y * dpr - pixelRadius);
+        const sampleSize = pixelRadius * 2;
+
+        if (sampleX >= 0 && sampleY >= 0 && sampleX + sampleSize <= ctx.canvas.width && sampleY + sampleSize <= ctx.canvas.height) {
+          const sampledData = ctx.getImageData(sampleX, sampleY, sampleSize, sampleSize);
+          ctx.save();
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.globalAlpha = opacity * 0.65;
+          ctx.beginPath();
+          ctx.arc(p2.x, p2.y, cssRadius, 0, Math.PI * 2);
+          ctx.clip();
+          
+          // Create temporary offscreen buffer to draw sampled smudge dab
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = sampleSize;
+          tempCanvas.height = sampleSize;
+          const tempCtx = tempCanvas.getContext('2d');
+          if (tempCtx) {
+            tempCtx.putImageData(sampledData, 0, 0);
+            ctx.drawImage(tempCanvas, p2.x - cssRadius, p2.y - cssRadius, cssRadius * 2, cssRadius * 2);
+          }
+          ctx.restore();
+        }
+      } catch {
+        // Fallback soft blend
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = colorHex;
+        ctx.globalAlpha = opacity * 0.2;
+        ctx.lineWidth = size;
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
     } else if (tool === 'pen') {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       ctx.strokeStyle = colorHex;
       ctx.globalAlpha = opacity;
       ctx.lineWidth = Math.max(1, size * 0.4);
@@ -472,7 +542,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
       ctx.stroke();
     } else if (tool === 'marker') {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       ctx.strokeStyle = colorHex;
       ctx.globalAlpha = opacity * 0.35; // Translucent marker layer
       ctx.lineWidth = size * 1.2;
@@ -483,7 +553,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       ctx.lineTo(p2.x, p2.y);
       ctx.stroke();
     } else if (tool === 'spray') {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       ctx.fillStyle = colorHex;
       ctx.globalAlpha = opacity * 0.4;
       const density = Math.floor(size * 1.8);
@@ -497,12 +567,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
         ctx.fill();
       }
     } else if (tool === 'calligraphy') {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       ctx.fillStyle = colorHex;
       ctx.globalAlpha = opacity;
-      const dx = p2.x - p1.x;
-      const dy = p2.y - p1.y;
-      const dist = Math.hypot(dx, dy);
       const angle = Math.atan2(dy, dx);
       const ribbonWidth = Math.max(2, size * Math.abs(Math.sin(angle + Math.PI / 4)));
 
@@ -510,7 +577,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       ctx.arc(p2.x, p2.y, ribbonWidth / 2, 0, Math.PI * 2);
       ctx.fill();
     } else if (tool === 'rainbow') {
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       const currentHue = (rainbowHue + 8) % 360;
       setRainbowHue(currentHue);
       ctx.strokeStyle = `hsl(${currentHue}, 90%, 60%)`;
@@ -524,7 +591,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       ctx.stroke();
     } else {
       // Default 'brush': Soft wet bristle stroke
-      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalCompositeOperation = strokeBlendMode;
       ctx.strokeStyle = colorHex;
       ctx.globalAlpha = opacity;
       ctx.lineWidth = size;
@@ -539,7 +606,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     }
 
     ctx.restore();
-  }, [rainbowHue]);
+  }, [rainbowHue, speedDynamics, strokeBlendMode]);
 
   // Apply Stencil Symmetry across canvas
   const drawSymmetricSegment = useCallback((
@@ -687,7 +754,17 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!isDrawingRef.current) return;
     e.preventDefault();
-    const pt = getCanvasCoords(e);
+    const rawPt = getCanvasCoords(e);
+
+    let pt = rawPt;
+    if (smoothingLevel !== 'off' && prevPtRef.current) {
+      const alpha = smoothingLevel === 'high' ? 0.88 : smoothingLevel === 'medium' ? 0.68 : 0.42;
+      pt = {
+        x: prevPtRef.current.x + (rawPt.x - prevPtRef.current.x) * (1 - alpha),
+        y: prevPtRef.current.y + (rawPt.y - prevPtRef.current.y) * (1 - alpha),
+      };
+    }
+
     pointsQueueRef.current.push(pt);
 
     if (!rafIdRef.current) {
@@ -740,11 +817,14 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       else if (key === 'm') setBrushTool('marker');
       else if (key === 's') setBrushTool('spray');
       else if (key === 'c') setBrushTool('calligraphy');
+      else if (key === 'u') setBrushTool('smudge');
       else if (key === 'r') setBrushTool('rainbow');
       else if (key === 'g') setBrushTool('stamp');
       else if (key === 'f') setBrushTool('bucket');
       else if (key === 'i') setBrushTool('eyedropper');
       else if (key === 'e') setBrushTool('eraser');
+      else if (key === 'h') setFlipX((prev) => !prev);
+      else if (key === 'v') setFlipY((prev) => !prev);
       else if (key === 'x') {
         setBrushTool((prev) => (prev === 'eraser' ? 'brush' : 'eraser'));
       } else if (key === '[') setBrushSize((s) => Math.max(2, s - 3));
@@ -815,6 +895,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
             { id: 'marker', label: 'Marker', icon: Highlighter, shortcut: 'M' },
             { id: 'spray', label: 'Spray', icon: Sparkles, shortcut: 'S' },
             { id: 'calligraphy', label: 'Chisel', icon: Brush, shortcut: 'C' },
+            { id: 'smudge', label: 'Smudge', icon: Hand, shortcut: 'U' },
             { id: 'rainbow', label: 'Rainbow', icon: Wand2, shortcut: 'R' },
             { id: 'stamp', label: 'Stamp', icon: Smile, shortcut: 'G' },
             { id: 'bucket', label: 'Fill', icon: PaintBucket, shortcut: 'F' },
@@ -848,6 +929,26 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
 
         {/* Right: Studio Action Buttons */}
         <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setFlipX((f) => !f)}
+            className={`p-1.5 border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+              flipX ? 'bg-amber-300 text-black' : 'bg-white text-black hover:bg-slate-100'
+            }`}
+            title="Flip View Horizontally (H)"
+          >
+            <FlipHorizontal className="w-3.5 h-3.5" />
+          </button>
+
+          <button
+            onClick={() => setFlipY((f) => !f)}
+            className={`p-1.5 border-2 border-black font-black text-xs uppercase shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+              flipY ? 'bg-amber-300 text-black' : 'bg-white text-black hover:bg-slate-100'
+            }`}
+            title="Flip View Vertically (V)"
+          >
+            <FlipVertical className="w-3.5 h-3.5" />
+          </button>
+
           <button
             onClick={() => setShowTemplatesModal(true)}
             className="px-2.5 py-1 text-xs font-black uppercase bg-pink-300 text-black border-2 border-black shadow-[2px_2px_0px_0px_#000] hover:bg-pink-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center gap-1"
@@ -919,7 +1020,22 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
               onPointerUp={handlePointerUp}
               onPointerCancel={handlePointerUp}
               className="touch-none cursor-crosshair w-full h-full block"
+              style={{ transform: `scaleX(${flipX ? -1 : 1}) scaleY(${flipY ? -1 : 1})` }}
             />
+
+            {/* View Flip Active Indicator Badge */}
+            {(flipX || flipY) && (
+              <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 bg-amber-300 text-black border-2 border-black px-2.5 py-1 text-xs font-black uppercase shadow-[2px_2px_0px_0px_#000]">
+                <span>Flipped {flipX && 'Horizontal'} {flipY && 'Vertical'}</span>
+                <button
+                  onClick={() => { setFlipX(false); setFlipY(false); }}
+                  className="ml-1 hover:text-red-600 font-bold"
+                  title="Reset View"
+                >
+                  ✕
+                </button>
+              </div>
+            )}
 
             {/* Floating Quick Swatch Overlay (Bottom Right) */}
             <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 bg-white/90 backdrop-blur-xs border-2 border-black p-1.5 shadow-[3px_3px_0px_0px_#000]">
@@ -1033,6 +1149,80 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
                 onChange={(e) => setBrushOpacity(parseFloat(e.target.value))}
                 className="w-full accent-black cursor-pointer"
               />
+            </div>
+          </div>
+
+          {/* Section 2.5: Pro Brush Physics & Blend Dynamics */}
+          <div className="space-y-2 bg-blue-50/70 p-3 border-2 border-black shadow-[2px_2px_0px_0px_#000] text-black">
+            <h5 className="font-black text-xs uppercase tracking-wider flex items-center gap-1.5">
+              <Sliders className="w-3.5 h-3.5 text-blue-600" />
+              <span>Pro Engine Dynamics</span>
+            </h5>
+
+            {/* Blend Mode Selector */}
+            <div>
+              <label className="block text-[10px] font-black uppercase mb-1 text-slate-700">Blend Mode</label>
+              <div className="grid grid-cols-3 gap-1">
+                {[
+                  { id: 'source-over', label: 'Normal' },
+                  { id: 'multiply', label: 'Multiply' },
+                  { id: 'screen', label: 'Screen' },
+                  { id: 'overlay', label: 'Overlay' },
+                  { id: 'color-dodge', label: 'Dodge' },
+                ].map((bm) => (
+                  <button
+                    key={bm.id}
+                    onClick={() => {
+                      setStrokeBlendMode(bm.id as GlobalCompositeOperation);
+                      audioSynth.playPop();
+                    }}
+                    className={`py-1 px-1 text-[10px] font-black uppercase border border-black shadow-[1px_1px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+                      strokeBlendMode === bm.id ? 'bg-yellow-300 text-black font-bold' : 'bg-white text-black hover:bg-slate-100'
+                    }`}
+                  >
+                    {bm.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Line Stabilizer / StreamLine */}
+            <div>
+              <label className="block text-[10px] font-black uppercase mb-1 text-slate-700">StreamLine Stabilizer</label>
+              <div className="grid grid-cols-4 gap-1">
+                {[
+                  { id: 'off', label: 'Off' },
+                  { id: 'low', label: 'Low' },
+                  { id: 'medium', label: 'Med' },
+                  { id: 'high', label: 'High' },
+                ].map((st) => (
+                  <button
+                    key={st.id}
+                    onClick={() => {
+                      setSmoothingLevel(st.id as typeof smoothingLevel);
+                      audioSynth.playPop();
+                    }}
+                    className={`py-1 text-[10px] font-black uppercase border border-black shadow-[1px_1px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+                      smoothingLevel === st.id ? 'bg-cyan-300 text-black font-bold' : 'bg-white text-black hover:bg-slate-100'
+                    }`}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Speed Dynamics Toggle */}
+            <div className="pt-1 flex items-center justify-between border-t border-slate-300">
+              <span className="text-[10px] font-black uppercase text-slate-700">Velocity Taper</span>
+              <button
+                onClick={() => setSpeedDynamics((v) => !v)}
+                className={`px-2 py-0.5 text-[10px] font-black uppercase border border-black shadow-[1px_1px_0px_0px_#000] ${
+                  speedDynamics ? 'bg-green-300 text-black' : 'bg-slate-200 text-slate-600'
+                }`}
+              >
+                {speedDynamics ? 'ON' : 'OFF'}
+              </button>
             </div>
           </div>
 
@@ -1194,8 +1384,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
             <div className="space-y-2 text-xs font-bold">
               {[
                 { key: 'B / P / M / S', desc: 'Brush / Pen / Marker / Spray' },
-                { key: 'C / R / G', desc: 'Chisel / Rainbow / Stamp' },
+                { key: 'C / U / R / G', desc: 'Chisel / Smudge / Rainbow / Stamp' },
                 { key: 'F / I / E', desc: 'Bucket Fill / Eyedropper / Eraser' },
+                { key: 'H / V', desc: 'Flip View Horiz / Vert' },
                 { key: 'X', desc: 'Swap Brush & Eraser' },
                 { key: '[ / ]', desc: 'Decrease / Increase Size' },
                 { key: 'Ctrl + Z / Y', desc: 'Undo / Redo' },
