@@ -12,6 +12,7 @@ import {
   getProceduralEmoji,
   nearestRealColorName,
   generateProceduralName,
+  normalizeHex,
   BASE_COLORS,
 } from '../utils/colorEngine';
 import { REAL_COLOR_NAMES } from '../data/realColors';
@@ -333,5 +334,41 @@ describe('generateProceduralName', () => {
   it('classifies golden hues as Metallic', () => {
     const meta = generateProceduralName({ h: 60, s: 70, l: 45 });
     expect(meta.category).toBe('Metallic');
+  });
+});
+
+describe('normalizeHex', () => {
+  it('passes through a canonical #RRGGBB unchanged', () => {
+    expect(normalizeHex('#FF00FF')).toBe('#FF00FF');
+  });
+
+  it('accepts input without a leading hash', () => {
+    expect(normalizeHex('FF00FF')).toBe('#FF00FF');
+  });
+
+  it('accepts lowercase digits and uppercases them', () => {
+    expect(normalizeHex('#ff00aa')).toBe('#FF00AA');
+  });
+
+  it('expands 3-digit shorthand', () => {
+    expect(normalizeHex('#f0a')).toBe('#FF00AA');
+  });
+
+  it('trims surrounding whitespace', () => {
+    expect(normalizeHex('  #ff0000  ')).toBe('#FF0000');
+  });
+
+  it('falls back to #FFFFFF for invalid input', () => {
+    expect(normalizeHex('not-a-color')).toBe('#FFFFFF');
+    expect(normalizeHex('#12345')).toBe('#FFFFFF');
+    expect(normalizeHex('#GGGGGG')).toBe('#FFFFFF');
+  });
+
+  it('uses the supplied fallback for invalid input', () => {
+    expect(normalizeHex('', '#000000')).toBe('#000000');
+  });
+
+  it('keeps 8-digit RGBA values as valid 8-digit hex', () => {
+    expect(normalizeHex('#FF000080')).toBe('#FF000080');
   });
 });

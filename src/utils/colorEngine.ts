@@ -15,6 +15,24 @@ export function hexToRgb(hex: string): RGB {
   };
 }
 
+// Normalize arbitrary user input into a valid hex color string.
+// Accepts optional '#', 3/4/6/8 digits (8 = RGBA), any case; falls back otherwise.
+export function normalizeHex(hex: string, fallback = '#FFFFFF'): string {
+  let c = hex.trim();
+  if (c.startsWith('#')) {
+    c = c.slice(1);
+  }
+  if (!/^[0-9a-fA-F]+$/.test(c)) {
+    return fallback;
+  }
+  if (c.length === 3 || c.length === 4) {
+    c = c.split('').map(x => x + x).join('');
+  } else if (c.length !== 6 && c.length !== 8) {
+    return fallback;
+  }
+  return `#${c.toUpperCase()}`;
+}
+
 // Convert RGB to Hex
 export function rgbToHex(r: number, g: number, b: number): string {
   const toHex = (n: number) => {
