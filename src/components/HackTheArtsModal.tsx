@@ -51,7 +51,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
             <span>Theme: "Create art that couldn’t exist without technology."</span>
           </div>
           <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-            Rather than replicating traditional media, Infinite Colour Craft merges <strong>subtractive RYB spectral pigment math</strong>, <strong>autonomous agent boid swarms</strong>, and <strong>procedural Web Audio synesthesia</strong> into a living, computational art medium that evolves with every human interaction.
+            Rather than replicating traditional media, Infinite Colour Craft merges <strong>perceptual RYB paint-mixing math</strong> (blue + yellow makes green, not grey), <strong>interpolated brush physics</strong>, and <strong>procedural Web Audio synthesis</strong> into a computational art medium that responds to every stroke in real time.
           </p>
         </div>
 
@@ -66,7 +66,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">30%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              Turns color discovery into combinatorial alchemy. Over 150+ rare pigments discovered through physical subtractive paint simulation.
+              Turns color discovery into combinatorial play grounded in real paint behavior — mixes resolve to 150+ real pigment names, from classics like Orange to hidden gems like Madder Lake.
             </p>
           </div>
 
@@ -78,7 +78,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">25%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              HTML5 Canvas vector calculus, Boid steering behaviors, Kubelka-Munk pigment blending, and Web Audio API synthesizer nodes.
+              Perceptual RYB color-space blending, RAF-batched stroke interpolation for gap-free brushes, and a live Web Audio synthesis graph — all browser-native, zero paid APIs.
             </p>
           </div>
 
@@ -90,7 +90,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">20%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              Frictionless drag-and-drop workspace, multi-layer brushes, stencils, and immersive synesthetic audio feedback.
+              Frictionless drag-and-drop workspace, eleven brush tools with symmetry stencils and blend modes, plus live synthesized audio feedback on every stroke.
             </p>
           </div>
 
