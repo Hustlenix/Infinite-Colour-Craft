@@ -2,6 +2,17 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { ColorItem, BoardTile, ActiveTab, Palette, Quest, DailyChallengeState, QuestReward } from './types';
 import { BASE_COLORS, hexToRgb, rgbToHsl } from './utils/colorEngine';
 import { generateDailyChallenge, getTodayDateString, checkColorMatchesChallenge } from './utils/dailyChallengeEngine';
+import {
+  safeGetItem,
+  safeSetItem,
+  safeRemoveItem,
+  safeParseJSON,
+  normalizeUnlockedColors,
+  normalizeBoardTiles,
+  normalizePalettes,
+  normalizeDailyChallengeState,
+  normalizeStringArray,
+} from './utils/storage';
 import { audioSynth } from './utils/audioSynth';
 import { Navbar } from './components/Navbar';
 import { SidebarInventory } from './components/SidebarInventory';
@@ -13,20 +24,17 @@ import { PaletteBuilder } from './components/PaletteBuilder';
 import { QuestsModal } from './components/QuestsModal';
 import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { HowToPlayModal } from './components/HowToPlayModal';
+import { HackTheArtsModal } from './components/HackTheArtsModal';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
-    try {
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme) {
-        return savedTheme === 'dark';
-      }
-      return localStorage.getItem('icc_theme_dark') === 'true';
-    } catch {
-      return false; // Default to Light mode
+    const savedTheme = safeGetItem('theme');
+    if (savedTheme) {
+      return savedTheme === 'dark';
     }
+    return safeGetItem('icc_theme_dark') === 'true';
   });
 
   useEffect(() => {
@@ -39,12 +47,8 @@ export default function App() {
       document.body.classList.remove('dark');
       document.body.style.backgroundColor = '#EBEBEB';
     }
-    try {
-      localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
-      localStorage.setItem('icc_theme_dark', String(isDarkMode));
-    } catch {
-      // Ignore
-    }
+    safeSetItem('theme', isDarkMode ? 'dark' : 'light');
+    safeSetItem('icc_theme_dark', String(isDarkMode));
   }, [isDarkMode]);
 
   const toggleTheme = () => {
@@ -129,55 +133,44 @@ export default function App() {
   }, [activeTab]);
 
   const [showHelp, setShowHelp] = useState<boolean>(() => {
-    try {
-      return !localStorage.getItem('icc_seen_welcome');
-    } catch {
-      return true;
-    }
+    return !safeGetItem('icc_seen_welcome');
   });
+  const [showHackTheArtsModal, setShowHackTheArtsModal] = useState<boolean>(false);
   const [isTrashOver, setIsTrashOver] = useState<boolean>(false);
   const [newlyUnlockedColor, setNewlyUnlockedColor] = useState<ColorItem | null>(null);
 
   // Unlocked Colors state with LocalStorage persistence
   const [unlockedColors, setUnlockedColors] = useState<ColorItem[]>(() => {
-    try {
-      const saved = localStorage.getItem('icc_unlocked_colors');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 5) {
-          return parsed;
-        }
+    const saved = safeGetItem('icc_unlocked_colors');
+    if (saved) {
+      const normalized = normalizeUnlockedColors(safeParseJSON<unknown>(saved, null));
+      if (normalized) {
+        return normalized;
       }
-    } catch {
-      // Fallback
     }
     return BASE_COLORS;
   });
 
   // Board Tiles state
   const [boardTiles, setBoardTiles] = useState<BoardTile[]>(() => {
-    try {
-      const saved = localStorage.getItem('icc_board_tiles');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+    const saved = safeGetItem('icc_board_tiles');
+    if (saved) {
+      const normalized = normalizeBoardTiles(safeParseJSON<unknown>(saved, null));
+      if (normalized) {
+        return normalized;
       }
-    } catch {
-      // Fallback
     }
     return [];
   });
 
   // Palettes state
   const [palettes, setPalettes] = useState<Palette[]>(() => {
-    try {
-      const saved = localStorage.getItem('icc_palettes');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+    const saved = safeGetItem('icc_palettes');
+    if (saved) {
+      const normalized = normalizePalettes(safeParseJSON<unknown>(saved, null));
+      if (normalized) {
+        return normalized;
       }
-    } catch {
-      // Fallback
     }
     return [
       {
@@ -194,49 +187,32 @@ export default function App() {
   const todayChallenge = useMemo(() => generateDailyChallenge(todayStr), [todayStr]);
 
   const [dailyState, setDailyState] = useState<DailyChallengeState>(() => {
-    try {
-      const saved = localStorage.getItem('icc_daily_challenge_state');
-      if (saved) {
-        const parsed: DailyChallengeState = JSON.parse(saved);
-        if (parsed.lastDate === todayStr) {
-          return parsed;
-        } else {
-          // New day - calculate streak
-          const yesterday = new Date();
-          yesterday.setDate(yesterday.getDate() - 1);
-          const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-          
-          const keepStreak = parsed.lastCompletedDate === yStr;
-          return {
-            lastDate: todayStr,
-            completed: false,
-            claimed: false,
-            progress: 0,
-            streak: keepStreak ? parsed.streak : 0,
-            lastCompletedDate: parsed.lastCompletedDate || '',
-          };
-        }
-      }
-    } catch {
-      // Fallback
+    const saved = safeGetItem('icc_daily_challenge_state');
+    const stored = saved
+      ? normalizeDailyChallengeState(safeParseJSON<unknown>(saved, null))
+      : null;
+    if (stored && stored.lastDate === todayStr) {
+      return stored;
     }
+    // New day (or unreadable state) — compute streak from the stored history
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+
+    const keepStreak = stored !== null && stored.lastCompletedDate === yStr;
     return {
       lastDate: todayStr,
       completed: false,
       claimed: false,
       progress: 0,
-      streak: 0,
-      lastCompletedDate: '',
+      streak: keepStreak ? stored.streak : 0,
+      lastCompletedDate: stored?.lastCompletedDate || '',
     };
   });
 
   // Save daily state
   useEffect(() => {
-    try {
-      localStorage.setItem('icc_daily_challenge_state', JSON.stringify(dailyState));
-    } catch {
-      // Ignore
-    }
+    safeSetItem('icc_daily_challenge_state', JSON.stringify(dailyState));
   }, [dailyState]);
 
   // Claim Daily Challenge Reward
@@ -266,25 +242,19 @@ export default function App() {
 
   // Claimed Quests state
   const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>(() => {
-    try {
-      const saved = localStorage.getItem('icc_claimed_quests');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) return parsed;
+    const saved = safeGetItem('icc_claimed_quests');
+    if (saved) {
+      const normalized = normalizeStringArray(safeParseJSON<unknown>(saved, null));
+      if (normalized) {
+        return normalized;
       }
-    } catch {
-      // Fallback
     }
     return [];
   });
 
   // Save claimed quests
   useEffect(() => {
-    try {
-      localStorage.setItem('icc_claimed_quests', JSON.stringify(claimedQuestIds));
-    } catch {
-      // Ignore
-    }
+    safeSetItem('icc_claimed_quests', JSON.stringify(claimedQuestIds));
   }, [claimedQuestIds]);
 
   // Handle quest reward claim
@@ -319,27 +289,15 @@ export default function App() {
 
   // Save state changes to LocalStorage
   useEffect(() => {
-    try {
-      localStorage.setItem('icc_unlocked_colors', JSON.stringify(unlockedColors));
-    } catch {
-      // Ignore storage error
-    }
+    safeSetItem('icc_unlocked_colors', JSON.stringify(unlockedColors));
   }, [unlockedColors]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('icc_board_tiles', JSON.stringify(boardTiles));
-    } catch {
-      // Ignore storage error
-    }
+    safeSetItem('icc_board_tiles', JSON.stringify(boardTiles));
   }, [boardTiles]);
 
   useEffect(() => {
-    try {
-      localStorage.setItem('icc_palettes', JSON.stringify(palettes));
-    } catch {
-      // Ignore storage error
-    }
+    safeSetItem('icc_palettes', JSON.stringify(palettes));
   }, [palettes]);
 
   // Fast map lookup for unlocked colors
@@ -434,30 +392,31 @@ export default function App() {
         streak: 0,
         lastCompletedDate: '',
       });
-      localStorage.removeItem('icc_unlocked_colors');
-      localStorage.removeItem('icc_board_tiles');
-      localStorage.removeItem('icc_claimed_quests');
-      localStorage.removeItem('icc_daily_challenge_state');
+      safeRemoveItem('icc_unlocked_colors');
+      safeRemoveItem('icc_board_tiles');
+      safeRemoveItem('icc_claimed_quests');
+      safeRemoveItem('icc_daily_challenge_state');
     }
   };
 
   return (
     <div className={`w-full h-screen flex flex-col font-sans overflow-hidden select-none ${isDarkMode ? 'bg-slate-950 text-white' : 'bg-[#F3F3EF] text-black'}`}>
       {/* Top Navbar */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        discoveredCount={unlockedColors.length}
-        totalEstimate={150}
-        soundEnabled={soundEnabled}
-        onToggleSound={handleToggleSound}
-        onClearBoard={() => setBoardTiles([])}
-        onOpenHelp={() => setShowHelp(true)}
-        boardTileCount={boardTiles.length}
-        hasUnclaimedDaily={dailyState.completed && !dailyState.claimed}
-        isDarkMode={isDarkMode}
-        onToggleTheme={toggleTheme}
-      />
+       <Navbar
+         activeTab={activeTab}
+         setActiveTab={setActiveTab}
+         discoveredCount={unlockedColors.length}
+         totalEstimate={150}
+         soundEnabled={soundEnabled}
+         onToggleSound={handleToggleSound}
+         onClearBoard={() => setBoardTiles([])}
+         onOpenHelp={() => setShowHelp(true)}
+         onOpenHackTheArts={() => setShowHackTheArtsModal(true)}
+         boardTileCount={boardTiles.length}
+         hasUnclaimedDaily={dailyState.completed && !dailyState.claimed}
+         isDarkMode={isDarkMode}
+         onToggleTheme={toggleTheme}
+       />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
@@ -557,30 +516,30 @@ export default function App() {
         />
       )}
 
-      {/* How to Play / Onboarding Tutorial Modal */}
-      {showHelp && (
-        <HowToPlayModal
-          isDarkMode={isDarkMode}
-          onClose={() => {
-            setShowHelp(false);
-            try {
-              localStorage.setItem('icc_seen_welcome', 'true');
-            } catch {
-              // Ignore
-            }
-          }}
-          onSpawnStarter={() => {
-            try {
-              localStorage.setItem('icc_seen_welcome', 'true');
-            } catch {
-              // Ignore
-            }
-            if (boardTiles.length === 0) {
-              spawnBaseSpectrum();
-            }
-          }}
-        />
-      )}
-    </div>
+       {/* How to Play / Onboarding Tutorial Modal */}
+       {showHelp && (
+         <HowToPlayModal
+           isDarkMode={isDarkMode}
+           onClose={() => {
+             setShowHelp(false);
+             safeSetItem('icc_seen_welcome', 'true');
+           }}
+           onSpawnStarter={() => {
+             safeSetItem('icc_seen_welcome', 'true');
+             if (boardTiles.length === 0) {
+               spawnBaseSpectrum();
+             }
+           }}
+         />
+       )}
+
+       {/* Hack The Arts Submission Modal */}
+       <HackTheArtsModal
+         isOpen={showHackTheArtsModal}
+         onClose={() => setShowHackTheArtsModal(false)}
+         onLaunchStudio={() => setActiveTab('studio')}
+         isDarkMode={isDarkMode}
+       />
+     </div>
   );
 }

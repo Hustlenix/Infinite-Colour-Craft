@@ -10,7 +10,8 @@ import {
   Swords,
   RotateCcw,
   Sun,
-  Moon
+  Moon,
+  Trophy
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -22,6 +23,7 @@ interface NavbarProps {
   onToggleSound: () => void;
   onClearBoard: () => void;
   onOpenHelp: () => void;
+  onOpenHackTheArts: () => void;
   boardTileCount: number;
   hasUnclaimedDaily?: boolean;
   isDarkMode: boolean;
@@ -37,6 +39,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleSound,
   onClearBoard,
   onOpenHelp,
+  onOpenHackTheArts,
   boardTileCount,
   isDarkMode,
   onToggleTheme,
@@ -144,6 +147,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             title={soundEnabled ? 'Mute Sound Effects' : 'Enable Sound Effects'}
           >
             {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
+          </button>
+
+          <button
+            onClick={onOpenHackTheArts}
+            className="px-2 py-1.5 border-2 border-black bg-pink-300 text-black hover:bg-pink-400 font-black text-xs uppercase shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center gap-1.5"
+            title="Hack The Arts Submission Details"
+          >
+            <Trophy className="w-4 h-4 text-black fill-black" />
+            <span className="hidden xl:inline">Hack The Arts</span>
           </button>
 
           <button
