@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import confetti from 'canvas-confetti';
 import { ColorItem } from '../types';
 import { audioSynth, StrokeTool } from '../utils/audioSynth';
+import { hexToRgb, normalizeHex } from '../utils/colorEngine';
 import { CANVAS_TEMPLATES, CanvasTemplate } from '../data/canvasTemplates';
 import { 
   Paintbrush, 
@@ -80,8 +81,8 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
   const [flipY, setFlipY] = useState<boolean>(false);
   const [showNavigator, setShowNavigator] = useState<boolean>(false);
 
-  // Custom Color State
-  const [customHex, setCustomHex] = useState<string>(activeColor.hex);
+  // Custom Color State (always normalized to a valid #RRGGBB)
+  const [customHex, setCustomHex] = useState<string>(() => normalizeHex(activeColor.hex));
 
   // Undo / Redo Stacks
   const [undoStack, setUndoStack] = useState<ImageData[]>([]);
@@ -94,19 +95,8 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
 
   // Keep customHex in sync with activeColor prop
   useEffect(() => {
-    setCustomHex(activeColor.hex);
+    setCustomHex(normalizeHex(activeColor.hex));
   }, [activeColor]);
-
-  // Convert hex color to RGB
-  const hexToRgb = useCallback((hex: string) => {
-    const cleanHex = hex.replace('#', '');
-    const num = parseInt(cleanHex, 16) || 0;
-    return {
-      r: (num >> 16) & 255,
-      g: (num >> 8) & 255,
-      b: num & 255,
-    };
-  }, []);
 
   // Save Canvas State to Undo
   const pushUndoState = useCallback(() => {
@@ -667,6 +657,25 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     }
   }, [brushOpacity, brushSize, brushTool, customHex, drawSegment, stencilMode]);
 
+    // Linearly interpolate intermediate points between two sampled coordinates
+  // (pointer events fire at 60-120Hz, leaving gaps on fast strokes)
+  const interpolatePoints = useCallback((
+    p1: { x: number; y: number },
+    p2: { x: number; y: number },
+    segments: number
+  ): { x: number; y: number }[] => {
+    const points: { x: number; y: number }[] = [];
+    if (segments <= 1) {
+      return points;
+    }
+    const dx = (p2.x - p1.x) / segments;
+    const dy = (p2.y - p1.y) / segments;
+    for (let i = 1; i < segments; i++) {
+      points.push({ x: p1.x + dx * i, y: p1.y + dy * i });
+    }
+    return points;
+  }, []);
+
   // Batch Processor for smooth RAF drawing
   const processPointerBatch = useCallback(() => {
     const canvas = canvasRef.current;
@@ -683,8 +692,28 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       return;
     }
 
-    while (queue.length > 0) {
-      const pt = queue.shift()!;
+    // Fill gaps between sampled pointer events so fast strokes stay continuous
+    const interpolatedQueue: { x: number; y: number }[] = [];
+    const pushUnique = (pt: { x: number; y: number }) => {
+      const last = interpolatedQueue[interpolatedQueue.length - 1];
+      if (!last || last.x !== pt.x || last.y !== pt.y) {
+        interpolatedQueue.push(pt);
+      }
+    };
+
+    for (let i = 0; i < queue.length; i++) {
+      const current = queue[i];
+      const next = queue[i + 1];
+      pushUnique(current);
+      if (next) {
+        const distance = Math.hypot(next.x - current.x, next.y - current.y);
+        const segments = Math.max(1, Math.floor(distance / 4)); // ~4px between dabs
+        interpolatedQueue.push(...interpolatePoints(current, next, segments));
+      }
+    }
+
+    while (interpolatedQueue.length > 0) {
+      const pt = interpolatedQueue.shift()!;
       if (!prevPtRef.current) {
         prevPtRef.current = pt;
         continue;
