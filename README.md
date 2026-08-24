@@ -26,6 +26,18 @@ There is no backend, no AI API call, and no paid service: the entire experience 
 
 **Stack:** React 19 · TypeScript · Vite · Tailwind CSS v4 · Web Audio API · Canvas 2D · Vitest (83 unit tests) · GitHub Actions CI deploying to GitHub Pages.
 
+### See it in action
+
+https://github.com/Hustlenix/Infinite-Colour-Craft/raw/main/docs/demo.mp4
+
+*60-second capture: mixing Red + Blue into Magenta, unlocking it as a named pigment, then painting with the interpolated brush engine (including rainbow tool) in light and dark modes.*
+
+| Crafting board | Discovery |
+|---|---|
+| ![Crafting board with the five base pigments](docs/screenshots/board.png) | ![Red + Blue fusing into Magenta](docs/screenshots/discovery.png) |
+| **Paint studio** | **Dark mode** |
+| ![Paint studio with spiral and wave strokes](docs/screenshots/studio.png) | ![Paint studio in dark mode](docs/screenshots/studio-dark.png) |
+
 ---
 
 ## What is it?
