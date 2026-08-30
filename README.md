@@ -21,10 +21,11 @@ Mix paints to discover new colors, hit daily goals, unlock rewards, and draw you
 1. **Perceptual RYB paint mixing.** Screens mix light (RGB), so blue + yellow makes grey. This app converts colors into the Red-Yellow-Blue domain artists learn, blends them there, and converts back — recreating subtractive pigment behavior digitally. Unknown mixes are matched to the nearest of 150+ real pigment names, so discovery always lands somewhere recognizable.
 2. **A gap-free brush engine.** Browsers only sample pointer positions 60–120 times per second, which normally shreds fast strokes into dotted fragments. Strokes are queued and processed on animation frames, with linear interpolation filling points roughly every 4 px between samples, plus speed-responsive width dynamics (fast strokes taper, slow strokes lay down more paint).
 3. **Sound with no audio files.** Every click, mix, unlock and brush stroke is generated live by a Web Audio synthesis graph — oscillators and filters parameterized by what you're doing — so the app ships zero audio assets.
+4. **A neural network that guesses your doodles.** A real convolutional neural network was trained on ten classes from Google's Quick, Draw! dataset (88% validation accuracy). The trained weights ship with the app, and inference runs entirely in your browser via a hand-rolled forward pass — draw a doodle, and the model tells you (and shows its top guesses) what it thinks you drew. No API key, no server, no upload: your sketch never leaves the tab.
 
-There is no backend, no AI API call, and no paid service: the entire experience is computation running in your tab.
+There is no backend, no paid API call, and no paid service. The AI is a trained-on-disk neural network whose inference you run locally — the entire experience is computation happening in your tab.
 
-**Stack:** React 19 · TypeScript · Vite · Tailwind CSS v4 · Web Audio API · Canvas 2D · Vitest (83 unit tests) · GitHub Actions CI deploying to GitHub Pages.
+**Stack:** React 19 · TypeScript · Vite · Tailwind CSS v4 · Web Audio API · Canvas 2D · a trained PyTorch CNN (exported weights, on-device JS inference) · Vitest (86 unit tests) · GitHub Actions CI deploying to GitHub Pages.
 
 ### See it in action
 
@@ -53,6 +54,7 @@ You start with five paints — Red, Green, Blue, White and Black. Drag two color
 - **Recipe book** — see how each color you discovered was made.
 - **Palette builder** — save your own palettes from colors you've unlocked.
 - **Procedural audio** — mixing and painting sounds are synthesized live with Web Audio, so there are no audio files to load.
+- **Doodle AI** — a neural network trained on ten classes from Google's Quick, Draw! dataset guesses what you draw, running fully on-device in your browser (no API key, no upload).
 - **Dark / light mode**, and your progress is saved in the browser.
 
 ## Keyboard shortcuts
@@ -67,6 +69,8 @@ You start with five paints — Red, Green, Blue, White and Black. Drag two color
 | `X` | Quick-swap brush & eraser |
 | `[` / `]` | Adjust brush size |
 | `Ctrl+Z` / `Ctrl+Y` | Undo / Redo |
+| `7` | Open Doodle AI (guesser) |
+| `8` | Open Doodle Challenge (game) |
 
 ## Run locally
 
@@ -104,13 +108,17 @@ npm run lint    # TypeScript typecheck (tsc --noEmit)
 ```
 src/
   App.tsx                  # App shell, state, localStorage persistence
-  components/              # Navbar, Crafting Board, Paint Canvas, modals, sidebar
-  data/canvasTemplates.ts  # Paint studio outline templates
-  data/realColors.ts       # Dictionary of real color names used for naming
-  utils/
-    colorEngine.ts         # Hex/RGB/HSL/RYB math, recipes, procedural naming
-    audioSynth.ts          # Web Audio synthesizer
-    dailyChallengeEngine.ts# Deterministic daily challenge generator
+   components/              # Navbar, Crafting Board, Paint Canvas, Doodle AI & Challenge, modals
+   data/
+     canvasTemplates.ts     # Paint studio outline templates
+     realColors.ts          # Dictionary of real color names used for naming
+     doodle_weights.json    # Trained PyTorch CNN weights (Quick, Draw! classes)
+   utils/
+     colorEngine.ts         # Hex/RGB/HSL/RYB math, recipes, procedural naming
+     audioSynth.ts          # Web Audio synthesizer
+     dailyChallengeEngine.ts# Deterministic daily challenge generator
+     doodleNet.ts           # On-device CNN inference engine (hand-rolled JS forward pass)
+     challengeLogic.ts      # Challenge game rules, pass/fail gating & scoring
   types.ts
 ```
 

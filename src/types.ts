@@ -99,7 +99,7 @@ export interface Palette {
   createdAt: number;
 }
 
-export type ActiveTab = 'board' | 'studio' | 'recipes' | 'palettes' | 'quests' | 'daily';
+export type ActiveTab = 'board' | 'studio' | 'recipes' | 'palettes' | 'quests' | 'daily' | 'ai' | 'challenge';
 
 export interface DailyChallenge {
   id: string; // date string YYYY-MM-DD

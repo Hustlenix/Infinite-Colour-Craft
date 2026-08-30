@@ -51,7 +51,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
             <span>Theme: "Create art that couldn’t exist without technology."</span>
           </div>
           <p className={`text-sm leading-relaxed ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
-            Rather than replicating traditional media, Infinite Colour Craft merges <strong>perceptual RYB paint-mixing math</strong> (blue + yellow makes green, not grey), <strong>interpolated brush physics</strong>, and <strong>procedural Web Audio synthesis</strong> into a computational art medium that responds to every stroke in real time.
+            Rather than replicating traditional media, Infinite Colour Craft merges <strong>perceptual RYB paint-mixing math</strong> (blue + yellow makes green, not grey), <strong>interpolated brush physics</strong>, a <strong>neural network trained on Google's Quick, Draw! dataset</strong> that guesses your doodles in real time, and <strong>procedural Web Audio synthesis</strong> into a computational art medium that responds to every stroke.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">25%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              Perceptual RYB color-space blending, RAF-batched stroke interpolation for gap-free brushes, and a live Web Audio synthesis graph — all browser-native, zero paid APIs.
+              A <strong>convolutional neural network trained on Google's Quick, Draw! dataset</strong> runs <strong>fully in-browser</strong> to recognize your doodles; plus perceptual RYB color-space blending, RAF-batched stroke interpolation for gap-free brushes, and a live Web Audio synthesis graph — all browser-native, zero paid APIs.
             </p>
           </div>
 
@@ -90,7 +90,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">20%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              Frictionless drag-and-drop workspace, eleven brush tools with symmetry stencils and blend modes, plus live synthesized audio feedback on every stroke.
+              Frictionless drag-and-drop workspace, eleven brush tools with symmetry stencils and blend modes, live synthesized audio feedback on every stroke, and a <strong>Quick, Draw!-style Doodle AI</strong> that watches your sketch and guesses what you drew.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export const HackTheArtsModal: React.FC<HackTheArtsModalProps> = ({
               <span className="bg-yellow-300 text-black font-black text-xs px-2 py-0.5 border border-black">25%</span>
             </div>
             <p className="text-xs text-slate-400 leading-normal">
-              Fully tested with Vitest (83 passing unit tests), responsive UI, dark/light modes, and zero external paid dependencies.
+              Fully tested with Vitest (86 passing unit tests incl. the neural-net inference engine), responsive UI, dark/light modes, and zero external paid dependencies.
             </p>
           </div>
 

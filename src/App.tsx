@@ -25,6 +25,8 @@ import { QuestsModal } from './components/QuestsModal';
 import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { HowToPlayModal } from './components/HowToPlayModal';
 import { HackTheArtsModal } from './components/HackTheArtsModal';
+import { DoodleAI } from './components/DoodleAI';
+import { DoodleChallenge } from './components/DoodleChallenge';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
@@ -106,6 +108,18 @@ export default function App() {
         if (key === '6') {
           e.preventDefault();
           setActiveTab('daily');
+          audioSynth.playPop();
+          return;
+        }
+        if (key === '7') {
+          e.preventDefault();
+          setActiveTab('ai');
+          audioSynth.playPop();
+          return;
+        }
+        if (key === '8') {
+          e.preventDefault();
+          setActiveTab('challenge');
           audioSynth.playPop();
           return;
         }
@@ -485,6 +499,14 @@ export default function App() {
             onNavigateToBoard={() => setActiveTab('board')}
             isDarkMode={isDarkMode}
           />
+        )}
+
+        {activeTab === 'ai' && (
+          <DoodleAI isDarkMode={isDarkMode} />
+        )}
+
+        {activeTab === 'challenge' && (
+          <DoodleChallenge isDarkMode={isDarkMode} />
         )}
 
         {/* Right Inventory Sidebar */}

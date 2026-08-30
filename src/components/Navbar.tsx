@@ -11,7 +11,9 @@ import {
   RotateCcw,
   Sun,
   Moon,
-  Trophy
+  Trophy,
+  Brain,
+  Target
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -112,6 +114,32 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <BookOpen className="w-4 h-4" />
             <span className="hidden md:inline">Recipes</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('ai')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-black font-black uppercase text-xs transition-all shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+              activeTab === 'ai'
+                ? 'bg-cyan-300 text-black'
+                : isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700 border-slate-700' : 'bg-white text-black hover:bg-slate-100'
+            }`}
+            title="Doodle AI — neural network guesser"
+          >
+            <Brain className="w-4 h-4" />
+            <span className="hidden md:inline">Doodle AI</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('challenge')}
+            className={`flex items-center gap-1.5 px-3 py-1.5 border-2 border-black font-black uppercase text-xs transition-all shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+              activeTab === 'challenge'
+                ? 'bg-emerald-300 text-black'
+                : isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700 border-slate-700' : 'bg-white text-black hover:bg-slate-100'
+            }`}
+            title="Challenge — draw it, the AI says true or false"
+          >
+            <Target className="w-4 h-4" />
+            <span className="hidden md:inline">Challenge</span>
           </button>
         </nav>
 
