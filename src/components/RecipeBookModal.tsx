@@ -112,14 +112,14 @@ export const RecipeBook: React.FC<RecipeBookProps> = ({
 
               {/* Title & Hex */}
               <div>
-                <h3 className="font-black text-sm uppercase text-black group-hover:underline">
+                <h3 className={`font-black text-sm uppercase group-hover:underline ${isDarkMode ? 'text-white' : 'text-black'}`}>
                   {color.name}
                 </h3>
-                <p className="text-xs font-mono font-bold text-black">{color.hex}</p>
+                <p className={`text-xs font-mono font-bold ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>{color.hex}</p>
               </div>
 
               {/* Parents Recipe Tag */}
-              <div className="text-[11px] font-black uppercase text-slate-700 border-t-2 border-black/20 pt-2 flex items-center justify-between">
+              <div className={`text-[11px] font-black uppercase border-t-2 border-black/20 pt-2 flex items-center justify-between ${isDarkMode ? 'text-slate-300' : 'text-slate-700'}`}>
                 <span>Parents:</span>
                 {color.parents ? (
                   <span className="font-black text-black truncate max-w-[150px] bg-yellow-300 px-1 border border-black">

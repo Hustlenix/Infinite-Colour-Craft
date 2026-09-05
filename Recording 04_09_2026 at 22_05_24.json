@@ -1,0 +1,5261 @@
+{
+    "title": "Recording 04/09/2026 at 22:05:24",
+    "steps": [
+        {
+            "type": "setViewport",
+            "width": 797,
+            "height": 729,
+            "deviceScaleFactor": 1,
+            "isMobile": false,
+            "hasTouch": false,
+            "isLandscape": false
+        },
+        {
+            "type": "navigate",
+            "url": "https://hustlenix.github.io/Infinite-Colour-Craft/",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://hustlenix.github.io/Infinite-Colour-Craft/",
+                    "title": "Infinite Colour Craft"
+                }
+            ]
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(76) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[76]/div"
+                ],
+                [
+                    "pierce/div:nth-of-type(76) > div"
+                ]
+            ],
+            "offsetY": 7.21246337890625,
+            "offsetX": 25.79998779296875,
+            "duration": 399.9000000022352
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "AudioVolumeMute"
+        },
+        {
+            "type": "keyUp",
+            "key": "AudioVolumeMute",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(75) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[75]/div"
+                ],
+                [
+                    "pierce/div:nth-of-type(75) > div"
+                ]
+            ],
+            "offsetY": 47.61244201660156,
+            "offsetX": 136.99996948242188,
+            "duration": 774.7000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(74) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[74]/div"
+                ],
+                [
+                    "pierce/div:nth-of-type(74) > div"
+                ]
+            ],
+            "offsetY": 31.612503051757812,
+            "offsetX": 65,
+            "duration": 379.8999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 217.8125,
+            "offsetX": 298,
+            "duration": 382
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 306.8125,
+            "offsetX": 284,
+            "duration": 462.0999999977648
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(60) > div > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[60]/div/span"
+                ],
+                [
+                    "pierce/div:nth-of-type(60) > div > span"
+                ]
+            ],
+            "offsetY": 8.212493896484375,
+            "offsetX": 13.39996337890625,
+            "duration": 638.0999999977648
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 220.8125,
+            "offsetX": 848,
+            "duration": 387
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 443.8125,
+            "offsetX": 856
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 380.8125,
+            "offsetX": 688,
+            "duration": 381.20000000298023
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main > div:nth-of-type(7) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[7]/div"
+                ],
+                [
+                    "pierce/main > div:nth-of-type(7) > div"
+                ]
+            ],
+            "offsetY": 31.21240234375,
+            "offsetX": 29.600006103515625,
+            "duration": 735
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main > div:nth-of-type(36) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[36]/div"
+                ],
+                [
+                    "pierce/main > div:nth-of-type(36) > div"
+                ]
+            ],
+            "offsetY": 38.052398681640625,
+            "offsetX": 12.50311279296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 473.8125,
+            "offsetX": 259,
+            "duration": 366.3999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main > div:nth-of-type(35) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[35]/div"
+                ],
+                [
+                    "pierce/main > div:nth-of-type(35) > div"
+                ]
+            ],
+            "offsetY": 15.412506103515625,
+            "offsetX": 36.20001220703125,
+            "duration": 455.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(32) > div > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[32]/div/span"
+                ],
+                [
+                    "pierce/div:nth-of-type(32) > div > span"
+                ]
+            ],
+            "offsetY": 2.21246337890625,
+            "offsetX": 4.5999908447265625,
+            "duration": 359.6000000014901
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main > div:nth-of-type(32) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[32]/div"
+                ],
+                [
+                    "pierce/main > div:nth-of-type(32) > div"
+                ]
+            ],
+            "offsetY": 2.4124908447265625,
+            "offsetX": 164.7999725341797,
+            "duration": 903.7999999970198
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/ALIGN GRID",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "button.md\\:px-3 > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[2]/button[2]/span"
+                ],
+                [
+                    "pierce/button.md\\:px-3 > span"
+                ],
+                [
+                    "text/Align Grid"
+                ]
+            ],
+            "offsetY": 3.4124984741210938,
+            "offsetX": 35.387481689453125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 162.8125,
+            "offsetX": 115,
+            "duration": 427.20000000298023
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 370.8125,
+            "offsetX": 308,
+            "duration": 441.3999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "main"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main"
+                ],
+                [
+                    "pierce/main"
+                ]
+            ],
+            "offsetY": 430.8125,
+            "offsetX": 494,
+            "duration": 482
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.top-0 > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/main/div[4]/div"
+                ],
+                [
+                    "pierce/div.top-0 > div"
+                ]
+            ],
+            "offsetY": 27.060638427734375,
+            "offsetX": 21.53167724609375
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div > div:nth-of-type(2) > div"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/aside/div[2]/div/div[2]/div"
+                ],
+                [
+                    "pierce/div.flex-1 > div > div:nth-of-type(2) > div"
+                ]
+            ],
+            "offsetY": 1123.4750366210938,
+            "offsetX": 64.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/USE IN PAINT STUDIO",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.top-16 button > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[3]/div/button/span"
+                ],
+                [
+                    "pierce/div.top-16 button > span"
+                ],
+                [
+                    "text/Use in Paint"
+                ]
+            ],
+            "offsetY": 8.599990844726562,
+            "offsetX": 51.8125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 227.1125030517578,
+            "offsetX": 238.19999885559082,
+            "duration": 3162.699999999255
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1"
+                ]
+            ],
+            "offsetY": 290.8125,
+            "offsetX": 409
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 273.1125030517578,
+            "offsetX": 391.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 233.1125030517578,
+            "offsetX": 459.1999988555908,
+            "duration": 581
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1"
+                ]
+            ],
+            "offsetY": 317.8125,
+            "offsetX": 412,
+            "duration": 456.69999999925494
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 240.1125030517578,
+            "offsetX": 554.1999988555908,
+            "duration": 717.3999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Caribbean Green (#0ABC80)"
+                ],
+                [
+                    "button:nth-of-type(18)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[1]/div[2]/button[18]"
+                ],
+                [
+                    "pierce/button:nth-of-type(18)"
+                ]
+            ],
+            "offsetY": 16.012496948242188,
+            "offsetX": 14.39996337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 347.1125030517578,
+            "offsetX": 322.1999988555908,
+            "duration": 645.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SMUDGE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[6]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "text/Smudge"
+                ]
+            ],
+            "offsetY": 8.199996948242188,
+            "offsetX": 0.11248779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 126.11250305175781,
+            "offsetX": 511.1999988555908,
+            "duration": 1683.5999999977648
+        },
+        {
+            "type": "change",
+            "value": "54",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 13.225006103515625,
+            "offsetX": 166.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 63.11250305175781,
+            "offsetX": 499.1999988555908,
+            "duration": 14299
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 7.612495422363281,
+            "offsetX": 8.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Ultramarine (#1306AA)"
+                ],
+                [
+                    "button:nth-of-type(19)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[1]/div[2]/button[19]"
+                ],
+                [
+                    "pierce/button:nth-of-type(19)"
+                ]
+            ],
+            "offsetY": 23.012496948242188,
+            "offsetX": 4
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 232.1125030517578,
+            "offsetX": 331.1999988555908,
+            "duration": 4216.300000000745
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 25.212501525878906,
+            "offsetX": 17.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/CHISEL",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(5) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[5]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(5) > span"
+                ],
+                [
+                    "text/Chisel"
+                ]
+            ],
+            "offsetY": 7.1999969482421875,
+            "offsetX": 26.662506103515625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 352.1125030517578,
+            "offsetX": 143.19999885559082,
+            "duration": 1907.699999999255
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 9.612495422363281,
+            "offsetX": 4.32501220703125
+        },
+        {
+            "type": "change",
+            "value": "13",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 9.225006103515625,
+            "offsetX": 40.20001220703125,
+            "duration": 400.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 225.1125030517578,
+            "offsetX": 288.1999988555908,
+            "duration": 835.5999999977648
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 236.1125030517578,
+            "offsetX": 489.1999988555908,
+            "duration": 1385.2999999970198
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 200.1125030517578,
+            "offsetX": 494.1999988555908,
+            "duration": 727.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 0.6124954223632812,
+            "offsetX": 9.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SPRAY"
+                ],
+                [
+                    "div.h-12 > div.gap-1 > button:nth-of-type(4)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[4]"
+                ],
+                [
+                    "pierce/div.h-12 > div.gap-1 > button:nth-of-type(4)"
+                ]
+            ],
+            "offsetY": 10.799995422363281,
+            "offsetX": 25.1875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 141.1125030517578,
+            "offsetX": 80.19999885559082
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 267.1125030517578,
+            "offsetX": 515.1999988555908,
+            "duration": 3265.599999997765
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.h-12 > div.gap-1"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]"
+                ],
+                [
+                    "pierce/div.h-12 > div.gap-1"
+                ],
+                [
+                    "text/BrushPenMarkerSprayChiselSmudgeRainbowStampFillPickerEraser"
+                ]
+            ],
+            "offsetY": 31.79999542236328,
+            "offsetX": 230
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/MARKER",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[3]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "text/Marker"
+                ]
+            ],
+            "offsetY": 1.1999969482421875,
+            "offsetX": 39.91249084472656
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 409.1125030517578,
+            "offsetX": 201.19999885559082,
+            "duration": 3014.89999999851
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/PEN",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(2) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[2]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(2) > span"
+                ],
+                [
+                    "text/Pen"
+                ]
+            ],
+            "offsetY": 13.199996948242188,
+            "offsetX": 2.3499908447265625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 480.1125030517578,
+            "offsetX": 432.1999988555908,
+            "duration": 1676.8999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/BRUSH",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.h-12 button:nth-of-type(1) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[1]/span"
+                ],
+                [
+                    "pierce/div.h-12 button:nth-of-type(1) > span"
+                ],
+                [
+                    "text/Brush"
+                ]
+            ],
+            "offsetY": 2.1999969482421875,
+            "offsetX": 25.39999771118164
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 266.1125030517578,
+            "offsetX": 455.1999988555908,
+            "duration": 1670.300000000745
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/RAINBOW"
+                ],
+                [
+                    "div.flex-1 > div div.gap-1 > button:nth-of-type(7)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[7]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.gap-1 > button:nth-of-type(7)"
+                ]
+            ],
+            "offsetY": 3.7999954223632812,
+            "offsetX": 68.67498779296875
+        },
+        {
+            "type": "change",
+            "value": "35",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 10.225006103515625,
+            "offsetX": 108.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 11.612495422363281,
+            "offsetX": 13.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 384.1125030517578,
+            "offsetX": 508.1999988555908,
+            "duration": 2193.699999999255
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 1.6124954223632812,
+            "offsetX": 11.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/12-WAY"
+                ],
+                [
+                    "div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[5]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "text/12-Way"
+                ]
+            ],
+            "offsetY": 16.76251220703125,
+            "offsetX": 66.39996337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 145.1125030517578,
+            "offsetX": 248.19999885559082,
+            "duration": 2464.900000002235
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 202.1125030517578,
+            "offsetX": 419.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 238.1125030517578,
+            "offsetX": 414.1999988555908,
+            "duration": 9261.39999999851
+        },
+        {
+            "type": "change",
+            "value": "12",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 2.024993896484375,
+            "offsetX": 38.20001220703125,
+            "duration": 392.80000000074506
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 4.612495422363281,
+            "offsetX": 4.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 280.1125030517578,
+            "offsetX": 307.1999988555908,
+            "duration": 30769.900000002235
+        },
+        {
+            "type": "change",
+            "value": "2",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 7.612495422363281,
+            "offsetX": 6.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 304.1125030517578,
+            "offsetX": 334.1999988555908,
+            "duration": 35266.300000000745
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 523.1125030517578,
+            "offsetX": 441.1999988555908,
+            "duration": 365.80000000074506
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 261.1125030517578,
+            "offsetX": 270.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 25.212501525878906,
+            "offsetX": 5.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 392.1125030517578,
+            "offsetX": 389.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 606.1125030517578,
+            "offsetX": 228.19999885559082,
+            "duration": 428.1000000014901
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 9.212501525878906,
+            "offsetX": 23.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 75.11250305175781,
+            "offsetX": 397.1999988555908,
+            "duration": 462.3999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 5.612495422363281,
+            "offsetX": 10.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 124.11250305175781,
+            "offsetX": 429.1999988555908,
+            "duration": 2214.60000000149
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 7.212501525878906,
+            "offsetX": 19.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 106.11250305175781,
+            "offsetX": 378.1999988555908,
+            "duration": 862
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 7.212501525878906,
+            "offsetX": 14.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 379.1125030517578,
+            "offsetX": 326.1999988555908,
+            "duration": 10929
+        },
+        {
+            "type": "change",
+            "value": "51",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 4.024993896484375,
+            "offsetX": 155.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 8.612495422363281,
+            "offsetX": 4.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 280.1125030517578,
+            "offsetX": 321.1999988555908,
+            "duration": 17656.599999997765
+        },
+        {
+            "type": "change",
+            "value": "22",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 9.024993896484375,
+            "offsetX": 67.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 308.1125030517578,
+            "offsetX": 314.1999988555908,
+            "duration": 1364.300000000745
+        },
+        {
+            "type": "change",
+            "value": "8",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 5.024993896484375,
+            "offsetX": 26.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 285.1125030517578,
+            "offsetX": 307.1999988555908,
+            "duration": 4955.5
+        },
+        {
+            "type": "change",
+            "value": "2",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 272.1125030517578,
+            "offsetX": 309.1999988555908,
+            "duration": 2924
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 5.27496337890625,
+            "offsetX": 145.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.mt-auto span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button/span"
+                ],
+                [
+                    "pierce/div.mt-auto span"
+                ],
+                [
+                    "text/Copy"
+                ]
+            ],
+            "offsetY": 8.67498779296875,
+            "offsetX": 19.4124755859375
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 21.27496337890625,
+            "offsetX": 100.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 21.27496337890625,
+            "offsetX": 100.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "doubleClick",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 21.27496337890625,
+            "offsetX": 100.79998779296875
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 68.11250305175781,
+            "offsetX": 331.1999988555908,
+            "duration": 8545.5
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 17.27496337890625,
+            "offsetX": 109.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 17.27496337890625,
+            "offsetX": 109.79998779296875
+        },
+        {
+            "type": "doubleClick",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 17.27496337890625,
+            "offsetX": 109.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 97.11250305175781,
+            "offsetX": 94.19999885559082,
+            "duration": 2417
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 52.11250305175781,
+            "offsetX": 156.19999885559082,
+            "duration": 3353.10000000149
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 123.11250305175781,
+            "offsetX": 146.19999885559082,
+            "duration": 3067.39999999851
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 132.1125030517578,
+            "offsetX": 210.19999885559082,
+            "duration": 6280.60000000149
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/FREE"
+                ],
+                [
+                    "div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[1]"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "text/Free"
+                ]
+            ],
+            "offsetY": 16.46246337890625,
+            "offsetX": 56.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 276.1125030517578,
+            "offsetX": 443.1999988555908,
+            "duration": 5621.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 13.27496337890625,
+            "offsetX": 75.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 13.27496337890625,
+            "offsetX": 75.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 9.212501525878906,
+            "offsetX": 5.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/12-WAY"
+                ],
+                [
+                    "div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[5]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "text/12-Way"
+                ]
+            ],
+            "offsetY": 25.76251220703125,
+            "offsetX": 62.39996337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 120.11250305175781,
+            "offsetX": 130.19999885559082,
+            "duration": 2899.39999999851
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 61.11250305175781,
+            "offsetX": 97.19999885559082
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 59.11250305175781,
+            "offsetX": 99.19999885559082,
+            "duration": 1112.8999999985099
+        },
+        {
+            "type": "change",
+            "value": "5",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 11.024993896484375,
+            "offsetX": 15.20001220703125,
+            "duration": 693.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/FREE"
+                ],
+                [
+                    "div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[1]"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "text/Free"
+                ]
+            ],
+            "offsetY": 10.46246337890625,
+            "offsetX": 51.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 274.1125030517578,
+            "offsetX": 320.1999988555908,
+            "duration": 2125.7000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 208.1125030517578,
+            "offsetX": 275.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 204.1125030517578,
+            "offsetX": 270.1999988555908,
+            "duration": 902.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 10.27496337890625,
+            "offsetX": 72.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 10.27496337890625,
+            "offsetX": 72.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 11.212501525878906,
+            "offsetX": 21.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 114.11250305175781,
+            "offsetX": 69.19999885559082,
+            "duration": 1827.1000000014901
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 5.612495422363281,
+            "offsetX": 8.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/12-WAY"
+                ],
+                [
+                    "div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[5]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div:nth-of-type(4) button:nth-of-type(5)"
+                ],
+                [
+                    "text/12-Way"
+                ]
+            ],
+            "offsetY": 8.76251220703125,
+            "offsetX": 13.39996337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 167.1125030517578,
+            "offsetX": 196.19999885559082,
+            "duration": 7717.400000002235
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 178.1125030517578,
+            "offsetX": 222.19999885559082,
+            "duration": 9578.20000000298
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/FREE"
+                ],
+                [
+                    "div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[1]"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "text/Free"
+                ]
+            ],
+            "offsetY": 14.46246337890625,
+            "offsetX": 64.79998779296875
+        },
+        {
+            "type": "change",
+            "value": "3",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 10.024993896484375,
+            "offsetX": 11.20001220703125,
+            "duration": 666.1999999992549
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 272.1125030517578,
+            "offsetX": 334.1999988555908,
+            "duration": 5987.10000000149
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 281.1125030517578,
+            "offsetX": 321.1999988555908
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "v"
+        },
+        {
+            "type": "keyUp",
+            "key": "v",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SYMMETRY MIRROR",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div > div.flex-1 > div div:nth-of-type(4) span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/h5/span"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(4) span"
+                ],
+                [
+                    "text/Symmetry Mirror"
+                ]
+            ],
+            "offsetY": 5.45001220703125,
+            "offsetX": 8.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "z"
+        },
+        {
+            "type": "keyUp",
+            "key": "z",
+            "target": "main"
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 295.1125030517578,
+            "offsetX": 394.1999988555908,
+            "duration": 8913.10000000149
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 21.27496337890625,
+            "offsetX": 39.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "`"
+        },
+        {
+            "type": "keyUp",
+            "key": "`",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/COPY"
+                ],
+                [
+                    "div.mt-auto > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[6]/button"
+                ],
+                [
+                    "pierce/div.mt-auto > button"
+                ]
+            ],
+            "offsetY": 14.27496337890625,
+            "offsetX": 93.79998779296875
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 9.212501525878906,
+            "offsetX": 22.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/STAMP"
+                ],
+                [
+                    "div.gap-1 > button:nth-of-type(8)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[8]"
+                ],
+                [
+                    "pierce/div.gap-1 > button:nth-of-type(8)"
+                ]
+            ],
+            "offsetY": 20.79999542236328,
+            "offsetX": 63.25
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 115.11250305175781,
+            "offsetX": 302.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 104.11250305175781,
+            "offsetX": 347.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 104.11250305175781,
+            "offsetX": 347.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 108.11250305175781,
+            "offsetX": 342.1999988555908,
+            "duration": 498
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/🍀"
+                ],
+                [
+                    "div.bg-purple-50 button:nth-of-type(9)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[9]"
+                ],
+                [
+                    "pierce/div.bg-purple-50 button:nth-of-type(9)"
+                ],
+                [
+                    "text/🍀"
+                ]
+            ],
+            "offsetY": 22.86248779296875,
+            "offsetX": 24.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 268.1125030517578,
+            "offsetX": 498.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div div.space-y-3 > div:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.space-y-3 > div:nth-of-type(1)"
+                ],
+                [
+                    "text/Stroke Size3px3"
+                ]
+            ],
+            "offsetY": 29.412490844726562,
+            "offsetX": 83.20001220703125
+        },
+        {
+            "type": "change",
+            "value": "80",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 31.024993896484375,
+            "offsetX": 273.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 192.1125030517578,
+            "offsetX": 294.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 300.1125030517578,
+            "offsetX": 298.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 312.1125030517578,
+            "offsetX": 396.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/12-WAY"
+                ],
+                [
+                    "div:nth-of-type(5) button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[5]"
+                ],
+                [
+                    "pierce/div:nth-of-type(5) button:nth-of-type(5)"
+                ],
+                [
+                    "text/12-Way"
+                ]
+            ],
+            "offsetY": 21.17498779296875,
+            "offsetX": 68.39996337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 78.11250305175781,
+            "offsetX": 563.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/FILL",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "button:nth-of-type(9) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[9]/span"
+                ],
+                [
+                    "pierce/button:nth-of-type(9) > span"
+                ],
+                [
+                    "text/Fill"
+                ]
+            ],
+            "offsetY": 14.199996948242188,
+            "offsetX": 2.837493896484375
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 111.11250305175781,
+            "offsetX": 174.19999885559082
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/PICKER"
+                ],
+                [
+                    "div.h-12 button:nth-of-type(10)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[10]"
+                ],
+                [
+                    "pierce/div.h-12 button:nth-of-type(10)"
+                ]
+            ],
+            "offsetY": 20.79999542236328,
+            "offsetX": 26.574981689453125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 9.612495422363281,
+            "offsetX": 3.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/MARKER",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[3]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "text/Marker"
+                ]
+            ],
+            "offsetY": 1.1999969482421875,
+            "offsetX": 39.91249084472656
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 301.1125030517578,
+            "offsetX": 361.1999988555908,
+            "duration": 1690.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/FREE"
+                ],
+                [
+                    "div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[4]/div/button[1]"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(4) button:nth-of-type(1)"
+                ],
+                [
+                    "text/Free"
+                ]
+            ],
+            "offsetY": 22.46246337890625,
+            "offsetX": 48.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 9.212501525878906,
+            "offsetX": 23.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 353.1125030517578,
+            "offsetX": 374.1999988555908,
+            "duration": 712.4000000022352
+        },
+        {
+            "type": "change",
+            "value": "29",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 4.024993896484375,
+            "offsetX": 89.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 6.212501525878906,
+            "offsetX": 15.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 218.1125030517578,
+            "offsetX": 294.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 200.1125030517578,
+            "offsetX": 358.1999988555908,
+            "duration": 2762.7000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 7.612495422363281,
+            "offsetX": 6.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/V"
+                ],
+                [
+                    "div:nth-of-type(5) button:nth-of-type(3)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[3]"
+                ],
+                [
+                    "pierce/div:nth-of-type(5) button:nth-of-type(3)"
+                ]
+            ],
+            "offsetY": 18.07501220703125,
+            "offsetX": 28.52496337890625
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Alt"
+        },
+        {
+            "type": "keyUp",
+            "key": "Tab",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SMUDGE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[6]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "text/Smudge"
+                ]
+            ],
+            "offsetY": 5.1999969482421875,
+            "offsetX": 0.11248779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 291.1125030517578,
+            "offsetX": 502.1999988555908,
+            "duration": 598.6000000014901
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div > div:nth-of-type(2) div:nth-of-type(37) p.text-\\[11px\\]"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/aside/div[2]/div/div[2]/div/div[37]/div/div[2]/p[1]"
+                ],
+                [
+                    "pierce/div.flex-1 > div > div:nth-of-type(2) div:nth-of-type(37) p.text-\\[11px\\]"
+                ]
+            ],
+            "offsetY": 10.774993896484375,
+            "offsetX": 41.199951171875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 152.1125030517578,
+            "offsetX": 451.1999988555908,
+            "duration": 4466.099999997765
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 152.1125030517578,
+            "offsetX": 451.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 152.1125030517578,
+            "offsetX": 451.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 152.1125030517578,
+            "offsetX": 451.1999988555908
+        },
+        {
+            "type": "doubleClick",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 201.1125030517578,
+            "offsetX": 427.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 201.1125030517578,
+            "offsetX": 427.1999988555908
+        },
+        {
+            "type": "doubleClick",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 201.1125030517578,
+            "offsetX": 427.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 160.1125030517578,
+            "offsetX": 421.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 160.1125030517578,
+            "offsetX": 421.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 160.1125030517578,
+            "offsetX": 421.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 147.1125030517578,
+            "offsetX": 440.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 256.1125030517578,
+            "offsetX": 447.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 256.1125030517578,
+            "offsetX": 447.1999988555908
+        },
+        {
+            "type": "doubleClick",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 196.1125030517578,
+            "offsetX": 431.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 213.1125030517578,
+            "offsetX": 380.1999988555908,
+            "duration": 679.3000000007451
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 115.11250305175781,
+            "offsetX": 381.1999988555908,
+            "duration": 2430
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Light Mode"
+                ],
+                [
+                    "button.bg-amber-300"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/div[3]/button[2]"
+                ],
+                [
+                    "pierce/button.bg-amber-300"
+                ]
+            ],
+            "offsetY": 14.612500190734863,
+            "offsetX": 22
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Control"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/#alchemy-lounge 1"
+                ],
+                [
+                    "#root > div > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/button"
+                ],
+                [
+                    "pierce/#root > div > button"
+                ],
+                [
+                    "text/#alchemy-lounge1"
+                ]
+            ],
+            "offsetY": 18.706565856933594,
+            "offsetX": 809.8699207305908
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "Shift"
+        },
+        {
+            "type": "keyUp",
+            "key": "Shift",
+            "target": "main"
+        },
+        {
+            "type": "keyDown",
+            "target": "main",
+            "key": "r"
+        },
+        {
+            "type": "keyUp",
+            "key": "r",
+            "target": "main",
+            "assertedEvents": [
+                {
+                    "type": "navigation",
+                    "url": "https://docs.google.com/offline/extension/frame?ouid=u98ce094e17e7f1",
+                    "title": "Infinite Colour Craft"
+                }
+            ]
+        },
+        {
+            "type": "keyUp",
+            "key": "Control",
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/STUDIO",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "nav > button:nth-of-type(2) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/nav/button[2]/span"
+                ],
+                [
+                    "pierce/nav > button:nth-of-type(2) > span"
+                ],
+                [
+                    "text/Studio"
+                ]
+            ],
+            "offsetY": 14,
+            "offsetX": 25.1875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 263.1125030517578,
+            "offsetX": 349.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 260.1125030517578,
+            "offsetX": 448.1999988555908,
+            "duration": 834.1999999992549
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SMUDGE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[6]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "text/Smudge"
+                ]
+            ],
+            "offsetY": 9.199996948242188,
+            "offsetX": 24.11248779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div div.space-y-3 > div:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.space-y-3 > div:nth-of-type(1)"
+                ],
+                [
+                    "text/Stroke Size14px14"
+                ]
+            ],
+            "offsetY": 22.61248779296875,
+            "offsetX": 186.20001220703125,
+            "duration": 365.8999999985099
+        },
+        {
+            "type": "change",
+            "value": "61",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "target": "main"
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[2]/div[1]/input"
+                ],
+                [
+                    "pierce/#root > div > div.flex-1 > div > div.flex-1 > div.w-full div:nth-of-type(1) > input"
+                ]
+            ],
+            "offsetY": 0.225006103515625,
+            "offsetX": 186.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 363.1125030517578,
+            "offsetX": 418.1999988555908,
+            "duration": 16914.699999999255
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div > div:nth-of-type(1) div:nth-of-type(5) span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/aside/div[2]/div/div[1]/div/div[5]/div/div[1]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div > div:nth-of-type(1) div:nth-of-type(5) span"
+                ]
+            ],
+            "offsetY": 5.07501220703125,
+            "offsetX": 7.45001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 611.1125030517578,
+            "offsetX": 511.1999988555908,
+            "duration": 7900.599999997765
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 467.1125030517578,
+            "offsetX": 387.1999988555908,
+            "duration": 814.3000000044703
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div.flex-1 > div > div:nth-of-type(1) div:nth-of-type(6) p.text-\\[9px\\]"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/aside/div[2]/div/div[1]/div/div[6]/div/div[2]/p[2]"
+                ],
+                [
+                    "pierce/div.flex-1 > div > div:nth-of-type(1) div:nth-of-type(6) p.text-\\[9px\\]"
+                ],
+                [
+                    "text/#87CEEB"
+                ]
+            ],
+            "offsetY": 9.95001220703125,
+            "offsetX": 0.4000244140625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 277.1125030517578,
+            "offsetX": 510.1999988555908,
+            "duration": 1786.1999999955297
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 277.1125030517578,
+            "offsetX": 510.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 304.1125030517578,
+            "offsetX": 308.1999988555908
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SPRAY",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(4) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[4]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(4) > span"
+                ],
+                [
+                    "text/Spray"
+                ]
+            ],
+            "offsetY": 8.199996948242188,
+            "offsetX": 14.587493896484375
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 398.1125030517578,
+            "offsetX": 520.1999988555908,
+            "duration": 2756.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SMUDGE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[6]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div button:nth-of-type(6) > span"
+                ],
+                [
+                    "text/Smudge"
+                ]
+            ],
+            "offsetY": 11.199996948242188,
+            "offsetX": 17.11248779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 155.1125030517578,
+            "offsetX": 370.1999988555908,
+            "duration": 2770.2999999970198
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 13.212501525878906,
+            "offsetX": 21.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "header div:nth-of-type(3)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/div[3]"
+                ],
+                [
+                    "pierce/header div:nth-of-type(3)"
+                ]
+            ],
+            "offsetY": 7.9375,
+            "offsetX": 94.2999267578125,
+            "duration": 569.3999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-slate-800 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/div[3]/button[2]/svg"
+                ],
+                [
+                    "pierce/button.bg-slate-800 > svg"
+                ]
+            ],
+            "offsetY": 0.012498855590820312,
+            "offsetX": 2.4000244140625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/GRIMOIRE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "header button:nth-of-type(4) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/nav/button[4]/span"
+                ],
+                [
+                    "pierce/header button:nth-of-type(4) > span"
+                ],
+                [
+                    "text/Grimoire"
+                ]
+            ],
+            "offsetY": 11,
+            "offsetX": 16.48748779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(2) > div.h-20"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div/div[2]/div[2]/div[1]"
+                ],
+                [
+                    "pierce/div:nth-of-type(2) > div.h-20"
+                ],
+                [
+                    "text/🟢Common"
+                ]
+            ],
+            "offsetY": 74.625,
+            "offsetX": 97.19998168945312
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/USE IN STUDIO"
+                ],
+                [
+                    "div.flex-1 button.bg-yellow-300"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div/div[4]/button[2]"
+                ],
+                [
+                    "pierce/div.flex-1 button.bg-yellow-300"
+                ]
+            ],
+            "offsetY": 20.024993896484375,
+            "offsetX": 24.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/DODGE"
+                ],
+                [
+                    "div.bg-blue-50\\/70 button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[5]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 button:nth-of-type(5)"
+                ],
+                [
+                    "text/Dodge"
+                ]
+            ],
+            "offsetY": 17.8499755859375,
+            "offsetX": 46.875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/Clear Canvas"
+                ],
+                [
+                    "button.bg-red-400"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]"
+                ],
+                [
+                    "pierce/button.bg-red-400"
+                ]
+            ],
+            "offsetY": 25.212501525878906,
+            "offsetX": 9.92498779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 337.1125030517578,
+            "offsetX": 430.1999988555908,
+            "duration": 1241.5
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/OVERLAY"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(4)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[4]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(4)"
+                ],
+                [
+                    "text/Overlay"
+                ]
+            ],
+            "offsetY": 12.8499755859375,
+            "offsetX": 11.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 472.1125030517578,
+            "offsetX": 445.1999988555908,
+            "duration": 1303.3000000044703
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/MULTIPLY"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(2)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[2]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(2)"
+                ],
+                [
+                    "text/Multiply"
+                ]
+            ],
+            "offsetY": 15.45001220703125,
+            "offsetX": 20.875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 246.1125030517578,
+            "offsetX": 342.1999988555908,
+            "duration": 1507
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/SCREEN"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(3)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[3]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(3)"
+                ],
+                [
+                    "text/Screen"
+                ]
+            ],
+            "offsetY": 2.45001220703125,
+            "offsetX": 32.5374755859375
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 334.1125030517578,
+            "offsetX": 286.1999988555908,
+            "duration": 3006.60000000149
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/MARKER",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[1]/button[3]/span"
+                ],
+                [
+                    "pierce/div.flex-1 > div div.gap-1 > button:nth-of-type(3) > span"
+                ],
+                [
+                    "text/Marker"
+                ]
+            ],
+            "offsetY": 3.1999969482421875,
+            "offsetX": 25.912490844726562
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 250.1125030517578,
+            "offsetX": 198.19999885559082,
+            "duration": 902.2999999970198
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/MULTIPLY"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(2)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[2]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(2)"
+                ],
+                [
+                    "text/Multiply"
+                ]
+            ],
+            "offsetY": 8.45001220703125,
+            "offsetX": 41.875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 371.1125030517578,
+            "offsetX": 480.1999988555908,
+            "duration": 746.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/OVERLAY"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(4)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[4]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(1) button:nth-of-type(4)"
+                ],
+                [
+                    "text/Overlay"
+                ]
+            ],
+            "offsetY": 10.8499755859375,
+            "offsetX": 25.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 220.1125030517578,
+            "offsetX": 302.1999988555908,
+            "duration": 862
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/DODGE"
+                ],
+                [
+                    "div.bg-blue-50\\/70 button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[1]/div/button[5]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 button:nth-of-type(5)"
+                ],
+                [
+                    "text/Dodge"
+                ]
+            ],
+            "offsetY": 16.8499755859375,
+            "offsetX": 37.875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 156.1125030517578,
+            "offsetX": 184.19999885559082,
+            "duration": 949.8999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 0.1125030517578125,
+            "offsetX": 261.1999988555908,
+            "duration": 2647.60000000149
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/OFF"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[2]/div/button[1]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(1)"
+                ],
+                [
+                    "text/Off"
+                ]
+            ],
+            "offsetY": 15.25,
+            "offsetX": 32.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 465.1125030517578,
+            "offsetX": 541.1999988555908,
+            "duration": 739.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/LOW"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(2)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[2]/div/button[2]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(2)"
+                ],
+                [
+                    "text/Low"
+                ]
+            ],
+            "offsetY": 5.25,
+            "offsetX": 41.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 368.1125030517578,
+            "offsetX": 445.1999988555908,
+            "duration": 774.1999999955297
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/HIGH"
+                ],
+                [
+                    "div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(4)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[2]/div/button[4]"
+                ],
+                [
+                    "pierce/div.bg-blue-50\\/70 > div:nth-of-type(2) button:nth-of-type(4)"
+                ],
+                [
+                    "text/High"
+                ]
+            ],
+            "offsetY": 21.25,
+            "offsetX": 23.20001220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 312.1125030517578,
+            "offsetX": 417.1999988555908,
+            "duration": 990.7999999970198
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/ON"
+                ],
+                [
+                    "div.pt-1 > button"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[3]/div[3]/button"
+                ],
+                [
+                    "pierce/div.pt-1 > button"
+                ],
+                [
+                    "text/ON"
+                ]
+            ],
+            "offsetY": 7.8499755859375,
+            "offsetX": 20.57501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "button.bg-red-400 > svg"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[1]/div[2]/button[6]/svg"
+                ],
+                [
+                    "pierce/button.bg-red-400 > svg"
+                ]
+            ],
+            "offsetY": 7.612495422363281,
+            "offsetX": 3.32501220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 558.1125030517578,
+            "offsetX": 232.19999885559082,
+            "duration": 678.6999999955297
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div > div.flex-1 > div div:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]"
+                ],
+                [
+                    "pierce/div > div.flex-1 > div div:nth-of-type(5)"
+                ],
+                [
+                    "text/Canvas PaperWDVGG"
+                ]
+            ],
+            "offsetY": 39.0625,
+            "offsetX": 140.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/V"
+                ],
+                [
+                    "div:nth-of-type(5) button:nth-of-type(3)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[3]"
+                ],
+                [
+                    "pierce/div:nth-of-type(5) button:nth-of-type(3)"
+                ]
+            ],
+            "offsetY": 17.07501220703125,
+            "offsetX": 27.52496337890625
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 504.1125030517578,
+            "offsetX": 349.1999988555908,
+            "duration": 651.8000000044703
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(5) button:nth-of-type(4)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[4]"
+                ],
+                [
+                    "pierce/div:nth-of-type(5) button:nth-of-type(4)"
+                ]
+            ],
+            "offsetY": 13.07501220703125,
+            "offsetX": 21.88751220703125
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 556.1125030517578,
+            "offsetX": 304.1999988555908,
+            "duration": 583.8999999985099
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 484.1125030517578,
+            "offsetX": 124.19999885559082,
+            "duration": 352.20000000298023
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "div:nth-of-type(5) button:nth-of-type(5)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[5]"
+                ],
+                [
+                    "pierce/div:nth-of-type(5) button:nth-of-type(5)"
+                ]
+            ],
+            "offsetY": 8.07501220703125,
+            "offsetX": 9.25
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 539.1125030517578,
+            "offsetX": 301.1999988555908,
+            "duration": 570.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/W"
+                ],
+                [
+                    "div.flex-1 > div div:nth-of-type(5) button:nth-of-type(1)"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[2]/div[5]/div/button[1]"
+                ],
+                [
+                    "pierce/div.flex-1 > div div:nth-of-type(5) button:nth-of-type(1)"
+                ]
+            ],
+            "offsetY": 15.07501220703125,
+            "offsetX": 26.79998779296875
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "canvas.cursor-crosshair"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/div[2]/div/div[2]/div[1]/div/canvas[1]"
+                ],
+                [
+                    "pierce/canvas.cursor-crosshair"
+                ]
+            ],
+            "offsetY": 409.1125030517578,
+            "offsetX": 150.19999885559082,
+            "duration": 516.2000000029802
+        },
+        {
+            "type": "click",
+            "target": "main",
+            "selectors": [
+                [
+                    "aria/GRIMOIRE",
+                    "aria/[role=\"generic\"]"
+                ],
+                [
+                    "header button:nth-of-type(4) > span"
+                ],
+                [
+                    "xpath///*[@id=\"root\"]/div/header/div/nav/button[4]/span"
+                ],
+                [
+                    "pierce/header button:nth-of-type(4) > span"
+                ],
+                [
+                    "text/Grimoire"
+                ]
+            ],
+            "offsetY": 5,
+            "offsetX": 8.48748779296875
+        }
+    ]
+}

@@ -1,7 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { BoardTile, ColorItem, DailyChallenge, DailyChallengeState } from '../types';
-import { blendColors } from '../utils/colorEngine';
+import { blendColors, hexToRgb, rgbToHsl } from '../utils/colorEngine';
 import { audioSynth } from '../utils/audioSynth';
+import { 
+  collaborationService, 
+  RemoteTileMove, 
+  RemoteTileFuse 
+} from '../services/collaborationService';
 import { 
   Copy, 
   Trash2, 
@@ -11,7 +16,8 @@ import {
   Flame, 
   Layers,
   Calendar,
-  Zap
+  Zap,
+  MousePointer2
 } from 'lucide-react';
 
 interface WorkspaceBoardProps {
@@ -45,6 +51,7 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
   const [dragOffset, setDragOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [targetFuseTileId, setTargetFuseTileId] = useState<string | null>(null);
   const [maxZIndex, setMaxZIndex] = useState(10);
+  const [isAligning, setIsAligning] = useState<boolean>(false);
   const [activeParticles, setActiveParticles] = useState<{
     id: string;
     x: number;
@@ -53,6 +60,98 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
     name: string;
     emoji: string;
   }[]>([]);
+  const [remoteCursors, setRemoteCursors] = useState<{
+    id: string;
+    name: string;
+    color: string;
+    x: number;
+    y: number;
+  }[]>([]);
+  const lastTileMoveBroadcastRef = useRef<number>(0);
+  const lastCursorBroadcastRef = useRef<number>(0);
+
+  // Subscribe to Real-Time Collaboration Events (Supabase / Relay)
+  useEffect(() => {
+    const handleRemoteTileMove = (data: RemoteTileMove) => {
+      setTiles((prev) =>
+        prev.map((t) =>
+          t.id === data.tileId ? { ...t, x: data.x, y: data.y, zIndex: data.zIndex } : t
+        )
+      );
+    };
+
+    const handleRemoteTileFuse = (data: RemoteTileFuse) => {
+      triggerFusionParticles(
+        data.x,
+        data.y,
+        data.resultingColorHex,
+        data.resultingColorName,
+        data.resultingColorEmoji
+      );
+      audioSynth.playFuse(180);
+
+      // Auto-unlock if unknown locally
+      if (!unlockedColorsMap.has(data.resultingColorHex)) {
+        const rgb = hexToRgb(data.resultingColorHex);
+        const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+        const newColor: ColorItem = {
+          id: data.resultingColorHex,
+          name: data.resultingColorName,
+          hex: data.resultingColorHex,
+          rgb,
+          hsl,
+          emoji: data.resultingColorEmoji,
+          discoveredAt: Date.now(),
+          rarity: 'Rare',
+          category: 'Secondary',
+        };
+        onDiscoverNewColor(newColor);
+      }
+    };
+
+    const handleRemoteTileSpawn = (tile: BoardTile) => {
+      setTiles((prev) => {
+        if (prev.some((t) => t.id === tile.id)) return prev;
+        return [...prev, tile];
+      });
+    };
+
+    const handleRemoteTileDelete = (data: { tileId: string }) => {
+      setTiles((prev) => prev.filter((t) => t.id !== data.tileId));
+    };
+
+    const handleRemoteCursor = (data: any) => {
+      if (data.tab === 'board' && data.user) {
+        setRemoteCursors((prev) => {
+          const filtered = prev.filter((c) => c.id !== data.user.id);
+          return [
+            ...filtered,
+            {
+              id: data.user.id,
+              name: data.user.name,
+              color: data.user.color,
+              x: data.x,
+              y: data.y,
+            },
+          ];
+        });
+      }
+    };
+
+    collaborationService.on('tile_move', handleRemoteTileMove);
+    collaborationService.on('tile_fuse', handleRemoteTileFuse);
+    collaborationService.on('tile_spawn', handleRemoteTileSpawn);
+    collaborationService.on('tile_delete', handleRemoteTileDelete);
+    collaborationService.on('cursor', handleRemoteCursor);
+
+    return () => {
+      collaborationService.off('tile_move', handleRemoteTileMove);
+      collaborationService.off('tile_fuse', handleRemoteTileFuse);
+      collaborationService.off('tile_spawn', handleRemoteTileSpawn);
+      collaborationService.off('tile_delete', handleRemoteTileDelete);
+      collaborationService.off('cursor', handleRemoteCursor);
+    };
+  }, [unlockedColorsMap, onDiscoverNewColor]);
 
   // Spawn visual particle explosion on fusion
   const triggerFusionParticles = (x: number, y: number, colorHex: string, colorName = 'Pigment', colorEmoji = '✨') => {
@@ -86,6 +185,17 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
   };
 
   const handlePointerMove = (e: React.PointerEvent) => {
+    if (boardRef.current) {
+      const boardRect = boardRef.current.getBoundingClientRect();
+      const relX = e.clientX - boardRect.left;
+      const relY = e.clientY - boardRect.top;
+      const now = Date.now();
+      if (now - lastCursorBroadcastRef.current > 50) {
+        lastCursorBroadcastRef.current = now;
+        collaborationService.sendCursor(relX, relY, 'board');
+      }
+    }
+
     if (!activeDragId || !boardRef.current) return;
 
     const boardRect = boardRef.current.getBoundingClientRect();
@@ -123,6 +233,18 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
       setIsTrashOver(isOverTrash);
     }
 
+    // Broadcast tile move throttled (~30ms)
+    const now = Date.now();
+    if (now - lastTileMoveBroadcastRef.current > 30) {
+      lastTileMoveBroadcastRef.current = now;
+      collaborationService.sendTileMove({
+        tileId: activeDragId,
+        x: newX,
+        y: newY,
+        zIndex: maxZIndex,
+      });
+    }
+
     // Move current tile
     setTiles((prev) =>
       prev.map((t) => (t.id === activeDragId ? { ...t, x: newX, y: newY } : t))
@@ -147,6 +269,7 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
         e.clientY <= trashRect.bottom;
 
       if (isOverTrash) {
+        collaborationService.sendTileDelete(draggedTile.id);
         setTiles((prev) => prev.filter((t) => t.id !== activeDragId));
         audioSynth.playTrash();
         setIsTrashOver(false);
@@ -196,6 +319,17 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
         // Visual particles at center of target tile
         triggerFusionParticles(targetTile.x + 70, targetTile.y + 22, resultColor.hex, resultColor.name, resultColor.emoji);
 
+        // Broadcast fusion to peers
+        collaborationService.sendTileFuse({
+          parent1Id: draggedTile.id,
+          parent2Id: targetTile.id,
+          resultingColorHex: resultColor.hex,
+          resultingColorName: resultColor.name,
+          resultingColorEmoji: resultColor.emoji,
+          x: targetTile.x + 70,
+          y: targetTile.y + 22,
+        });
+
         // Check if discovered
         onDiscoverNewColor(resultColor);
 
@@ -226,6 +360,13 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
       // Clamp tile within board bounds
       const clampedX = Math.max(10, Math.min(boardRect.width - 130, draggedTile.x));
       const clampedY = Math.max(10, Math.min(boardRect.height - 50, draggedTile.y));
+
+      collaborationService.sendTileMove({
+        tileId: draggedTile.id,
+        x: clampedX,
+        y: clampedY,
+        zIndex: draggedTile.zIndex,
+      });
 
       setTiles((prev) =>
         prev.map((t) => (t.id === draggedTile.id ? { ...t, x: clampedX, y: clampedY } : t))
@@ -296,26 +437,78 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
     audioSynth.playTrash();
   };
 
-  // Auto align tiles in a neat grid
-  const handleAutoAlign = () => {
+  // Auto align tiles in a neat, non-overlapping grid that respects header & UI controls
+  const handleAutoAlign = useCallback(() => {
     if (!boardRef.current) return;
-    const padding = 20;
-    const colWidth = 140;
-    const rowHeight = 60;
-    const cols = Math.floor((boardRef.current.clientWidth - padding * 2) / colWidth) || 1;
+    const boardWidth = boardRef.current.clientWidth || 800;
+    const boardHeight = boardRef.current.clientHeight || 600;
 
-    setTiles((prev) =>
-      prev.map((tile, i) => {
+    // Start comfortably below the top control bar (y: 82) and leave clean margin on left (x: 28)
+    const startX = 28;
+    const startY = 82;
+    const minColWidth = 180;
+    const preferredColWidth = 205;
+    const rowHeight = 54;
+    const paddingBottom = 24;
+
+    const availableWidth = Math.max(160, boardWidth - startX * 2);
+    const availableHeight = Math.max(100, boardHeight - startY - paddingBottom);
+
+    // Trigger smooth layout glide transition for 350ms
+    setIsAligning(true);
+    setTimeout(() => setIsAligning(false), 360);
+
+    setTiles((prev) => {
+      if (prev.length === 0) return prev;
+      const totalTiles = prev.length;
+
+      // Calculate max rows and cols that comfortably fit in board without clipping
+      const maxRowsThatFit = Math.max(1, Math.floor(availableHeight / rowHeight));
+      const maxColsThatFit = Math.max(1, Math.floor(availableWidth / minColWidth));
+
+      // Calculate natural columns based on preferred column width
+      let cols = Math.max(1, Math.floor(availableWidth / preferredColWidth));
+
+      // If rows would exceed screen height, expand columns up to maxColsThatFit
+      const rowsNeededAtCurrentCols = Math.ceil(totalTiles / cols);
+      if (rowsNeededAtCurrentCols > maxRowsThatFit && maxColsThatFit > cols) {
+        cols = Math.min(maxColsThatFit, Math.ceil(totalTiles / maxRowsThatFit));
+      }
+
+      // Compute actual column step (spacing)
+      const colStep = Math.min(
+        preferredColWidth,
+        Math.max(minColWidth, Math.floor(availableWidth / cols))
+      );
+
+      const alignedTiles = prev.map((tile, i) => {
         const col = i % cols;
         const row = Math.floor(i / cols);
+        const newX = Math.round(startX + col * colStep);
+        const newY = Math.round(startY + row * rowHeight);
+
         return {
           ...tile,
-          x: padding + col * colWidth,
-          y: padding + row * rowHeight,
+          x: newX,
+          y: newY,
         };
-      })
-    );
-  };
+      });
+
+      // Broadcast new positions to real-time collaboration peers
+      alignedTiles.forEach((t) => {
+        collaborationService.sendTileMove({
+          tileId: t.id,
+          x: t.x,
+          y: t.y,
+          zIndex: t.zIndex,
+        });
+      });
+
+      return alignedTiles;
+    });
+
+    audioSynth.playPop();
+  }, [setTiles]);
 
   // Keyboard Shortcuts for Workspace Board (A/R = Align, S = Spawn Starter, C/Del = Clear Board)
   useEffect(() => {
@@ -338,7 +531,6 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
         if (key === 'a' || key === 'r') {
           e.preventDefault();
           handleAutoAlign();
-          audioSynth.playPop();
           return;
         }
         if (key === 's') {
@@ -358,7 +550,7 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [onSpawnBaseSpectrum, setTiles]);
+  }, [handleAutoAlign, onSpawnBaseSpectrum, setTiles]);
 
   // Disable default browser touch gestures (pull-to-refresh, pinch-zoom, swipe scroll) on the board
   useEffect(() => {
@@ -426,12 +618,12 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
       </div>
 
       {/* Board Controls Overlay */}
-      <div className={`absolute top-4 left-4 z-20 flex items-center gap-2 border-2 p-1.5 shadow-[4px_4px_0px_0px_#000] ${
-        isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-black text-black'
+      <div className={`absolute top-4 left-4 z-20 flex items-center gap-2 border rounded-xl p-1.5 shadow-md ${
+        isDarkMode ? 'bg-slate-900/90 border-slate-700 text-white backdrop-blur-xs' : 'bg-white/95 border-slate-300 text-black backdrop-blur-xs'
       }`}>
         <button
           onClick={onSpawnBaseSpectrum}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-300 border-2 border-black text-xs font-black uppercase text-black shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all hover:bg-yellow-400"
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-yellow-300 rounded-lg border-2 border-slate-900 text-xs font-black uppercase text-black shadow-[2px_2px_0px_0px_rgba(15,23,42,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all hover:bg-yellow-400"
         >
           <Flame className="w-3.5 h-3.5 text-black fill-black" />
           <span>Spawn Base Spectrum</span>
@@ -441,8 +633,8 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
           <>
             <button
               onClick={handleAutoAlign}
-              className={`p-1.5 md:px-3 md:py-1.5 border-2 border-black transition-colors text-xs font-black uppercase flex items-center gap-1 shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
-                isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700 border-slate-700' : 'bg-white text-black hover:bg-slate-100'
+              className={`p-1.5 md:px-3 md:py-1.5 rounded-lg border-2 transition-colors text-xs font-black uppercase flex items-center gap-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+                isDarkMode ? 'bg-slate-800 text-white hover:bg-slate-700 border-slate-700' : 'bg-white text-black hover:bg-slate-100 border-slate-800'
               }`}
               title="Auto-Arrange Tiles into Grid"
             >
@@ -452,8 +644,8 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
 
             <button
               onClick={() => setTiles([])}
-              className={`p-1.5 border-2 border-black hover:bg-red-300 transition-colors text-xs font-black uppercase shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
-                isDarkMode ? 'bg-slate-800 text-white border-slate-700 hover:text-black' : 'bg-white text-black'
+              className={`p-1.5 rounded-lg border-2 hover:bg-red-300 transition-colors text-xs font-black uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,0.5)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
+                isDarkMode ? 'bg-slate-800 text-white border-slate-700 hover:text-black' : 'bg-white text-black border-slate-800'
               }`}
               title="Clear Board"
             >
@@ -526,7 +718,9 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
               transform: `translate3d(${tile.x}px, ${tile.y}px, 0px)`,
               zIndex: tile.zIndex,
             }}
-            className={`absolute top-0 left-0 cursor-grab active:cursor-grabbing group touch-none select-none transition-shadow ${
+            className={`absolute top-0 left-0 cursor-grab active:cursor-grabbing group touch-none select-none ${
+              isAligning ? 'transition-transform duration-300 ease-out' : 'transition-shadow'
+            } ${
               isDragging ? 'scale-105 opacity-90' : ''
             }`}
           >
@@ -543,37 +737,39 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
 
             {/* Tile Container */}
             <div
-              className={`relative z-10 flex items-center gap-2.5 px-3.5 py-2.5 border-2 border-black shadow-[4px_4px_0px_0px_#000] hover:shadow-[6px_6px_0px_0px_#000] hover:-translate-y-0.5 transition-all ${
-                isDarkMode ? 'bg-slate-900 border-slate-700 text-white shadow-[4px_4px_0px_0px_#1E293B]' : 'bg-white border-black text-black shadow-[4px_4px_0px_0px_#000]'
+              className={`relative z-10 flex items-center gap-2.5 px-3 py-2 rounded-lg border-2 select-none transition-all ${
+                isDarkMode
+                  ? 'bg-slate-900 border-slate-700 text-white shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] hover:border-slate-500'
+                  : 'bg-white border-slate-900 text-slate-900 shadow-[3px_3px_0px_0px_rgba(15,23,42,0.9)] hover:border-black'
               } ${
                 isTargetOfFusion
-                  ? 'animate-alchemy-target border-4 border-black bg-yellow-300 text-black shadow-[8px_8px_0px_0px_#000]'
-                  : ''
+                  ? 'animate-alchemy-target ring-2 ring-yellow-400 ring-offset-2 ring-offset-black bg-yellow-300 border-slate-950 text-black shadow-[5px_5px_0px_0px_#000] scale-105'
+                  : 'hover:-translate-y-0.5'
               } ${tile.isNew ? 'animate-tile-spawn' : ''}`}
             >
               {/* Color Swatch Box */}
               <div
-                className="w-5 h-5 border border-black shadow-[1px_1px_0px_0px_#000] flex items-center justify-center text-[10px] shrink-0"
+                className="w-5 h-5 rounded-md border border-black/30 dark:border-white/20 shadow-xs flex items-center justify-center text-[10px] shrink-0"
                 style={{ backgroundColor: tile.hex }}
               >
-                <span className="drop-shadow-sm">{tile.emoji}</span>
+                <span className="drop-shadow-xs">{tile.emoji}</span>
               </div>
 
               {/* Title */}
-              <span className={`text-xs font-black uppercase tracking-tight ${isDarkMode && !isTargetOfFusion ? 'text-white' : 'text-black'}`}>
+              <span className={`text-xs font-black uppercase tracking-tight ${isDarkMode && !isTargetOfFusion ? 'text-white' : 'text-slate-900'}`}>
                 {tile.name}
               </span>
 
               {/* Hover Actions Bar */}
-              <div className={`opacity-0 group-hover:opacity-100 flex items-center gap-1 ml-1 pl-1 border-l-2 transition-opacity ${
-                isDarkMode ? 'border-slate-700' : 'border-black'
+              <div className={`opacity-0 group-hover:opacity-100 flex items-center gap-1 ml-1 pl-1.5 border-l transition-opacity ${
+                isDarkMode ? 'border-slate-700' : 'border-slate-300'
               }`}>
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleDoubleClickTile(tile);
                   }}
-                  className={`p-1 border border-black ${isDarkMode ? 'text-white hover:bg-yellow-300 hover:text-black' : 'text-black hover:bg-yellow-300'}`}
+                  className={`p-1 rounded border transition-colors ${isDarkMode ? 'border-slate-700 text-white hover:bg-yellow-300 hover:text-black hover:border-black' : 'border-slate-300 text-slate-800 hover:bg-yellow-300 hover:border-black'}`}
                   title="Clone Tile"
                 >
                   <Copy className="w-3 h-3" />
@@ -583,7 +779,7 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
                     e.stopPropagation();
                     handleDeleteTile(tile.id);
                   }}
-                  className={`p-1 border border-black ${isDarkMode ? 'text-white hover:bg-red-400 hover:text-black' : 'text-black hover:bg-red-400'}`}
+                  className={`p-1 rounded border transition-colors ${isDarkMode ? 'border-slate-700 text-white hover:bg-red-400 hover:text-black hover:border-black' : 'border-slate-300 text-slate-800 hover:bg-red-400 hover:border-black'}`}
                   title="Remove Tile"
                 >
                   <Trash2 className="w-3 h-3" />
@@ -636,6 +832,28 @@ export const WorkspaceBoard: React.FC<WorkspaceBoardProps> = ({
             <span className="text-white">{p.name}</span>
             <Sparkles className="w-3.5 h-3.5 fill-yellow-300 text-yellow-300" />
           </div>
+        </div>
+      ))}
+
+      {/* Remote Collaborator Cursors */}
+      {remoteCursors.map((cursor) => (
+        <div
+          key={cursor.id}
+          className="absolute pointer-events-none z-40 transition-all duration-75 flex items-center gap-1.5"
+          style={{
+            transform: `translate3d(${cursor.x}px, ${cursor.y}px, 0)`,
+          }}
+        >
+          <MousePointer2
+            className="w-4 h-4 -rotate-45 drop-shadow-md"
+            style={{ color: cursor.color, fill: cursor.color }}
+          />
+          <span
+            className="text-[9px] font-bold px-1.5 py-0.5 rounded-md text-white shadow-sm border border-black/20 select-none whitespace-nowrap"
+            style={{ backgroundColor: cursor.color }}
+          >
+            {cursor.name}
+          </span>
         </div>
       ))}
     </main>

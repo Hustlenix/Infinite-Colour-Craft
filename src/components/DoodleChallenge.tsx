@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { predict } from '../utils/doodleNet';
 import type { DoodleModel } from '../utils/doodleNet';
-import { computePass, computeOutcome, ROUNDS, ROUND_SECONDS } from '../utils/challengeLogic';
-import { Target, Eraser, Wand2, Loader2, Brain, Trophy, RefreshCw, Clock, CheckCircle2, XCircle } from 'lucide-react';
+import { computeOutcome, ROUNDS, ROUND_SECONDS } from '../utils/challengeLogic';
+import { preprocessCanvas } from '../utils/doodlePreprocess';
+import { Target, Eraser, Wand2, Loader2, Brain, Trophy, RefreshCw, Clock, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
 
 interface DoodleChallengeProps {
   isDarkMode: boolean;
 }
 
-const CANVAS_SIZE = 280;
-const GRID = 28;
+const CANVAS_SIZE = 480;
+const STROKE_WIDTH = 18;
 
 type Phase = 'idle' | 'playing' | 'feedback' | 'gameover';
 
@@ -41,7 +42,6 @@ const shuffle = <T,>(arr: T[]): T[] => {
 
 export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const offscreenRef = useRef<HTMLCanvasElement>(null);
   const [model, setModel] = useState<DoodleModel | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -63,7 +63,7 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
   const drawingRef = useRef(false);
   const lastPosRef = useRef<{ x: number; y: number } | null>(null);
 
-  // Lazy-load the model weights (code-split)
+  // Lazy-load model weights
   useEffect(() => {
     let cancelled = false;
     (async () => {
@@ -82,7 +82,7 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
         setLoading(false);
       } catch {
         if (!cancelled) {
-          setError('Could not load the doodle model. Please try again.');
+          setError('Could not load the doodle model.');
           setLoading(false);
         }
       }
@@ -92,21 +92,15 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
     };
   }, []);
 
-  // Set up canvas
+  // Initialize canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
-    const off = offscreenRef.current;
-    const octx = off ? off.getContext('2d') : null;
-    if (off && octx) {
-      octx.fillStyle = 'black';
-      octx.fillRect(0, 0, GRID, GRID);
-    }
     clearCanvas(ctx);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isDarkMode]);
 
   const clearCanvas = (ctx?: CanvasRenderingContext2D | null) => {
     const canvas = canvasRef.current;
@@ -137,9 +131,9 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (canvas && ctx) {
-      ctx.fillStyle = isDarkMode ? '#ffffff' : '#000000';
+      ctx.fillStyle = isDarkMode ? '#ffffff' : '#111827';
       ctx.beginPath();
-      ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, STROKE_WIDTH / 2, 0, Math.PI * 2);
       ctx.fill();
     }
   };
@@ -151,8 +145,8 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
     if (!canvas || !ctx) return;
     e.preventDefault();
     const p = getPos(e);
-    ctx.strokeStyle = isDarkMode ? '#ffffff' : '#000000';
-    ctx.lineWidth = 4;
+    ctx.strokeStyle = isDarkMode ? '#ffffff' : '#111827';
+    ctx.lineWidth = STROKE_WIDTH;
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
     ctx.beginPath();
@@ -172,77 +166,39 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
     }
   };
 
-  // Timer
-  useEffect(() => {
-    if (phase !== 'playing') return;
-    if (timeLeft <= 0) {
-      // time's up — auto guess
-      handleGuess(true);
-      return;
-    }
-    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, timeLeft]);
-
-  const startGame = () => {
-    if (!model) return;
-    promptQueueRef.current = shuffle(model.categories);
-    setResults([]);
-    setScore(0);
-    setStreak(0);
-    setBestStreak(0);
-    setRound(1);
-    setPrompt(promptQueueRef.current[0]);
-    setTimeLeft(ROUND_SECONDS);
-    setFeedback(null);
-    setPhase('playing');
-  };
-
-  const nextPrompt = () => {
-    const q = promptQueueRef.current;
-    const nextIdx = round; // rounds are 1-based, next index = round
-    if (nextIdx < q.length && nextIdx < ROUNDS) {
-      setPrompt(q[nextIdx]);
-    }
-  };
-
-  const getBitmap = (): number[] | null => {
-    const canvas = canvasRef.current;
-    const off = offscreenRef.current;
-    if (!canvas || !off) return null;
-    const ctx = canvas.getContext('2d');
-    const octx = off.getContext('2d');
-    if (!ctx || !octx) return null;
-    octx.fillStyle = 'black';
-    octx.fillRect(0, 0, GRID, GRID);
-    octx.drawImage(canvas, 0, 0, GRID, GRID);
-    const imgData = octx.getImageData(0, 0, GRID, GRID);
-    const bitmap = new Array<number>(GRID * GRID);
-    for (let i = 0; i < GRID * GRID; i++) {
-      const idx = i * 4;
-      const lum = 0.299 * imgData.data[idx] + 0.587 * imgData.data[idx + 1] + 0.114 * imgData.data[idx + 2];
-      bitmap[i] = lum / 255;
-    }
-    return bitmap;
-  };
-
   const handleGuess = useCallback(
     (timedOut = false) => {
       if (!model || phaseRef.current !== 'playing' || guessing) return;
       if (!timedOut) setGuessing(true);
-      const bitmap = getBitmap();
-      if (!bitmap) {
+
+      const canvas = canvasRef.current;
+      if (!canvas) {
         setGuessing(false);
         return;
       }
-      const preds = predict(bitmap, model); // sorted desc
-      const topLabel = preds[0].label;
-      const topPct = preds[0].pct;
-      const outcome = computeOutcome(prompt, preds, timeLeft, streak);
-      const correct = outcome.correct;
-      const earned = outcome.earned;
-      const newStreak = outcome.streak;
+
+      const { bitmap, hasStrokes } = preprocessCanvas(canvas, isDarkMode);
+
+      let topLabel = 'nothing';
+      let topPct = 0;
+      let earned = 0;
+      let correct = false;
+      let newStreak = 0;
+
+      if (hasStrokes) {
+        const preds = predict(bitmap, model);
+        topLabel = preds[0].label;
+        topPct = preds[0].pct;
+        const outcome = computeOutcome(prompt, preds, timeLeft, streak);
+        correct = outcome.correct;
+        earned = outcome.earned;
+        newStreak = outcome.streak;
+      } else {
+        // Blank canvas submission
+        correct = false;
+        newStreak = 0;
+        earned = 0;
+      }
 
       setFeedback({ correct, topLabel, topPct, earned, streak: newStreak });
       setResults((r) => [
@@ -260,12 +216,38 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
       }
       setGuessing(false);
     },
-    [model, prompt, round, timeLeft, streak, bestStreak, guessing]
+    [model, prompt, round, timeLeft, streak, bestStreak, guessing, isDarkMode]
   );
+
+  // Countdown Timer
+  useEffect(() => {
+    if (phase !== 'playing') return;
+    if (timeLeft <= 0) {
+      handleGuess(true);
+      return;
+    }
+    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
+    return () => clearTimeout(t);
+  }, [phase, timeLeft, handleGuess]);
+
+  const startGame = () => {
+    if (!model) return;
+    promptQueueRef.current = shuffle(model.categories);
+    setResults([]);
+    setScore(0);
+    setStreak(0);
+    setBestStreak(0);
+    setRound(1);
+    setPrompt(promptQueueRef.current[0]);
+    setTimeLeft(ROUND_SECONDS);
+    setFeedback(null);
+    setPhase('playing');
+    setTimeout(() => clearCanvas(), 50);
+  };
 
   const nextRound = () => {
     const q = promptQueueRef.current;
-    const nextIdx = round; // next round index
+    const nextIdx = round;
     clearCanvas();
     setPrompt(q[nextIdx % q.length]);
     setTimeLeft(ROUND_SECONDS);
@@ -277,74 +259,106 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
   const pct = (p: number) => Math.round(p * 100);
 
   return (
-    <div className="flex-1 flex items-start justify-center p-4 md:p-8 overflow-y-auto h-full">
-      <div className="w-full max-w-3xl flex flex-col items-center gap-4">
-        {/* Header bar */}
-        <div className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-3 flex items-center justify-between ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
+    <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-y-auto h-full">
+      <div className="w-full max-w-5xl flex flex-col items-center gap-4">
+        
+        {/* Top Status Header */}
+        <div
+          className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-3 flex items-center justify-between ${
+            isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'
+          }`}
+        >
           <div className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-emerald-400" />
-            <h2 className="font-black uppercase text-sm tracking-tight">Challenge</h2>
+            <Target className="w-5 h-5 text-emerald-500" />
+            <h2 className="font-black uppercase text-sm tracking-tight">Speed Doodle Challenge</h2>
           </div>
           <div className="flex items-center gap-4 text-xs font-black uppercase">
-            <span>Round <span className="text-emerald-400">{Math.min(round, ROUNDS)}/{ROUNDS}</span></span>
-            <span>Score <span className="text-emerald-400">{score}</span></span>
-            <span>Streak <span className="text-emerald-400">{streak}</span></span>
+            <span>
+              Round <strong className="text-emerald-500">{Math.min(round, ROUNDS)}/{ROUNDS}</strong>
+            </span>
+            <span>
+              Score <strong className="text-emerald-500">{score}</strong>
+            </span>
+            <span>
+              Streak <strong className="text-emerald-500">{streak}</strong>
+            </span>
           </div>
         </div>
 
         {loading && (
           <div className="py-16 flex items-center gap-2 text-xs opacity-60">
-            <Loader2 className="w-4 h-4 animate-spin" /> Loading the doodle brain…
+            <Loader2 className="w-4 h-4 animate-spin" /> Loading doodle brain…
           </div>
         )}
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+        {error && <p className="text-sm text-rose-500">{error}</p>}
 
+        {/* Phase: Idle */}
         {!loading && !error && phase === 'idle' && (
-          <div className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-6 text-center ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Brain className="w-6 h-6 text-pink-400" />
-              <span className="font-black uppercase">Draw it. The AI says true or false.</span>
+          <div
+            className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-6 text-center ${
+              isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Brain className="w-6 h-6 text-pink-500" />
+              <span className="font-black uppercase text-base tracking-tight">Test Your Drawing Skills</span>
             </div>
-            <p className="text-sm mb-4 opacity-70">
-              A real neural network trained on Google's{' '}
-              <span className="font-bold">Quick, Draw!</span> dataset will watch your sketch.
-              Draw the prompt before the clock runs out — we pass you if the AI sees{' '}
-              <span className="font-bold">true</span> (your prompt is its top guess, or in its
-              top-3 above 15% confidence).
+            <p className="text-xs mb-4 opacity-75 max-w-md mx-auto leading-relaxed">
+              Sketch the prompted object within {ROUND_SECONDS} seconds. The local AI classifier will judge if it can recognize your doodle!
             </p>
-            <p className="text-xs mb-6 opacity-50">
-              {ROUNDS} rounds · {ROUND_SECONDS}s each · {model ? model.categories.join(' · ') : ''}
-            </p>
+            <div className="text-[11px] mb-6 opacity-60 flex flex-wrap justify-center gap-1.5 max-w-lg mx-auto">
+              {model?.categories.map((c) => (
+                <span key={c} className="px-2 py-0.5 rounded border border-black/20 dark:border-white/20 font-bold uppercase">
+                  {c}
+                </span>
+              ))}
+            </div>
             <button
               onClick={startGame}
               disabled={!model}
-              className="px-6 py-3 bg-emerald-300 border-2 border-black font-black uppercase text-sm shadow-[4px_4px_0px_0px_#000] hover:bg-emerald-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50 flex items-center gap-2 mx-auto"
+              className="px-6 py-2.5 bg-emerald-300 text-black border-2 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_#000] hover:bg-emerald-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none disabled:opacity-50 flex items-center gap-2 mx-auto transition-colors"
             >
               <RefreshCw className="w-4 h-4" /> Start Challenge
             </button>
           </div>
         )}
 
+        {/* Phase: Playing or Feedback */}
         {(phase === 'playing' || phase === 'feedback') && (
-          <>
-            {/* Prompt + timer */}
-            <div className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-3 ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
-              <div className="flex items-center justify-center gap-3">
-                <span className="font-black uppercase text-xs opacity-60">Draw a</span>
-                <span className="font-black uppercase text-2xl tracking-tight text-emerald-400">{prompt}</span>
-                {phase === 'playing' && (
-                  <span className={`flex items-center gap-1 font-mono text-sm ${timeLeft <= 5 ? 'text-red-500' : 'opacity-70'}`}>
-                    <Clock className="w-4 h-4" /> {timeLeft}s
-                  </span>
-                )}
+          <div className="w-full flex flex-col gap-4 items-center">
+            
+            {/* Prompt banner */}
+            <div
+              className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-3 flex items-center justify-between ${
+                isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-black uppercase text-xs opacity-60">Target:</span>
+                <span className="font-black uppercase text-xl tracking-tight text-emerald-500">
+                  {prompt}
+                </span>
               </div>
+              {phase === 'playing' && (
+                <div className={`flex items-center gap-1.5 font-mono font-bold text-sm px-2.5 py-0.5 rounded border ${
+                  timeLeft <= 5 
+                    ? 'border-rose-500 text-rose-500 bg-rose-500/10 animate-pulse' 
+                    : 'border-black/20 text-emerald-500 bg-emerald-500/10'
+                }`}>
+                  <Clock className="w-4 h-4" /> {timeLeft}s
+                </div>
+              )}
             </div>
 
-            <div className="flex gap-6 flex-col md:flex-row items-start">
-              {/* Canvas */}
-              <div className="flex flex-col gap-3 items-center">
-                <div className={`border-2 border-black shadow-[4px_4px_0px_0px_#000] overflow-hidden ${isDarkMode ? 'bg-slate-800' : 'bg-white'} ${phase === 'playing' ? '' : 'opacity-60 pointer-events-none'}`}>
+            <div className="flex gap-6 flex-col md:flex-row items-center md:items-start justify-center w-full">
+              {/* Canvas area */}
+              <div className="flex flex-col gap-3 items-center w-full max-w-[460px]">
+                <div
+                  className={`border-2 border-black shadow-[4px_4px_0px_0px_#000] p-1 w-full aspect-square ${
+                    isDarkMode ? 'bg-slate-800' : 'bg-white'
+                  } ${phase === 'playing' ? '' : 'opacity-80'}`}
+                >
                   <canvas
                     ref={canvasRef}
                     width={CANVAS_SIZE}
@@ -353,103 +367,139 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
                     onPointerMove={onPointerMove}
                     onPointerUp={endDraw}
                     onPointerCancel={endDraw}
-                    className="touch-none w-full h-auto block cursor-crosshair"
-                    style={{ maxWidth: 300 }}
+                    className="touch-none block cursor-crosshair rounded-xs w-full h-full"
                   />
-                  <canvas ref={offscreenRef} width={GRID} height={GRID} className="hidden" />
                 </div>
 
-                <div className="flex gap-2">
+                <div className="flex gap-2 w-full justify-between">
                   <button
                     onClick={() => clearCanvas()}
                     disabled={phase !== 'playing'}
-                    className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-slate-200 text-black hover:bg-slate-100 disabled:opacity-40"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-slate-200 text-black hover:bg-slate-100 disabled:opacity-40 transition-colors"
                   >
                     <Eraser className="w-4 h-4" /> Clear
                   </button>
                   <button
                     onClick={() => handleGuess()}
                     disabled={phase !== 'playing' || guessing}
-                    className="flex items-center gap-1.5 px-3 py-1.5 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-emerald-300 text-black hover:bg-emerald-400 disabled:opacity-50"
+                    className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-emerald-300 text-black hover:bg-emerald-400 disabled:opacity-50 transition-colors"
                   >
-                    <Wand2 className="w-4 h-4" /> {guessing ? 'Checking…' : 'Guess'}
+                    <Wand2 className="w-4 h-4" /> {guessing ? 'Judging…' : 'Submit'}
                   </button>
                 </div>
               </div>
 
-              {/* Feedback */}
+              {/* Feedback panel */}
               {phase === 'feedback' && feedback && (
-                <div className={`w-full max-w-[340px] border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4 ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
-                  <div className="flex items-center gap-2 mb-2">
-                    {feedback.correct ? (
-                      <CheckCircle2 className="w-6 h-6 text-emerald-400" />
-                    ) : (
-                      <XCircle className="w-6 h-6 text-red-400" />
-                    )}
-                    <h3 className={`font-black uppercase text-lg ${feedback.correct ? 'text-emerald-400' : 'text-red-400'}`}>
-                      {feedback.correct ? 'TRUE — Right!' : 'FALSE — Not quite'}
-                    </h3>
+                <div
+                  className={`w-full max-w-sm border-2 border-black shadow-[4px_4px_0px_0px_#000] p-4 flex flex-col justify-between ${
+                    isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'
+                  }`}
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-2">
+                      {feedback.correct ? (
+                        <CheckCircle2 className="w-6 h-6 text-emerald-500 flex-shrink-0" />
+                      ) : (
+                        <XCircle className="w-6 h-6 text-rose-500 flex-shrink-0" />
+                      )}
+                      <h3
+                        className={`font-black uppercase text-base ${
+                          feedback.correct ? 'text-emerald-500' : 'text-rose-500'
+                        }`}
+                      >
+                        {feedback.correct ? 'Match Confirmed!' : 'AI Guessed: ' + feedback.topLabel}
+                      </h3>
+                    </div>
+
+                    <p className="text-xs mb-3 opacity-80 leading-snug">
+                      Target was <strong className="uppercase">{prompt}</strong>. The neural model was{' '}
+                      <strong>{pct(feedback.topPct)}%</strong> confident you drew a{' '}
+                      <strong className="uppercase">{feedback.topLabel}</strong>.
+                    </p>
+
+                    <div className="h-3 w-full border-2 border-black bg-slate-100 dark:bg-slate-800 overflow-hidden mb-3 rounded-xs">
+                      <div
+                        className={`h-full transition-all duration-300 ${
+                          feedback.correct ? 'bg-emerald-400' : 'bg-rose-400'
+                        }`}
+                        style={{ width: `${Math.max(4, pct(feedback.topPct))}%` }}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs font-black uppercase mb-4 opacity-75">
+                      <span>Score: +{feedback.earned} pts</span>
+                      <span>Streak: ×{Math.max(1, feedback.streak)}</span>
+                    </div>
                   </div>
-                  <p className="text-sm mb-1">
-                    You drew <span className="font-black uppercase">{prompt}</span>. The AI was {pct(feedback.topPct)}% sure it was a{' '}
-                    <span className="font-black uppercase">{feedback.topLabel}</span>.
-                  </p>
-                  <div className="h-3 w-full border-2 border-black bg-slate-100 dark:bg-slate-800 overflow-hidden mb-3">
-                    <div className={`h-full ${feedback.correct ? 'bg-emerald-400' : 'bg-red-400'}`} style={{ width: `${Math.max(2, pct(feedback.topPct))}%` }} />
-                  </div>
-                  <div className="flex items-center justify-between text-xs font-black uppercase mb-4">
-                    <span>+{feedback.earned} pts</span>
-                    <span>Streak ×{Math.max(1, feedback.streak)}</span>
-                  </div>
+
                   <button
                     onClick={nextRound}
-                    className="w-full px-4 py-2 bg-yellow-300 border-2 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_#000] hover:bg-yellow-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-yellow-300 text-black border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] hover:bg-yellow-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-colors"
                   >
-                    {round >= ROUNDS ? 'See Results' : 'Next Round →'}
+                    <span>{round >= ROUNDS ? 'See Final Results' : 'Next Round'}</span>
+                    <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               )}
             </div>
-          </>
+          </div>
         )}
 
+        {/* Phase: Gameover */}
         {phase === 'gameover' && (
-          <div className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-6 ${isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'}`}>
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <Trophy className="w-7 h-7 text-yellow-400" />
-              <h2 className="font-black uppercase text-2xl tracking-tight">Challenge Complete</h2>
+          <div
+            className={`w-full border-2 border-black shadow-[4px_4px_0px_0px_#000] p-6 text-center ${
+              isDarkMode ? 'bg-slate-900 text-white' : 'bg-white text-black'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <Trophy className="w-6 h-6 text-yellow-500" />
+              <h2 className="font-black uppercase text-xl tracking-tight">Challenge Results</h2>
             </div>
-            <div className="grid grid-cols-3 gap-3 mb-5 text-center">
-              <div className="border-2 border-black p-3">
-                <div className="text-2xl font-black text-emerald-400">{score}</div>
+            
+            <div className="grid grid-cols-3 gap-3 my-4 text-center">
+              <div className="border-2 border-black p-2.5 bg-slate-50 dark:bg-slate-800">
+                <div className="text-xl font-black text-emerald-500">{score}</div>
                 <div className="text-[10px] font-black uppercase opacity-60">Total Score</div>
               </div>
-              <div className="border-2 border-black p-3">
-                <div className="text-2xl font-black text-emerald-400">{results.filter((r) => r.correct).length}/{results.length}</div>
+              <div className="border-2 border-black p-2.5 bg-slate-50 dark:bg-slate-800">
+                <div className="text-xl font-black text-emerald-500">
+                  {results.filter((r) => r.correct).length}/{results.length}
+                </div>
                 <div className="text-[10px] font-black uppercase opacity-60">Correct</div>
               </div>
-              <div className="border-2 border-black p-3">
-                <div className="text-2xl font-black text-emerald-400">{bestStreak}</div>
+              <div className="border-2 border-black p-2.5 bg-slate-50 dark:bg-slate-800">
+                <div className="text-xl font-black text-emerald-500">{bestStreak}</div>
                 <div className="text-[10px] font-black uppercase opacity-60">Best Streak</div>
               </div>
             </div>
 
-            <div className="flex flex-col gap-1.5 mb-5">
+            <div className="flex flex-col gap-1.5 mb-5 max-h-44 overflow-y-auto">
               {results.map((r, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs">
-                  <span className={`w-5 h-5 flex items-center justify-center border-2 border-black ${r.correct ? 'bg-emerald-300' : 'bg-red-300'}`}>
+                <div
+                  key={i}
+                  className="flex items-center gap-2 text-xs p-1.5 border border-black/10 dark:border-white/10 rounded"
+                >
+                  <span
+                    className={`w-5 h-5 flex items-center justify-center border border-black text-[10px] font-black ${
+                      r.correct ? 'bg-emerald-300 text-black' : 'bg-rose-300 text-black'
+                    }`}
+                  >
                     {r.correct ? '✓' : '✗'}
                   </span>
-                  <span className="font-black uppercase w-16">{r.prompt}</span>
-                  <span className="opacity-60">AI saw a {r.topLabel} ({pct(r.topPct)}%)</span>
-                  <span className="ml-auto font-mono font-black">+{r.score}</span>
+                  <span className="font-black uppercase w-16 text-left">{r.prompt}</span>
+                  <span className="opacity-60 text-left flex-1">
+                    AI saw: {r.topLabel} ({pct(r.topPct)}%)
+                  </span>
+                  <span className="font-mono font-black text-right">+{r.score}</span>
                 </div>
               ))}
             </div>
 
             <button
               onClick={startGame}
-              className="mx-auto px-6 py-3 bg-emerald-300 border-2 border-black font-black uppercase text-sm shadow-[4px_4px_0px_0px_#000] hover:bg-emerald-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center gap-2"
+              className="mx-auto px-6 py-2.5 bg-emerald-300 text-black border-2 border-black font-black uppercase text-xs shadow-[3px_3px_0px_0px_#000] hover:bg-emerald-400 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none flex items-center gap-2 transition-colors"
             >
               <RefreshCw className="w-4 h-4" /> Play Again
             </button>

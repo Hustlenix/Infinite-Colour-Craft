@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { ColorItem, ColorCategory } from '../types';
+import { audioSynth } from '../utils/audioSynth';
 import { 
   Search, 
   Sparkles, 
@@ -198,12 +199,12 @@ export const SidebarInventory: React.FC<SidebarInventoryProps> = ({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="SEARCH PIGMENTS, HEX, TIER..."
-            className="w-full pl-9 pr-3 py-1.5 bg-white dark:bg-slate-800 border-2 border-black dark:border-slate-700 text-xs font-bold text-black dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:bg-yellow-50 dark:focus:bg-slate-700 shadow-[2px_2px_0px_0px_#000] uppercase"
+            className="w-full pl-9 pr-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 text-xs font-bold text-black dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-slate-900 uppercase shadow-xs"
           />
           {search && (
             <button
               onClick={() => setSearch('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-black dark:text-white hover:bg-yellow-300 dark:hover:text-black px-1 border border-black dark:border-slate-700"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-black dark:text-white hover:bg-yellow-300 dark:hover:text-black px-1 rounded border border-slate-300 dark:border-slate-700"
             >
               ✕
             </button>
@@ -219,8 +220,8 @@ export const SidebarInventory: React.FC<SidebarInventoryProps> = ({
           <div className="flex items-center gap-1 overflow-x-auto no-scrollbar py-0.5 text-xs">
             <button
               onClick={() => setRarityFilter('All')}
-              className={`px-2 py-0.5 border-2 border-black dark:border-slate-700 text-[9px] font-black uppercase whitespace-nowrap transition-all shadow-[1px_1px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
-                rarityFilter === 'All' ? 'bg-yellow-300 text-black shadow-[2px_2px_0px_0px_#000]' : 'bg-white dark:bg-slate-800 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+              className={`px-2 py-0.5 rounded-md border text-[9px] font-black uppercase whitespace-nowrap transition-all shadow-xs active:translate-y-0.5 ${
+                rarityFilter === 'All' ? 'bg-yellow-300 border-slate-950 text-black font-bold' : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
               }`}
             >
               All Tiers
@@ -231,12 +232,12 @@ export const SidebarInventory: React.FC<SidebarInventoryProps> = ({
                 <button
                   key={tier.id}
                   onClick={() => setRarityFilter(tier.id)}
-                  className={`flex items-center gap-1 px-2 py-0.5 border-2 border-black dark:border-slate-700 text-[9px] font-black uppercase whitespace-nowrap transition-all shadow-[1px_1px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none ${
-                    rarityFilter === tier.id ? `${tier.badgeBg} text-black shadow-[2px_2px_0px_0px_#000]` : 'bg-white dark:bg-slate-800 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
+                  className={`flex items-center gap-1 px-2 py-0.5 rounded-md border text-[9px] font-black uppercase whitespace-nowrap transition-all shadow-xs active:translate-y-0.5 ${
+                    rarityFilter === tier.id ? `${tier.badgeBg} border-slate-950 text-black font-bold` : 'bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-black dark:text-white hover:bg-slate-100 dark:hover:bg-slate-700'
                   }`}
                 >
                   <span>{tier.label}</span>
-                  <span className="text-[8px] bg-black text-white px-1 font-mono">{count}</span>
+                  <span className="text-[8px] bg-black text-white px-1 rounded font-mono">{count}</span>
                 </button>
               );
             })}
@@ -341,38 +342,39 @@ export const SidebarInventory: React.FC<SidebarInventoryProps> = ({
                             onClick={() => {
                               if (activeTab === 'studio') {
                                 onSelectColorForBrush(color);
+                                audioSynth.playPop();
                               } else {
                                 onSpawnTileToBoard(color);
                               }
                             }}
-                            className={`group relative p-2 border-2 border-black dark:border-slate-700 transition-all cursor-grab active:cursor-grabbing hover:-translate-y-0.5 ${
+                            className={`group relative p-2 rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing hover:-translate-y-0.5 ${
                               isSelectedForBrush
-                                ? 'bg-yellow-300 border-black text-black shadow-[3px_3px_0px_0px_#000]'
-                                : 'bg-white dark:bg-slate-900 text-black dark:text-white hover:bg-yellow-50 dark:hover:bg-slate-800 shadow-[2px_2px_0px_0px_#000] hover:shadow-[4px_4px_0px_0px_#000]'
+                                ? 'bg-yellow-300 border-slate-950 text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                                : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:border-slate-400 dark:hover:border-slate-500 shadow-xs hover:shadow-sm'
                             }`}
                           >
                             <div className="flex items-center gap-1.5">
                               {/* Swatch Box */}
                               <div
-                                className="w-6 h-6 border border-black shadow-[1px_1px_0px_0px_#000] flex items-center justify-center text-xs shrink-0"
+                                className="w-6 h-6 rounded-md border border-black/20 dark:border-white/20 shadow-xs flex items-center justify-center text-xs shrink-0"
                                 style={{ backgroundColor: color.hex }}
                               >
-                                <span className="drop-shadow-sm">{color.emoji}</span>
+                                <span className="drop-shadow-xs">{color.emoji}</span>
                               </div>
 
                               {/* Color Info */}
                               <div className="min-w-0 flex-1">
-                                <p className="text-[11px] font-black uppercase text-black dark:text-white truncate leading-tight">
+                                <p className="text-[11px] font-black uppercase text-slate-900 dark:text-white truncate leading-tight">
                                   {color.name}
                                 </p>
-                                <p className="text-[9px] text-slate-600 dark:text-slate-400 font-mono font-bold">
+                                <p className="text-[9px] text-slate-500 dark:text-slate-400 font-mono font-bold">
                                   {color.hex}
                                 </p>
                               </div>
                             </div>
 
                             {isSelectedForBrush && (
-                              <div className="absolute -top-1 -right-1 w-4 h-4 bg-black border border-white text-white flex items-center justify-center shadow-[1px_1px_0px_0px_#000]">
+                              <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-slate-950 border border-white text-white flex items-center justify-center shadow-xs">
                                 <Check className="w-2.5 h-2.5 stroke-[3]" />
                               </div>
                             )}
@@ -399,50 +401,51 @@ export const SidebarInventory: React.FC<SidebarInventoryProps> = ({
                   onClick={() => {
                     if (activeTab === 'studio') {
                       onSelectColorForBrush(color);
+                      audioSynth.playPop();
                     } else {
                       onSpawnTileToBoard(color);
                     }
                   }}
-                  className={`group relative p-2.5 border-2 border-black dark:border-slate-700 transition-all cursor-grab active:cursor-grabbing hover:-translate-y-0.5 ${
+                  className={`group relative p-2.5 rounded-lg border-2 transition-all cursor-grab active:cursor-grabbing hover:-translate-y-0.5 ${
                     isSelectedForBrush
-                      ? 'bg-yellow-300 border-black text-black shadow-[4px_4px_0px_0px_#000]'
-                      : 'bg-white dark:bg-slate-900 text-black dark:text-white hover:bg-yellow-50 dark:hover:bg-slate-800 shadow-[3px_3px_0px_0px_#000] hover:shadow-[5px_5px_0px_0px_#000]'
+                      ? 'bg-yellow-300 border-slate-950 text-black shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)]'
+                      : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 text-slate-900 dark:text-white hover:border-slate-400 dark:hover:border-slate-500 shadow-xs hover:shadow-sm'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {/* Swatch Box */}
                     <div
-                      className="w-7 h-7 border border-black shadow-[1px_1px_0px_0px_#000] flex items-center justify-center text-xs shrink-0 transition-transform group-hover:scale-110"
+                      className="w-7 h-7 rounded-md border border-black/20 dark:border-white/20 shadow-xs flex items-center justify-center text-xs shrink-0 transition-transform group-hover:scale-110"
                       style={{ backgroundColor: color.hex }}
                     >
-                      <span className="drop-shadow-sm">{color.emoji}</span>
+                      <span className="drop-shadow-xs">{color.emoji}</span>
                     </div>
 
                     {/* Color Info */}
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-black uppercase text-black dark:text-white truncate group-hover:underline">
+                      <p className="text-xs font-black uppercase text-slate-900 dark:text-white truncate group-hover:underline">
                         {color.name}
                       </p>
-                      <p className="text-[10px] text-slate-600 dark:text-slate-400 font-mono font-bold flex items-center gap-1">
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono font-bold flex items-center gap-1">
                         <span>{color.hex}</span>
                       </p>
                     </div>
                   </div>
 
                   {/* Rarity Tag */}
-                  <div className="mt-2 flex items-center justify-between border-t border-black/20 dark:border-slate-700 pt-1.5 text-[10px] text-black dark:text-white">
-                    <span className="px-1.5 py-0.2 border border-black dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-black dark:text-white font-mono font-bold text-[9px] uppercase">
+                  <div className="mt-2 flex items-center justify-between border-t border-slate-200 dark:border-slate-700 pt-1.5 text-[10px] text-slate-900 dark:text-white">
+                    <span className="px-1.5 py-0.2 rounded border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-300 font-mono font-bold text-[9px] uppercase">
                       {color.rarity || 'Common'}
                     </span>
 
-                    <span className="flex items-center gap-0.5 text-black font-black uppercase bg-yellow-300 px-1 border border-black opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span className="flex items-center gap-0.5 text-black font-black uppercase bg-yellow-300 px-1 rounded border border-slate-950 opacity-0 group-hover:opacity-100 transition-opacity">
                       <Plus className="w-3 h-3" />
                       <span>{activeTab === 'studio' ? 'Brush' : 'Spawn'}</span>
                     </span>
                   </div>
 
                   {isSelectedForBrush && (
-                    <div className="absolute -top-1 -right-1 w-5 h-5 bg-black border border-white text-white flex items-center justify-center shadow-[1px_1px_0px_0px_#000]">
+                    <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-slate-950 border border-white text-white flex items-center justify-center shadow-xs">
                       <Check className="w-3 h-3 stroke-[3]" />
                     </div>
                   )}

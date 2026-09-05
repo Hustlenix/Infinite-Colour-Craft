@@ -34,8 +34,53 @@ import {
   Sliders,
   Hand,
   Zap,
-  Eye
+  Eye,
+  MousePointer2
 } from 'lucide-react';
+import { collaborationService, RemoteStroke } from '../services/collaborationService';
+
+// Live Vector Preview Thumbnail for Outline Templates
+const TemplateThumbnail: React.FC<{
+  template: CanvasTemplate;
+  isDarkMode: boolean;
+}> = ({ template, isDarkMode }) => {
+  const thumbRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = thumbRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = isDarkMode ? '#1E293B' : '#F8FAFC';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    if (template.id === 'blank') {
+      ctx.save();
+      ctx.strokeStyle = isDarkMode ? '#475569' : '#CBD5E1';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(10, 10, canvas.width - 20, canvas.height - 20);
+      ctx.restore();
+      return;
+    }
+
+    template.drawOutline(ctx, canvas.width, canvas.height, isDarkMode, {
+      lineWidth: 2.2,
+      strokeColor: isDarkMode ? '#F8FAFC' : '#0F172A',
+    });
+  }, [template, isDarkMode]);
+
+  return (
+    <canvas
+      ref={thumbRef}
+      width={130}
+      height={100}
+      className="w-full h-24 object-contain rounded-md border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-inner"
+    />
+  );
+};
 
 interface PaintCanvasProps {
   activeColor: ColorItem;
@@ -91,11 +136,77 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
   // UI Modals
   const [showShortcutsModal, setShowShortcutsModal] = useState<boolean>(false);
   const [showTemplatesModal, setShowTemplatesModal] = useState<boolean>(false);
-  const [copiedNotification, setCopiedNotification] = useState<boolean>(false);
+  const [copiedNotification, setCopiedNotification] = useState<string | null>(null);
+
+  // Outline Enhancement Controls (Coloring Book Overlay Mode)
+  const outlineOverlayRef = useRef<HTMLCanvasElement>(null);
+  const [outlineOnTop, setOutlineOnTop] = useState<boolean>(true);
+  const [outlineLineWidth, setOutlineLineWidth] = useState<number>(3.5);
+  const [outlineColorStyle, setOutlineColorStyle] = useState<'auto' | 'dark' | 'white' | 'gold' | 'indigo'>('auto');
+
+  // Real-time Collaboration State
+  const [remoteCanvasCursors, setRemoteCanvasCursors] = useState<{
+    id: string;
+    name: string;
+    color: string;
+    x: number;
+    y: number;
+  }[]>([]);
+  const currentLocalStrokeRef = useRef<{ x: number; y: number }[]>([]);
+  const lastCanvasCursorBroadcastRef = useRef<number>(0);
+
+  // Compute stroke color for outline
+  const getOutlineStrokeColor = useCallback(() => {
+    switch (outlineColorStyle) {
+      case 'dark':
+        return '#0F172A';
+      case 'white':
+        return '#F8FAFC';
+      case 'gold':
+        return '#D97706';
+      case 'indigo':
+        return '#2563EB';
+      case 'auto':
+      default:
+        return (paperTexture === 'dark' || paperTexture === 'glow') ? '#F8FAFC' : '#0F172A';
+    }
+  }, [outlineColorStyle, paperTexture]);
+
+  // Redraw Outline Overlay on top-layer canvas (keeps lines razor-sharp above colors)
+  const drawOutlineOverlay = useCallback(() => {
+    const overlay = outlineOverlayRef.current;
+    if (!overlay) return;
+    const ctx = overlay.getContext('2d');
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = parseFloat(overlay.style.width) || overlay.width / dpr;
+    const displayHeight = parseFloat(overlay.style.height) || overlay.height / dpr;
+
+    ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+    if (selectedTemplate.id === 'blank' || !outlineOnTop) {
+      return;
+    }
+
+    ctx.save();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const strokeColor = getOutlineStrokeColor();
+    selectedTemplate.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow', {
+      lineWidth: outlineLineWidth,
+      strokeColor,
+    });
+    ctx.restore();
+  }, [selectedTemplate, outlineOnTop, getOutlineStrokeColor, outlineLineWidth, paperTexture]);
+
+  useEffect(() => {
+    drawOutlineOverlay();
+  }, [drawOutlineOverlay]);
 
   // Keep customHex in sync with activeColor prop
   useEffect(() => {
     setCustomHex(normalizeHex(activeColor.hex));
+    setBrushTool((prev) => (prev === 'eraser' ? 'brush' : prev));
   }, [activeColor]);
 
   // Save Canvas State to Undo
@@ -167,6 +278,13 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       canvas.style.width = `${displayWidth}px`;
       canvas.style.height = `${displayHeight}px`;
 
+      if (outlineOverlayRef.current) {
+        outlineOverlayRef.current.width = internalWidth;
+        outlineOverlayRef.current.height = internalHeight;
+        outlineOverlayRef.current.style.width = `${displayWidth}px`;
+        outlineOverlayRef.current.style.height = `${displayHeight}px`;
+      }
+
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       // Fill paper background
@@ -188,7 +306,11 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
 
       // Draw Selected Template Outline if active
       if (selectedTemplate.id !== 'blank') {
-        selectedTemplate.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow');
+        const strokeColor = getOutlineStrokeColor();
+        selectedTemplate.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow', {
+          lineWidth: outlineLineWidth,
+          strokeColor,
+        });
       }
 
       if (tempCanvas) {
@@ -200,8 +322,10 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       } else {
         pushUndoState();
       }
+
+      drawOutlineOverlay();
     }
-  }, [getPaperBgColor, paperTexture, pushUndoState, selectedTemplate]);
+  }, [getPaperBgColor, paperTexture, pushUndoState, selectedTemplate, outlineLineWidth, getOutlineStrokeColor, drawOutlineOverlay]);
 
   // Handle Undo
   const handleUndo = useCallback(() => {
@@ -254,16 +378,26 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     const displayWidth = parseFloat(canvas.style.width) || canvas.width;
     const displayHeight = parseFloat(canvas.style.height) || canvas.height;
 
+    ctx.save();
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
     ctx.fillStyle = getPaperBgColor(paperTexture);
     ctx.fillRect(0, 0, displayWidth, displayHeight);
+    ctx.restore();
 
     if (selectedTemplate.id !== 'blank') {
-      selectedTemplate.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow');
+      const strokeColor = getOutlineStrokeColor();
+      selectedTemplate.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow', {
+        lineWidth: outlineLineWidth,
+        strokeColor,
+      });
     }
 
+    drawOutlineOverlay();
     pushUndoState();
     audioSynth.playTrash();
-  }, [getPaperBgColor, paperTexture, pushUndoState, selectedTemplate]);
+    collaborationService.sendClearCanvas();
+  }, [getPaperBgColor, paperTexture, pushUndoState, selectedTemplate, getOutlineStrokeColor, outlineLineWidth, drawOutlineOverlay]);
 
   // Apply Template Outline
   const handleSelectTemplate = useCallback((template: CanvasTemplate) => {
@@ -284,7 +418,12 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     ctx.fillRect(0, 0, displayWidth, displayHeight);
 
     if (template.id !== 'blank') {
-      template.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow');
+      const strokeColor = getOutlineStrokeColor();
+      template.drawOutline(ctx, displayWidth, displayHeight, paperTexture === 'dark' || paperTexture === 'glow', {
+        lineWidth: outlineLineWidth,
+        strokeColor,
+      });
+      setOutlineOnTop(true);
       confetti({
         particleCount: 40,
         spread: 60,
@@ -295,8 +434,9 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       audioSynth.playPop();
     }
 
+    drawOutlineOverlay();
     pushUndoState();
-  }, [getPaperBgColor, paperTexture, pushUndoState]);
+  }, [getPaperBgColor, paperTexture, pushUndoState, getOutlineStrokeColor, outlineLineWidth, drawOutlineOverlay]);
 
   // Flood Fill / Paint Bucket Algorithm
   const handleFloodFill = useCallback((startX: number, startY: number) => {
@@ -446,7 +586,182 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     return { x, y };
   }, [flipX, flipY]);
 
-  // Draw Segment between points with Tool Specific rendering
+  const smoothPointRef = useRef<{ x: number; y: number } | null>(null);
+  const currentBrushSizeRef = useRef<number>(14);
+
+  // Draw Smooth Curve Segment between points with Tool Specific rendering
+  const drawCurveSegment = useCallback((
+    ctx: CanvasRenderingContext2D,
+    pStart: { x: number; y: number },
+    pCtrl: { x: number; y: number },
+    pEnd: { x: number; y: number },
+    tool: StrokeTool,
+    colorHex: string,
+    size: number,
+    opacity: number
+  ) => {
+    ctx.save();
+
+    if (tool === 'eraser') {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.strokeStyle = 'rgba(0,0,0,1)';
+      ctx.lineWidth = Math.max(1, size * 1.5);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+    } else if (tool === 'pen') {
+      ctx.globalCompositeOperation = strokeBlendMode;
+      ctx.strokeStyle = colorHex;
+      ctx.globalAlpha = opacity;
+      ctx.lineWidth = Math.max(1, size * 0.45);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+    } else if (tool === 'marker') {
+      ctx.globalCompositeOperation = strokeBlendMode;
+      ctx.strokeStyle = colorHex;
+      ctx.globalAlpha = Math.min(1, opacity * 0.45);
+      ctx.lineWidth = Math.max(2, size * 1.25);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+    } else if (tool === 'rainbow') {
+      ctx.globalCompositeOperation = strokeBlendMode;
+      const currentHue = (rainbowHue + 4) % 360;
+      setRainbowHue(currentHue);
+      ctx.strokeStyle = `hsl(${currentHue}, 90%, 60%)`;
+      ctx.globalAlpha = opacity;
+      ctx.lineWidth = size;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+    } else if (tool === 'spray') {
+      ctx.globalCompositeOperation = strokeBlendMode;
+      ctx.fillStyle = colorHex;
+      ctx.globalAlpha = opacity * 0.45;
+      const density = Math.floor(Math.max(4, size * 1.6));
+      for (let i = 0; i < density; i++) {
+        const t = Math.random();
+        // Quadratic bezier interpolation point
+        const bx = (1 - t) * (1 - t) * pStart.x + 2 * (1 - t) * t * pCtrl.x + t * t * pEnd.x;
+        const by = (1 - t) * (1 - t) * pStart.y + 2 * (1 - t) * t * pCtrl.y + t * t * pEnd.y;
+        const offsetR = Math.random() * size * 0.85;
+        const angle = Math.random() * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(
+          bx + Math.cos(angle) * offsetR,
+          by + Math.sin(angle) * offsetR,
+          Math.random() * 1.5 + 0.5,
+          0,
+          Math.PI * 2
+        );
+        ctx.fill();
+      }
+    } else if (tool === 'calligraphy') {
+      ctx.globalCompositeOperation = strokeBlendMode;
+      ctx.strokeStyle = colorHex;
+      ctx.fillStyle = colorHex;
+      ctx.globalAlpha = opacity;
+      ctx.lineWidth = Math.max(2, size * 0.45);
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+
+      const dx = pEnd.x - pStart.x;
+      const dy = pEnd.y - pStart.y;
+      const angle = Math.atan2(dy, dx);
+      const ribbonWidth = Math.max(2, size * Math.abs(Math.sin(angle + Math.PI / 4)));
+      ctx.beginPath();
+      ctx.arc(pEnd.x, pEnd.y, ribbonWidth / 2, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (tool === 'smudge') {
+      try {
+        const dpr = window.devicePixelRatio || 1;
+        const radius = Math.max(5, size * 0.9);
+        const sourceRadius = radius * 1.2;
+
+        ctx.save();
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = Math.min(0.85, opacity * 0.7);
+
+        // Clip to circular soft feathered brush at destination
+        ctx.beginPath();
+        ctx.arc(pEnd.x, pEnd.y, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        // Sample directly from canvas without CPU roundtrip (GPU accelerated texture blit)
+        const sx = Math.max(0, (pStart.x - sourceRadius) * dpr);
+        const sy = Math.max(0, (pStart.y - sourceRadius) * dpr);
+        const sw = Math.min(ctx.canvas.width - sx, sourceRadius * 2 * dpr);
+        const sh = Math.min(ctx.canvas.height - sy, sourceRadius * 2 * dpr);
+
+        if (sw > 0 && sh > 0) {
+          ctx.drawImage(
+            ctx.canvas,
+            sx, sy, sw, sh,
+            pEnd.x - radius, pEnd.y - radius, radius * 2, radius * 2
+          );
+        }
+
+        // Feathered blend with active pigment so smudging mixes colors realistically
+        const grad = ctx.createRadialGradient(
+          pEnd.x, pEnd.y, 0,
+          pEnd.x, pEnd.y, radius
+        );
+        grad.addColorStop(0, colorHex);
+        grad.addColorStop(0.5, `${colorHex}55`);
+        grad.addColorStop(1, 'transparent');
+
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = Math.min(0.3, opacity * 0.25);
+        ctx.fillRect(pEnd.x - radius, pEnd.y - radius, radius * 2, radius * 2);
+
+        ctx.restore();
+      } catch {
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.strokeStyle = colorHex;
+        ctx.globalAlpha = opacity * 0.2;
+        ctx.lineWidth = size;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.beginPath();
+        ctx.moveTo(pStart.x, pStart.y);
+        ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+        ctx.stroke();
+      }
+    } else {
+      // Default 'brush': Soft silky smooth curved stroke with zero gaps
+      ctx.globalCompositeOperation = strokeBlendMode;
+      ctx.strokeStyle = colorHex;
+      ctx.globalAlpha = opacity;
+      ctx.lineWidth = size;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.beginPath();
+      ctx.moveTo(pStart.x, pStart.y);
+      ctx.quadraticCurveTo(pCtrl.x, pCtrl.y, pEnd.x, pEnd.y);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }, [rainbowHue, strokeBlendMode]);
+
+  // Backward compatible segment connector
   const drawSegment = useCallback((
     ctx: CanvasRenderingContext2D,
     p1: { x: number; y: number },
@@ -456,184 +771,126 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     baseSize: number,
     opacity: number
   ) => {
-    ctx.save();
+    const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+    drawCurveSegment(ctx, p1, mid, p2, tool, colorHex, baseSize, opacity);
+  }, [drawCurveSegment]);
 
-    const dx = p2.x - p1.x;
-    const dy = p2.y - p1.y;
-    const dist = Math.hypot(dx, dy);
-
-    // Speed / Velocity Taper Dynamics: fast strokes taper thinner, slow strokes remain thick
-    const dynScale = speedDynamics ? Math.max(0.35, Math.min(1.8, 1.4 - dist / 35)) : 1;
-    const size = Math.max(1, baseSize * dynScale);
-
-    const midX = (p1.x + p2.x) / 2;
-    const midY = (p1.y + p2.y) / 2;
-
-    if (tool === 'eraser') {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.strokeStyle = 'rgba(0,0,0,1)';
-      ctx.lineWidth = size * 1.5;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
-      ctx.stroke();
-    } else if (tool === 'smudge') {
-      // Smudge / Wet Paint Blender: samples pixels from p1 and blends/smears them to p2
-      try {
-        const dpr = window.devicePixelRatio || 1;
-        const cssRadius = Math.max(4, size * 0.8);
-        const pixelRadius = Math.floor(cssRadius * dpr);
-        const sampleX = Math.floor(p1.x * dpr - pixelRadius);
-        const sampleY = Math.floor(p1.y * dpr - pixelRadius);
-        const sampleSize = pixelRadius * 2;
-
-        if (sampleX >= 0 && sampleY >= 0 && sampleX + sampleSize <= ctx.canvas.width && sampleY + sampleSize <= ctx.canvas.height) {
-          const sampledData = ctx.getImageData(sampleX, sampleY, sampleSize, sampleSize);
-          ctx.save();
-          ctx.globalCompositeOperation = 'source-over';
-          ctx.globalAlpha = opacity * 0.65;
-          ctx.beginPath();
-          ctx.arc(p2.x, p2.y, cssRadius, 0, Math.PI * 2);
-          ctx.clip();
-          
-          // Create temporary offscreen buffer to draw sampled smudge dab
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = sampleSize;
-          tempCanvas.height = sampleSize;
-          const tempCtx = tempCanvas.getContext('2d');
-          if (tempCtx) {
-            tempCtx.putImageData(sampledData, 0, 0);
-            ctx.drawImage(tempCanvas, p2.x - cssRadius, p2.y - cssRadius, cssRadius * 2, cssRadius * 2);
-          }
-          ctx.restore();
-        }
-      } catch {
-        // Fallback soft blend
+  // Draw Initial Touch/Click Dab (Dot)
+  const drawSymmetricDot = useCallback((
+    ctx: CanvasRenderingContext2D,
+    pt: { x: number; y: number },
+    w: number,
+    h: number,
+    tool = brushTool,
+    color = customHex,
+    size = brushSize,
+    opacity = brushOpacity
+  ) => {
+    const drawDot = (p: { x: number; y: number }) => {
+      ctx.save();
+      if (tool === 'eraser') {
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,1)';
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(1, size / 2), 0, Math.PI * 2);
+        ctx.fill();
+      } else if (tool === 'smudge') {
         ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeStyle = colorHex;
-        ctx.globalAlpha = opacity * 0.2;
-        ctx.lineWidth = size;
+        const r = Math.max(4, size / 2);
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
+        grad.addColorStop(0, color);
+        grad.addColorStop(0.5, `${color}66`);
+        grad.addColorStop(1, 'transparent');
+        ctx.fillStyle = grad;
+        ctx.globalAlpha = Math.min(0.4, opacity * 0.35);
         ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
-        ctx.stroke();
-      }
-    } else if (tool === 'pen') {
-      ctx.globalCompositeOperation = strokeBlendMode;
-      ctx.strokeStyle = colorHex;
-      ctx.globalAlpha = opacity;
-      ctx.lineWidth = Math.max(1, size * 0.4);
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
-      ctx.stroke();
-    } else if (tool === 'marker') {
-      ctx.globalCompositeOperation = strokeBlendMode;
-      ctx.strokeStyle = colorHex;
-      ctx.globalAlpha = opacity * 0.35; // Translucent marker layer
-      ctx.lineWidth = size * 1.2;
-      ctx.lineCap = 'square';
-      ctx.lineJoin = 'bevel';
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.stroke();
-    } else if (tool === 'spray') {
-      ctx.globalCompositeOperation = strokeBlendMode;
-      ctx.fillStyle = colorHex;
-      ctx.globalAlpha = opacity * 0.4;
-      const density = Math.floor(size * 1.8);
-      for (let i = 0; i < density; i++) {
-        const offsetR = Math.random() * size * 0.8;
-        const angle = Math.random() * Math.PI * 2;
-        const sx = p2.x + Math.cos(angle) * offsetR;
-        const sy = p2.y + Math.sin(angle) * offsetR;
+        ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.globalCompositeOperation = strokeBlendMode;
+        ctx.fillStyle = color;
+        ctx.globalAlpha = opacity;
         ctx.beginPath();
-        ctx.arc(sx, sy, Math.random() * 1.5 + 0.5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(1, size / 2), 0, Math.PI * 2);
         ctx.fill();
       }
-    } else if (tool === 'calligraphy') {
-      ctx.globalCompositeOperation = strokeBlendMode;
-      ctx.fillStyle = colorHex;
-      ctx.globalAlpha = opacity;
-      const angle = Math.atan2(dy, dx);
-      const ribbonWidth = Math.max(2, size * Math.abs(Math.sin(angle + Math.PI / 4)));
+      ctx.restore();
+    };
 
-      ctx.beginPath();
-      ctx.arc(p2.x, p2.y, ribbonWidth / 2, 0, Math.PI * 2);
-      ctx.fill();
-    } else if (tool === 'rainbow') {
-      ctx.globalCompositeOperation = strokeBlendMode;
-      const currentHue = (rainbowHue + 8) % 360;
-      setRainbowHue(currentHue);
-      ctx.strokeStyle = `hsl(${currentHue}, 90%, 60%)`;
-      ctx.globalAlpha = opacity;
-      ctx.lineWidth = size;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
-      ctx.stroke();
-    } else {
-      // Default 'brush': Soft wet bristle stroke
-      ctx.globalCompositeOperation = strokeBlendMode;
-      ctx.strokeStyle = colorHex;
-      ctx.globalAlpha = opacity;
-      ctx.lineWidth = size;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-      ctx.shadowBlur = size * 0.2;
-      ctx.shadowColor = colorHex;
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.quadraticCurveTo(p1.x, p1.y, midX, midY);
-      ctx.stroke();
+    drawDot(pt);
+
+    if (stencilMode === 'mirror' || stencilMode === 'quad' || stencilMode === 'mandala' || stencilMode === 'kaleidoscope') {
+      drawDot({ x: w - pt.x, y: pt.y });
     }
+    if (stencilMode === 'quad' || stencilMode === 'mandala' || stencilMode === 'kaleidoscope') {
+      drawDot({ x: pt.x, y: h - pt.y });
+      drawDot({ x: w - pt.x, y: h - pt.y });
+    }
+    if (stencilMode === 'mandala' || stencilMode === 'kaleidoscope') {
+      const rotations = stencilMode === 'kaleidoscope' ? 12 : 8;
+      const cx = w / 2;
+      const cy = h / 2;
+      for (let i = 1; i < rotations; i++) {
+        const angle = (i * Math.PI * 2) / rotations;
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+        drawDot({
+          x: cx + (pt.x - cx) * cos - (pt.y - cy) * sin,
+          y: cy + (pt.x - cx) * sin + (pt.y - cy) * cos,
+        });
+      }
+    }
+  }, [brushOpacity, brushSize, brushTool, customHex, stencilMode, strokeBlendMode]);
 
-    ctx.restore();
-  }, [rainbowHue, speedDynamics, strokeBlendMode]);
-
-  // Apply Stencil Symmetry across canvas
-  const drawSymmetricSegment = useCallback((
+  // Apply Stencil Symmetry across canvas for smooth curves
+  const drawSymmetricCurve = useCallback((
     ctx: CanvasRenderingContext2D,
-    p1: { x: number; y: number },
-    p2: { x: number; y: number },
+    pStart: { x: number; y: number },
+    pCtrl: { x: number; y: number },
+    pEnd: { x: number; y: number },
     w: number,
-    h: number
+    h: number,
+    tool = brushTool,
+    color = customHex,
+    size = brushSize,
+    opacity = brushOpacity
   ) => {
     const cx = w / 2;
     const cy = h / 2;
 
-    const drawPair = (pt1: { x: number; y: number }, pt2: { x: number; y: number }) => {
-      drawSegment(ctx, pt1, pt2, brushTool, customHex, brushSize, brushOpacity);
+    const draw = (
+      s: { x: number; y: number },
+      c: { x: number; y: number },
+      e: { x: number; y: number }
+    ) => {
+      drawCurveSegment(ctx, s, c, e, tool, color, size, opacity);
     };
 
-    // Primary
-    drawPair(p1, p2);
+    // Primary stroke
+    draw(pStart, pCtrl, pEnd);
 
     if (stencilMode === 'mirror' || stencilMode === 'quad' || stencilMode === 'mandala' || stencilMode === 'kaleidoscope') {
       // Mirror X
-      drawPair(
-        { x: w - p1.x, y: p1.y },
-        { x: w - p2.x, y: p2.y }
+      draw(
+        { x: w - pStart.x, y: pStart.y },
+        { x: w - pCtrl.x, y: pCtrl.y },
+        { x: w - pEnd.x, y: pEnd.y }
       );
     }
 
     if (stencilMode === 'quad' || stencilMode === 'mandala' || stencilMode === 'kaleidoscope') {
       // Mirror Y
-      drawPair(
-        { x: p1.x, y: h - p1.y },
-        { x: p2.x, y: h - p2.y }
+      draw(
+        { x: pStart.x, y: h - pStart.y },
+        { x: pCtrl.x, y: h - pCtrl.y },
+        { x: pEnd.x, y: h - pEnd.y }
       );
       // Mirror XY
-      drawPair(
-        { x: w - p1.x, y: h - p1.y },
-        { x: w - p2.x, y: h - p2.y }
+      draw(
+        { x: w - pStart.x, y: h - pStart.y },
+        { x: w - pCtrl.x, y: h - pCtrl.y },
+        { x: w - pEnd.x, y: h - pEnd.y }
       );
     }
 
@@ -644,103 +901,106 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
         const cos = Math.cos(angle);
         const sin = Math.sin(angle);
 
-        const r1 = {
-          x: cx + (p1.x - cx) * cos - (p1.y - cy) * sin,
-          y: cy + (p1.x - cx) * sin + (p1.y - cy) * cos,
-        };
-        const r2 = {
-          x: cx + (p2.x - cx) * cos - (p2.y - cy) * sin,
-          y: cy + (p2.x - cx) * sin + (p2.y - cy) * cos,
-        };
-        drawPair(r1, r2);
+        const rotatePt = (p: { x: number; y: number }) => ({
+          x: cx + (p.x - cx) * cos - (p.y - cy) * sin,
+          y: cy + (p.x - cx) * sin + (p.y - cy) * cos,
+        });
+
+        draw(rotatePt(pStart), rotatePt(pCtrl), rotatePt(pEnd));
       }
     }
-  }, [brushOpacity, brushSize, brushTool, customHex, drawSegment, stencilMode]);
+  }, [brushOpacity, brushSize, brushTool, customHex, drawCurveSegment, stencilMode]);
 
-    // Linearly interpolate intermediate points between two sampled coordinates
-  // (pointer events fire at 60-120Hz, leaving gaps on fast strokes)
-  const interpolatePoints = useCallback((
+  // Backward compatible symmetric segment connector
+  const drawSymmetricSegment = useCallback((
+    ctx: CanvasRenderingContext2D,
     p1: { x: number; y: number },
     p2: { x: number; y: number },
-    segments: number
-  ): { x: number; y: number }[] => {
-    const points: { x: number; y: number }[] = [];
-    if (segments <= 1) {
-      return points;
-    }
-    const dx = (p2.x - p1.x) / segments;
-    const dy = (p2.y - p1.y) / segments;
-    for (let i = 1; i < segments; i++) {
-      points.push({ x: p1.x + dx * i, y: p1.y + dy * i });
-    }
-    return points;
-  }, []);
+    w: number,
+    h: number
+  ) => {
+    const mid = { x: (p1.x + p2.x) / 2, y: (p1.y + p2.y) / 2 };
+    drawSymmetricCurve(ctx, p1, mid, p2, w, h);
+  }, [drawSymmetricCurve]);
 
-  // Batch Processor for smooth RAF drawing
-  const processPointerBatch = useCallback(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
+  // Real-time Collaboration: Sync remote strokes, canvas clear, and cursors
+  useEffect(() => {
+    const handleRemoteStroke = (stroke: RemoteStroke) => {
+      const canvas = canvasRef.current;
+      if (!canvas || !stroke.points || stroke.points.length === 0) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
-    const displayWidth = parseFloat(canvas.style.width) || canvas.width;
-    const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+      const pts = stroke.points;
+      const tool = (stroke.tool as StrokeTool) || 'brush';
+      const color = stroke.color;
+      const size = stroke.size || 12;
+      const opacity = stroke.opacity ?? 0.8;
 
-    const queue = pointsQueueRef.current;
-    if (queue.length === 0) {
-      rafIdRef.current = null;
-      return;
-    }
+      if (pts.length === 1) {
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.globalAlpha = opacity;
+        ctx.beginPath();
+        ctx.arc(pts[0].x, pts[0].y, Math.max(1, size / 2), 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
 
-    // Fill gaps between sampled pointer events so fast strokes stay continuous
-    const interpolatedQueue: { x: number; y: number }[] = [];
-    const pushUnique = (pt: { x: number; y: number }) => {
-      const last = interpolatedQueue[interpolatedQueue.length - 1];
-      if (!last || last.x !== pt.x || last.y !== pt.y) {
-        interpolatedQueue.push(pt);
+      let lastMid = pts[0];
+      for (let i = 1; i < pts.length; i++) {
+        const pPrev = pts[i - 1];
+        const pCurr = pts[i];
+        const mid = { x: (pPrev.x + pCurr.x) / 2, y: (pPrev.y + pCurr.y) / 2 };
+        drawCurveSegment(ctx, lastMid, pPrev, mid, tool, color, size, opacity);
+        lastMid = mid;
+      }
+      const lastPt = pts[pts.length - 1];
+      drawCurveSegment(ctx, lastMid, lastPt, lastPt, tool, color, size, opacity);
+    };
+
+    const handleRemoteClear = () => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      const displayWidth = parseFloat(canvas.style.width) || canvas.width;
+      const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+      ctx.fillStyle = getPaperBgColor(paperTexture);
+      ctx.fillRect(0, 0, displayWidth, displayHeight);
+    };
+
+    const handleRemoteCursor = (data: any) => {
+      if (data.tab === 'studio' && data.user) {
+        setRemoteCanvasCursors((prev) => {
+          const filtered = prev.filter((c) => c.id !== data.user.id);
+          return [
+            ...filtered,
+            {
+              id: data.user.id,
+              name: data.user.name,
+              color: data.user.color,
+              x: data.x,
+              y: data.y,
+            },
+          ];
+        });
       }
     };
 
-    for (let i = 0; i < queue.length; i++) {
-      const current = queue[i];
-      const next = queue[i + 1];
-      pushUnique(current);
-      if (next) {
-        const distance = Math.hypot(next.x - current.x, next.y - current.y);
-        const segments = Math.max(1, Math.floor(distance / 4)); // ~4px between dabs
-        interpolatedQueue.push(...interpolatePoints(current, next, segments));
-      }
-    }
+    collaborationService.on('stroke', handleRemoteStroke);
+    collaborationService.on('clear_canvas', handleRemoteClear);
+    collaborationService.on('cursor', handleRemoteCursor);
 
-    while (interpolatedQueue.length > 0) {
-      const pt = interpolatedQueue.shift()!;
-      if (!prevPtRef.current) {
-        prevPtRef.current = pt;
-        continue;
-      }
+    return () => {
+      collaborationService.off('stroke', handleRemoteStroke);
+      collaborationService.off('clear_canvas', handleRemoteClear);
+      collaborationService.off('cursor', handleRemoteCursor);
+    };
+  }, [drawCurveSegment, getPaperBgColor, paperTexture]);
 
-      drawSymmetricSegment(ctx, prevPtRef.current, pt, displayWidth, displayHeight);
-
-      const dx = pt.x - prevPtRef.current.x;
-      const dy = pt.y - prevPtRef.current.y;
-      const speed = Math.hypot(dx, dy);
-
-      audioSynth.updatePaintSound({
-        rgb: hexToRgb(customHex),
-        speed,
-        tool: brushTool,
-        brushSize,
-        brushOpacity,
-        stencilMode,
-      });
-
-      prevPtRef.current = pt;
-    }
-
-    rafIdRef.current = requestAnimationFrame(processPointerBatch);
-  }, [brushOpacity, brushSize, brushTool, customHex, drawSymmetricSegment, hexToRgb, stencilMode]);
-
-  // Pointer Handlers
+  // Pointer Handlers with Continuous Smooth Spline Engine
   const handlePointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     e.preventDefault();
     canvasRef.current?.setPointerCapture(e.pointerId);
@@ -764,7 +1024,20 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
 
     isDrawingRef.current = true;
     prevPtRef.current = pt;
-    pointsQueueRef.current = [pt];
+    prevMidPtRef.current = pt;
+    smoothPointRef.current = pt;
+    currentBrushSizeRef.current = brushSize;
+    currentLocalStrokeRef.current = [pt];
+
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const displayWidth = parseFloat(canvas.style.width) || canvas.width;
+        const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+        drawSymmetricDot(ctx, pt, displayWidth, displayHeight, brushTool, customHex, brushSize, brushOpacity);
+      }
+    }
 
     audioSynth.startPaintSound({
       rgb: hexToRgb(customHex),
@@ -774,31 +1047,92 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       brushOpacity,
       stencilMode,
     });
-
-    if (!rafIdRef.current) {
-      rafIdRef.current = requestAnimationFrame(processPointerBatch);
-    }
   };
 
   const handlePointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!isDrawingRef.current) return;
-    e.preventDefault();
     const rawPt = getCanvasCoords(e);
 
+    // Broadcast cursor position in studio tab throttled (~50ms)
+    const now = Date.now();
+    if (now - lastCanvasCursorBroadcastRef.current > 50) {
+      lastCanvasCursorBroadcastRef.current = now;
+      collaborationService.sendCursor(rawPt.x, rawPt.y, 'studio');
+    }
+
+    if (!isDrawingRef.current) return;
+    e.preventDefault();
+
+    // StreamLine filter stabilizer for buttery curved paths
     let pt = rawPt;
-    if (smoothingLevel !== 'off' && prevPtRef.current) {
-      const alpha = smoothingLevel === 'high' ? 0.88 : smoothingLevel === 'medium' ? 0.68 : 0.42;
-      pt = {
-        x: prevPtRef.current.x + (rawPt.x - prevPtRef.current.x) * (1 - alpha),
-        y: prevPtRef.current.y + (rawPt.y - prevPtRef.current.y) * (1 - alpha),
+    if (smoothingLevel !== 'off') {
+      const weight = smoothingLevel === 'high' ? 0.2 : smoothingLevel === 'medium' ? 0.42 : 0.72;
+      if (!smoothPointRef.current) {
+        smoothPointRef.current = rawPt;
+      }
+      smoothPointRef.current = {
+        x: smoothPointRef.current.x + (rawPt.x - smoothPointRef.current.x) * weight,
+        y: smoothPointRef.current.y + (rawPt.y - smoothPointRef.current.y) * weight,
       };
+      pt = smoothPointRef.current;
     }
 
-    pointsQueueRef.current.push(pt);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    if (!rafIdRef.current) {
-      rafIdRef.current = requestAnimationFrame(processPointerBatch);
+    const displayWidth = parseFloat(canvas.style.width) || canvas.width;
+    const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+
+    const pPrev = prevPtRef.current || pt;
+    const pMidPrev = prevMidPtRef.current || pPrev;
+
+    // Calculate next midpoint
+    const mid = {
+      x: (pPrev.x + pt.x) / 2,
+      y: (pPrev.y + pt.y) / 2,
+    };
+
+    const dist = Math.hypot(pt.x - pPrev.x, pt.y - pPrev.y);
+
+    // Velocity taper with smooth exponential blend
+    if (speedDynamics) {
+      const targetScale = Math.max(0.76, Math.min(1.22, 1.15 - dist / 55));
+      const targetSize = brushSize * targetScale;
+      currentBrushSizeRef.current = currentBrushSizeRef.current
+        ? currentBrushSizeRef.current * 0.75 + targetSize * 0.25
+        : targetSize;
+    } else {
+      currentBrushSizeRef.current = brushSize;
     }
+    const effectiveSize = currentBrushSizeRef.current;
+
+    // Draw C1-continuous smooth quadratic spline from pMidPrev through pPrev to mid
+    drawSymmetricCurve(
+      ctx,
+      pMidPrev,
+      pPrev,
+      mid,
+      displayWidth,
+      displayHeight,
+      brushTool,
+      customHex,
+      effectiveSize,
+      brushOpacity
+    );
+
+    audioSynth.updatePaintSound({
+      rgb: hexToRgb(customHex),
+      speed: dist,
+      tool: brushTool,
+      brushSize: effectiveSize,
+      brushOpacity,
+      stencilMode,
+    });
+
+    prevMidPtRef.current = mid;
+    prevPtRef.current = pt;
+    currentLocalStrokeRef.current.push(pt);
   };
 
   const handlePointerUp = (e: React.PointerEvent<HTMLCanvasElement>) => {
@@ -806,14 +1140,50 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     e.preventDefault();
     canvasRef.current?.releasePointerCapture(e.pointerId);
 
+    const canvas = canvasRef.current;
+    if (canvas && prevPtRef.current && prevMidPtRef.current) {
+      const ctx = canvas.getContext('2d');
+      if (ctx) {
+        const displayWidth = parseFloat(canvas.style.width) || canvas.width;
+        const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+        // Finish final segment to tip
+        drawSymmetricCurve(
+          ctx,
+          prevMidPtRef.current,
+          prevPtRef.current,
+          prevPtRef.current,
+          displayWidth,
+          displayHeight,
+          brushTool,
+          customHex,
+          currentBrushSizeRef.current || brushSize,
+          brushOpacity
+        );
+      }
+    }
+
     isDrawingRef.current = false;
     prevPtRef.current = null;
+    prevMidPtRef.current = null;
+    smoothPointRef.current = null;
     pointsQueueRef.current = [];
 
     if (rafIdRef.current) {
       cancelAnimationFrame(rafIdRef.current);
       rafIdRef.current = null;
     }
+
+    if (currentLocalStrokeRef.current.length > 0) {
+      collaborationService.sendStroke({
+        points: currentLocalStrokeRef.current,
+        color: customHex,
+        size: brushSize,
+        opacity: brushOpacity,
+        tool: brushTool,
+        stencilMode,
+      });
+    }
+    currentLocalStrokeRef.current = [];
 
     audioSynth.stopPaintSound();
     pushUndoState();
@@ -865,15 +1235,31 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleClearCanvas, handleRedo, handleUndo]);
 
-  // Export Artwork PNG
+  // Export Artwork PNG (combines paint layer and outline layer)
   const handleExportPNG = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     try {
+      let exportDataUrl = '';
+      if (outlineOverlayRef.current && outlineOnTop && selectedTemplate.id !== 'blank') {
+        const mergeCanvas = document.createElement('canvas');
+        mergeCanvas.width = canvas.width;
+        mergeCanvas.height = canvas.height;
+        const mergeCtx = mergeCanvas.getContext('2d');
+        if (mergeCtx) {
+          mergeCtx.drawImage(canvas, 0, 0);
+          mergeCtx.drawImage(outlineOverlayRef.current, 0, 0);
+          exportDataUrl = mergeCanvas.toDataURL('image/png');
+        }
+      }
+      if (!exportDataUrl) {
+        exportDataUrl = canvas.toDataURL('image/png');
+      }
+
       const link = document.createElement('a');
-      link.download = `infinite-colour-masterpiece-${Date.now()}.png`;
-      link.href = canvas.toDataURL('image/png');
+      link.download = `infinite-colour-${selectedTemplate.id !== 'blank' ? selectedTemplate.id : 'masterpiece'}-${Date.now()}.png`;
+      link.href = exportDataUrl;
       link.click();
 
       confetti({
@@ -887,25 +1273,150 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
     }
   };
 
-  // Copy Canvas to Clipboard
+  // Copy Canvas to Clipboard with multi-tier fallback (Promise ClipboardItem -> Direct Blob -> Data URL -> Download)
   const handleCopyToClipboard = async () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     try {
-      canvas.toBlob(async (blob) => {
-        if (!blob) return;
-        await navigator.clipboard.write([
-          new ClipboardItem({ 'image/png': blob })
-        ]);
-        setCopiedNotification(true);
+      let targetCanvas: HTMLCanvasElement = canvas;
+      if (outlineOverlayRef.current && outlineOnTop && selectedTemplate.id !== 'blank') {
+        const mergeCanvas = document.createElement('canvas');
+        mergeCanvas.width = canvas.width;
+        mergeCanvas.height = canvas.height;
+        const mergeCtx = mergeCanvas.getContext('2d');
+        if (mergeCtx) {
+          mergeCtx.drawImage(canvas, 0, 0);
+          mergeCtx.drawImage(outlineOverlayRef.current, 0, 0);
+          targetCanvas = mergeCanvas;
+        }
+      }
+
+      // Tier 1: Modern Promise-based ClipboardItem (keeps transient user gesture active in Chrome/Edge/Safari)
+      if (typeof ClipboardItem !== 'undefined' && navigator.clipboard && navigator.clipboard.write) {
+        try {
+          const blobPromise = new Promise<Blob>((resolve, reject) => {
+            targetCanvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error('toBlob failed'));
+            }, 'image/png');
+          });
+
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blobPromise })
+          ]);
+          setCopiedNotification('Artwork PNG copied to clipboard! (Ctrl+V to paste)');
+          audioSynth.playPop();
+          setTimeout(() => setCopiedNotification(null), 2500);
+          return;
+        } catch (itemErr) {
+          console.warn('Promise ClipboardItem write failed, trying awaited blob write:', itemErr);
+          const blob = await new Promise<Blob | null>((resolve) => targetCanvas.toBlob(resolve, 'image/png'));
+          if (blob) {
+            try {
+              await navigator.clipboard.write([
+                new ClipboardItem({ 'image/png': blob })
+              ]);
+              setCopiedNotification('Artwork PNG copied to clipboard! (Ctrl+V to paste)');
+              audioSynth.playPop();
+              setTimeout(() => setCopiedNotification(null), 2500);
+              return;
+            } catch (blobErr) {
+              console.warn('Direct blob write failed:', blobErr);
+            }
+          }
+        }
+      }
+
+      // Tier 2: Text clipboard fallback with Data-URL
+      const dataUrl = targetCanvas.toDataURL('image/png');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(dataUrl);
+        setCopiedNotification('Image Data-URL copied to clipboard!');
         audioSynth.playPop();
-        setTimeout(() => setCopiedNotification(false), 2000);
-      });
-    } catch {
-      // Fallback
+        setTimeout(() => setCopiedNotification(null), 2500);
+        return;
+      }
+
+      // Tier 3: Trigger PNG download
+      handleExportPNG();
+      setCopiedNotification('Downloaded artwork PNG!');
+      setTimeout(() => setCopiedNotification(null), 2500);
+    } catch (err) {
+      console.error('All copy to clipboard strategies failed:', err);
+      handleExportPNG();
+      setCopiedNotification('Downloaded artwork PNG!');
+      setTimeout(() => setCopiedNotification(null), 2500);
     }
   };
+
+  // Support pasting images from clipboard (Ctrl+V) directly onto canvas
+  useEffect(() => {
+    const handlePaste = async (e: ClipboardEvent) => {
+      // Don't intercept paste inside text inputs
+      if ((e.target as HTMLElement)?.tagName === 'INPUT' || (e.target as HTMLElement)?.tagName === 'TEXTAREA') {
+        return;
+      }
+
+      const items = e.clipboardData?.items;
+      if (!items) return;
+
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.type.indexOf('image') !== -1) {
+          const file = item.getAsFile();
+          if (!file) continue;
+
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = canvasRef.current;
+              if (!canvas) return;
+              const ctx = canvas.getContext('2d');
+              if (!ctx) return;
+
+              pushUndoState();
+
+              const displayWidth = parseFloat(canvas.style.width) || canvas.width;
+              const displayHeight = parseFloat(canvas.style.height) || canvas.height;
+
+              // Fit nicely on canvas
+              const maxW = displayWidth * 0.85;
+              const maxH = displayHeight * 0.85;
+              let drawW = img.width;
+              let drawH = img.height;
+
+              const scale = Math.min(maxW / drawW, maxH / drawH, 1);
+              drawW *= scale;
+              drawH *= scale;
+
+              const posX = (displayWidth - drawW) / 2;
+              const posY = (displayHeight - drawH) / 2;
+
+              ctx.save();
+              ctx.globalCompositeOperation = 'source-over';
+              ctx.globalAlpha = 1;
+              ctx.drawImage(img, posX, posY, drawW, drawH);
+              ctx.restore();
+
+              pushUndoState();
+              audioSynth.playPop();
+              setCopiedNotification('Pasted image onto canvas!');
+              setTimeout(() => setCopiedNotification(null), 2500);
+            };
+            img.src = event.target?.result as string;
+          };
+          reader.readAsDataURL(file);
+          e.preventDefault();
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('paste', handlePaste);
+    return () => window.removeEventListener('paste', handlePaste);
+  }, [pushUndoState]);
 
   return (
     <div className={`flex-1 flex flex-col h-full relative overflow-hidden select-none ${
@@ -1040,7 +1551,7 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
         
         {/* Canvas Area */}
         <div className="flex-1 relative overflow-hidden flex items-center justify-center p-2 md:p-4">
-          <div className="relative w-full h-full border-4 border-black shadow-[6px_6px_0px_0px_#000] bg-white overflow-hidden flex items-center justify-center">
+          <div className="relative w-full h-full border-2 border-slate-900 dark:border-slate-700 shadow-md bg-white rounded-xl overflow-hidden flex items-center justify-center">
             
             <canvas
               ref={canvasRef}
@@ -1051,6 +1562,37 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
               className="touch-none cursor-crosshair w-full h-full block"
               style={{ transform: `scaleX(${flipX ? -1 : 1}) scaleY(${flipY ? -1 : 1})` }}
             />
+
+            {/* Top-layer Outline Overlay Canvas (Keeps lines razor-sharp above color) */}
+            <canvas
+              ref={outlineOverlayRef}
+              className="absolute inset-0 pointer-events-none touch-none w-full h-full block"
+              style={{ transform: `scaleX(${flipX ? -1 : 1}) scaleY(${flipY ? -1 : 1})` }}
+            />
+
+            {/* Remote Collaborator Cursors in Studio */}
+            {remoteCanvasCursors.map((cursor) => (
+              <div
+                key={cursor.id}
+                className="absolute pointer-events-none z-30 transition-all duration-75 flex items-center gap-1.5"
+                style={{
+                  left: `${cursor.x}px`,
+                  top: `${cursor.y}px`,
+                  transform: 'translate(-2px, -2px)',
+                }}
+              >
+                <MousePointer2
+                  className="w-4 h-4 -rotate-45 drop-shadow-md"
+                  style={{ color: cursor.color, fill: cursor.color }}
+                />
+                <span
+                  className="text-[9px] font-bold px-1.5 py-0.5 rounded-md text-white shadow-sm border border-black/20 select-none whitespace-nowrap"
+                  style={{ backgroundColor: cursor.color }}
+                >
+                  {cursor.name}
+                </span>
+              </div>
+            ))}
 
             {/* View Flip Active Indicator Badge */}
             {(flipX || flipY) && (
@@ -1081,25 +1623,93 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
               />
             </div>
 
-            {/* Template Badge Indicator */}
+            {/* Outline Controls Panel when a template is active */}
             {selectedTemplate.id !== 'blank' && (
-              <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5 bg-yellow-300 text-black border-2 border-black px-2.5 py-1 text-xs font-black uppercase shadow-[2px_2px_0px_0px_#000]">
-                <span>{selectedTemplate.emoji}</span>
-                <span>{selectedTemplate.name}</span>
+              <div className="absolute top-3 left-3 z-20 flex flex-wrap items-center gap-1.5 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xs text-black dark:text-white border-2 border-slate-900 dark:border-slate-700 rounded-lg p-1.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.8)] max-w-[90%]">
+                <div className="flex items-center gap-1.5 px-2 py-0.5 bg-pink-100 dark:bg-pink-950/60 text-pink-700 dark:text-pink-300 rounded text-xs font-black uppercase">
+                  <span>{selectedTemplate.emoji}</span>
+                  <span className="truncate max-w-[120px]">{selectedTemplate.name}</span>
+                </div>
+
+                {/* Keep on Top Toggle */}
+                <button
+                  onClick={() => setOutlineOnTop((prev) => !prev)}
+                  className={`px-2 py-0.5 text-[10px] font-bold uppercase rounded border transition-all flex items-center gap-1 ${
+                    outlineOnTop
+                      ? 'bg-emerald-500 text-white border-emerald-600 shadow-xs'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-300 dark:border-slate-700'
+                  }`}
+                  title="When active, the crisp black outline stays on top of your brush strokes like a real coloring book"
+                >
+                  <Eye className="w-3 h-3" />
+                  <span>{outlineOnTop ? 'Outline: Over Color' : 'Outline: Flat'}</span>
+                </button>
+
+                {/* Outline Weight Options */}
+                <div className="flex items-center gap-0.5 bg-slate-100 dark:bg-slate-800 p-0.5 rounded border border-slate-200 dark:border-slate-700">
+                  <button
+                    onClick={() => setOutlineLineWidth(2)}
+                    className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${outlineLineWidth === 2 ? 'bg-white dark:bg-slate-700 text-black dark:text-white shadow-xs' : 'text-slate-500'}`}
+                    title="Fine line weight"
+                  >
+                    Fine
+                  </button>
+                  <button
+                    onClick={() => setOutlineLineWidth(3.5)}
+                    className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${outlineLineWidth === 3.5 ? 'bg-white dark:bg-slate-700 text-black dark:text-white shadow-xs' : 'text-slate-500'}`}
+                    title="Medium line weight"
+                  >
+                    Med
+                  </button>
+                  <button
+                    onClick={() => setOutlineLineWidth(5)}
+                    className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${outlineLineWidth === 5 ? 'bg-white dark:bg-slate-700 text-black dark:text-white shadow-xs' : 'text-slate-500'}`}
+                    title="Thick line weight"
+                  >
+                    Bold
+                  </button>
+                </div>
+
+                {/* Outline Color Style Options */}
+                <div className="flex items-center gap-1 pl-1">
+                  <button
+                    onClick={() => setOutlineColorStyle('dark')}
+                    className={`w-4 h-4 rounded-full bg-slate-900 border ${outlineColorStyle === 'dark' ? 'ring-2 ring-pink-500' : 'border-slate-300'}`}
+                    title="Ink Black outline"
+                  />
+                  <button
+                    onClick={() => setOutlineColorStyle('gold')}
+                    className={`w-4 h-4 rounded-full bg-amber-500 border ${outlineColorStyle === 'gold' ? 'ring-2 ring-pink-500' : 'border-slate-300'}`}
+                    title="Gold Alchemical outline"
+                  />
+                  <button
+                    onClick={() => setOutlineColorStyle('indigo')}
+                    className={`w-4 h-4 rounded-full bg-blue-600 border ${outlineColorStyle === 'indigo' ? 'ring-2 ring-pink-500' : 'border-slate-300'}`}
+                    title="Indigo blueprint outline"
+                  />
+                  <button
+                    onClick={() => setOutlineColorStyle('white')}
+                    className={`w-4 h-4 rounded-full bg-white border ${outlineColorStyle === 'white' ? 'ring-2 ring-pink-500' : 'border-slate-400'}`}
+                    title="Chalk White outline"
+                  />
+                </div>
+
+                {/* Dismiss / Freehand button */}
                 <button
                   onClick={() => handleSelectTemplate(CANVAS_TEMPLATES[0])}
-                  className="ml-1 hover:text-red-600 font-bold"
+                  className="ml-auto px-1.5 py-0.5 text-xs font-bold text-slate-500 hover:text-red-600 transition-colors"
+                  title="Remove template and switch to blank freehand canvas"
                 >
                   ✕
                 </button>
               </div>
             )}
 
-            {/* Copy Notification Toast */}
+            {/* Copy / Action Notification Toast */}
             {copiedNotification && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-green-300 text-black border-2 border-black px-3 py-1 font-black text-xs uppercase shadow-[4px_4px_0px_0px_#000] animate-bounce flex items-center gap-1">
-                <Check className="w-4 h-4" />
-                <span>Copied to Clipboard!</span>
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 z-20 bg-green-300 text-black border-2 border-black px-3.5 py-1.5 font-black text-xs uppercase shadow-[4px_4px_0px_0px_#000] animate-bounce flex items-center gap-1.5 max-w-[90%] text-center">
+                <Check className="w-4 h-4 shrink-0" />
+                <span>{copiedNotification}</span>
               </div>
             )}
           </div>
@@ -1354,38 +1964,66 @@ export const PaintCanvas: React.FC<PaintCanvasProps> = ({
       {/* Outlines / Templates Modal */}
       {showTemplatesModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-fadeIn select-none">
-          <div className={`relative w-full max-w-lg border-4 p-5 shadow-[8px_8px_0px_0px_#000] space-y-4 ${
-            isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-black text-black'
+          <div className={`relative w-full max-w-2xl border-2 rounded-xl p-5 shadow-2xl space-y-4 max-h-[90vh] flex flex-col ${
+            isDarkMode ? 'bg-slate-900 border-slate-700 text-white' : 'bg-white border-slate-800 text-black'
           }`}>
-            <div className="flex items-center justify-between border-b-2 pb-2 border-black">
+            <div className="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <Layers className="w-5 h-5 text-pink-500" />
-                <h3 className="font-black text-base uppercase italic">Select Outline Template</h3>
+                <div>
+                  <h3 className="font-black text-base uppercase tracking-tight">Artistic Coloring Outlines</h3>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Handcrafted vector drawings with closed paths, ideal for coloring & flood-fill</p>
+                </div>
               </div>
               <button
                 onClick={() => setShowTemplatesModal(false)}
-                className="w-7 h-7 flex items-center justify-center font-black border-2 border-black bg-white text-black hover:bg-yellow-300"
+                className="w-8 h-8 rounded-lg flex items-center justify-center font-black border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               >
                 ✕
               </button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-80 overflow-y-auto p-1">
-              {CANVAS_TEMPLATES.map((tpl) => (
-                <button
-                  key={tpl.id}
-                  onClick={() => handleSelectTemplate(tpl)}
-                  className={`p-3 border-2 border-black font-black text-left flex flex-col items-center gap-2 shadow-[3px_3px_0px_0px_#000] transition-all hover:scale-105 active:scale-95 ${
-                    selectedTemplate.id === tpl.id ? 'bg-pink-300 text-black' : isDarkMode ? 'bg-slate-800 text-white' : 'bg-slate-50 text-black'
-                  }`}
-                >
-                  <span className="text-3xl">{tpl.emoji}</span>
-                  <div className="text-center">
-                    <div className="text-xs uppercase">{tpl.name}</div>
-                    <div className="text-[9px] text-slate-500 uppercase">{tpl.category}</div>
-                  </div>
-                </button>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 overflow-y-auto p-1 max-h-[60vh] pr-2">
+              {CANVAS_TEMPLATES.map((tpl) => {
+                const isActive = selectedTemplate.id === tpl.id;
+                return (
+                  <button
+                    key={tpl.id}
+                    onClick={() => handleSelectTemplate(tpl)}
+                    className={`p-3 rounded-lg border-2 text-left flex flex-col gap-2 transition-all hover:-translate-y-0.5 ${
+                      isActive
+                        ? 'bg-pink-50 dark:bg-pink-950/40 border-pink-500 ring-2 ring-pink-400 shadow-md'
+                        : 'bg-white dark:bg-slate-800/80 border-slate-200 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-500 shadow-xs'
+                    }`}
+                  >
+                    {/* Live Vector Thumbnail */}
+                    <div className="relative">
+                      <TemplateThumbnail template={tpl} isDarkMode={isDarkMode} />
+                      {isActive && (
+                        <div className="absolute top-1.5 right-1.5 px-2 py-0.5 bg-pink-500 text-white font-black text-[9px] uppercase rounded-full shadow-xs">
+                          Active
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-lg">{tpl.emoji}</span>
+                        <span className="text-xs font-black uppercase text-slate-900 dark:text-white truncate">{tpl.name}</span>
+                      </div>
+                      <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300">
+                        {tpl.category}
+                      </span>
+                    </div>
+
+                    {tpl.description && (
+                      <p className="text-[10px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
+                        {tpl.description}
+                      </p>
+                    )}
+                  </button>
+                );
+              })}
             </div>
           </div>
         </div>

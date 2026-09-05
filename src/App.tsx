@@ -25,8 +25,9 @@ import { QuestsModal } from './components/QuestsModal';
 import { DailyChallengeModal } from './components/DailyChallengeModal';
 import { HowToPlayModal } from './components/HowToPlayModal';
 import { HackTheArtsModal } from './components/HackTheArtsModal';
-import { DoodleAI } from './components/DoodleAI';
-import { DoodleChallenge } from './components/DoodleChallenge';
+import { AILab } from './components/AILab';
+import { CollaborationModal } from './components/CollaborationModal';
+import { CollabStatusBar } from './components/CollabStatusBar';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
@@ -123,6 +124,12 @@ export default function App() {
           audioSynth.playPop();
           return;
         }
+        if (key === '9') {
+          e.preventDefault();
+          setActiveTab('ai');
+          audioSynth.playPop();
+          return;
+        }
       }
 
       // Quick Theme toggle shortcut (Alt+T or T when not in studio)
@@ -150,6 +157,7 @@ export default function App() {
     return !safeGetItem('icc_seen_welcome');
   });
   const [showHackTheArtsModal, setShowHackTheArtsModal] = useState<boolean>(false);
+  const [showCollabModal, setShowCollabModal] = useState<boolean>(false);
   const [isTrashOver, setIsTrashOver] = useState<boolean>(false);
   const [newlyUnlockedColor, setNewlyUnlockedColor] = useState<ColorItem | null>(null);
 
@@ -426,11 +434,18 @@ export default function App() {
          onClearBoard={() => setBoardTiles([])}
          onOpenHelp={() => setShowHelp(true)}
          onOpenHackTheArts={() => setShowHackTheArtsModal(true)}
+         onOpenCollab={() => setShowCollabModal(true)}
          boardTileCount={boardTiles.length}
          hasUnclaimedDaily={dailyState.completed && !dailyState.claimed}
          isDarkMode={isDarkMode}
          onToggleTheme={toggleTheme}
        />
+
+      {/* Real-Time Collaboration Presence Status Bar */}
+      <CollabStatusBar
+        isDarkMode={isDarkMode}
+        onOpenSettings={() => setShowCollabModal(true)}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
@@ -501,27 +516,29 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'ai' && (
-          <DoodleAI isDarkMode={isDarkMode} />
+        {/* Unified AI Lab (Doodle Vision, Speed Challenge) */}
+        {(activeTab === 'ai' || activeTab === 'challenge') && (
+          <AILab
+            initialSubTab={activeTab === 'challenge' ? 'challenge' : 'ai'}
+            isDarkMode={isDarkMode}
+          />
         )}
 
-        {activeTab === 'challenge' && (
-          <DoodleChallenge isDarkMode={isDarkMode} />
+        {/* Right Inventory Sidebar: only shown on 'board' and 'studio' to prevent clutter */}
+        {(activeTab === 'board' || activeTab === 'studio') && (
+          <SidebarInventory
+            unlockedColors={unlockedColors}
+            activeColor={activeBrushColor}
+            onSelectColorForBrush={(color) => {
+              setActiveBrushColor(color);
+            }}
+            onSpawnTileToBoard={spawnTileToBoard}
+            onResetProgress={handleResetProgress}
+            activeTab={activeTab}
+            isTrashOver={isTrashOver}
+            isDarkMode={isDarkMode}
+          />
         )}
-
-        {/* Right Inventory Sidebar */}
-        <SidebarInventory
-          unlockedColors={unlockedColors}
-          activeColor={activeBrushColor}
-          onSelectColorForBrush={(color) => {
-            setActiveBrushColor(color);
-          }}
-          onSpawnTileToBoard={spawnTileToBoard}
-          onResetProgress={handleResetProgress}
-          activeTab={activeTab}
-          isTrashOver={isTrashOver}
-          isDarkMode={isDarkMode}
-        />
       </div>
 
       {/* New Color Unlock Modal Celebration */}
@@ -560,6 +577,13 @@ export default function App() {
          isOpen={showHackTheArtsModal}
          onClose={() => setShowHackTheArtsModal(false)}
          onLaunchStudio={() => setActiveTab('studio')}
+         isDarkMode={isDarkMode}
+       />
+
+       {/* Real-time Multiplayer Collaboration Modal */}
+       <CollaborationModal
+         isOpen={showCollabModal}
+         onClose={() => setShowCollabModal(false)}
          isDarkMode={isDarkMode}
        />
      </div>
