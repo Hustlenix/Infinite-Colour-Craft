@@ -85,6 +85,18 @@ export const HowToPlayModal: React.FC<HowToPlayModalProps> = ({ onClose, onSpawn
           </div>
         </div>
 
+        {/* Full written guide */}
+        <a
+          href="guides/how-to-play.html"
+          target="_blank"
+          rel="noreferrer"
+          className={`block text-center text-[11px] font-bold underline underline-offset-2 ${
+            isDarkMode ? 'text-yellow-300' : 'text-slate-700'
+          }`}
+        >
+          📖 Read the full guide with mixing tips
+        </a>
+
         {/* Big Start Button */}
         <button
           onClick={handleStart}
