@@ -1,4 +1,4 @@
-import { DailyChallenge, ColorItem, QuestReward } from '../types';
+import { DailyChallenge, DailyChallengeState, ColorItem, QuestReward } from '../types';
 
 // Deterministic seed pseudo-random generator based on date string e.g. "2026-07-25"
 function getSeedFromDate(dateStr: string): number {
@@ -128,7 +128,7 @@ const CHALLENGE_TEMPLATES = [
   },
   {
     title: 'High Brightness Spectrum',
-    description: 'Synthesize a pigment with Lightness over 70%.',
+    description: 'Synthesize a pigment with Lightness of at least 70%.',
     hint: 'Blend in pure White (#FFFFFF) to elevate lightness.',
     targetType: 'lightness' as const,
     targetLightnessMin: 70,
@@ -148,6 +148,7 @@ const CHALLENGE_TEMPLATES = [
     description: 'Mix 3 new colors today.',
     hint: 'Drag and stack any two different colors on the board!',
     targetType: 'combine_count' as const,
+    requiresNewDiscovery: true,
     requiredAmount: 3,
   },
   {
@@ -197,6 +198,7 @@ export function generateDailyChallenge(dateStr = getTodayDateString()): DailyCha
     targetHueMax: template.targetHueMax,
     targetLightnessMin: template.targetLightnessMin,
     requiredAmount: template.requiredAmount,
+    requiresNewDiscovery: template.requiresNewDiscovery ?? false,
     rewardPigment: reward,
   };
 }
@@ -250,4 +252,24 @@ export function checkColorMatchesChallenge(color: ColorItem, challenge: DailyCha
     return true; // Any color combination counts
   }
   return false;
+}
+
+export function advanceDailyChallenge(state: DailyChallengeState, challenge: DailyChallenge, color: ColorItem, isNew: boolean, date: string, eventId?: string): DailyChallengeState {
+  state = rolloverDaily(state, date);
+  if (state.completed || challenge.id !== date || (eventId && state.processedEventIds?.includes(eventId)) || (challenge.requiresNewDiscovery && !isNew) || !checkColorMatchesChallenge(color, challenge)) return state;
+  if ((challenge.requiresNewDiscovery || challenge.targetType !== 'combine_count') && state.discoveredHexes?.includes(color.hex)) return state;
+  const progress = Math.min(challenge.requiredAmount, state.progress + 1), completed = progress >= challenge.requiredAmount;
+  return { ...state, progress, completed, streak: completed ? state.streak + 1 : state.streak, lastCompletedDate: completed ? date : state.lastCompletedDate,
+    discoveredHexes: [...(state.discoveredHexes || []), color.hex], processedEventIds: eventId ? [...(state.processedEventIds || []), eventId].slice(-64) : state.processedEventIds };
+}
+
+export function previousLocalDate(date: string): string {
+  const [y,m,d] = date.split('-').map(Number), prior = new Date(y,m-1,d-1);
+  return `${prior.getFullYear()}-${String(prior.getMonth()+1).padStart(2,'0')}-${String(prior.getDate()).padStart(2,'0')}`;
+}
+export function rolloverDaily(state: DailyChallengeState | null, date: string): DailyChallengeState {
+  if (state?.lastDate === date) return state;
+  return { lastDate:date, completed:false, claimed:false, progress:0,
+    streak:state?.lastCompletedDate === previousLocalDate(date) ? state.streak : 0,
+    lastCompletedDate:state?.lastCompletedDate || '', discoveredHexes:[], processedEventIds:[] };
 }

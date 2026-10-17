@@ -132,6 +132,7 @@ function fc(input: Float32Array, w: number[][], b: number[]): Float32Array {
 // Run a 28x28 bitmap (784 floats, 0..1) through the network.
 // Returns logits; caller applies softmax.
 export function forward(bitmap: number[], model: DoodleModel): number[] {
+  if(bitmap.length!==784||bitmap.some(v=>!Number.isFinite(v)||v<0||v>1))throw Error('Doodle input must contain 784 finite values between 0 and 1.');
   const s = model.state;
   // conv1: input 1 channel 28x28
   const inp = new Float32Array(784);

@@ -32,6 +32,7 @@ export interface ColorItem {
   emoji: string;
   isBase?: boolean;
   parents?: [string, string] | null; // Hex codes or names of parents
+  parentIds?: [string,string]; // Stable canonical hex identifiers; legacy names remain readable.
   discoveredAt: number; // Timestamp
   rarity: Rarity;
   category: ColorCategory;
@@ -115,6 +116,7 @@ export interface DailyChallenge {
   targetLightnessMin?: number;
   requiredAmount: number;
   rewardPigment: QuestReward;
+  requiresNewDiscovery?:boolean;
 }
 
 export interface DailyChallengeState {
@@ -124,4 +126,6 @@ export interface DailyChallengeState {
   progress: number;
   streak: number;
   lastCompletedDate: string;
+  processedEventIds?:string[];
+  discoveredHexes?:string[];
 }

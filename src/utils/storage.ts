@@ -73,7 +73,14 @@ export function isColorItem(value: unknown): value is ColorItem {
 /** Keeps only well-formed ColorItems; null if fewer than the 5 base colors survive. */
 export function normalizeUnlockedColors(raw: unknown): ColorItem[] | null {
   if (!Array.isArray(raw)) return null;
-  const colors = raw.filter(isColorItem);
+  const colors = raw.filter(isColorItem).map(color => ({
+    ...color,
+    hex: color.hex.toUpperCase(),
+    parentIds: Array.isArray(color.parentIds) && color.parentIds.length === 2 && color.parentIds.every(isValidHex)
+      ? color.parentIds.map(hex => hex.toUpperCase()) as [string, string] : undefined,
+    parents: Array.isArray(color.parents) && color.parents.length === 2 && color.parents.every(p => typeof p === 'string')
+      ? color.parents : undefined,
+  }));
   if (colors.length < 5) return null;
   return colors;
 }
@@ -123,6 +130,12 @@ export function normalizeDailyChallengeState(raw: unknown): DailyChallengeState 
     streak: typeof raw.streak === 'number' && raw.streak >= 0 ? Math.floor(raw.streak) : 0,
     lastCompletedDate:
       typeof raw.lastCompletedDate === 'string' ? raw.lastCompletedDate : '',
+    ...(Array.isArray(raw.processedEventIds) ? {
+      processedEventIds: raw.processedEventIds.filter((v): v is string => typeof v === 'string').slice(-64),
+    } : {}),
+    ...(Array.isArray(raw.discoveredHexes) ? {
+      discoveredHexes: raw.discoveredHexes.filter(isValidHex).map(hex => hex.toUpperCase()).slice(-64),
+    } : {}),
   };
 }
 

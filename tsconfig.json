@@ -22,5 +22,7 @@
     },
     "allowImportingTsExtensions": true,
     "noEmit": true
-  }
+  },
+  "include": ["src", "server.ts", "vite.config.ts", "playwright.config.ts", "e2e"],
+  "exclude": ["node_modules", "dist", "scripts"]
 }

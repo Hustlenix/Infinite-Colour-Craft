@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import type { ColorItem } from '../types';
 import { DoodleAI } from './DoodleAI';
 import { DoodleChallenge } from './DoodleChallenge';
 import { Brain, Target, Bot } from 'lucide-react';
@@ -6,13 +7,22 @@ import { Brain, Target, Bot } from 'lucide-react';
 interface AILabProps {
   initialSubTab?: 'ai' | 'challenge';
   isDarkMode: boolean;
+  active?:boolean;
+  colors?:ColorItem[];
+  ink?:ColorItem;
+  onInk?:(c:ColorItem)=>void;
+  onCraft?:()=>void;
+  onStudio?:()=>void;
 }
 
 export const AILab: React.FC<AILabProps> = ({
   initialSubTab = 'ai',
   isDarkMode,
+  active=true,colors=[],ink,onInk,onCraft,onStudio,
 }) => {
   const [subTab, setSubTab] = useState<'ai' | 'challenge'>(initialSubTab);
+  const labInk=colors.find(color=>color.hex===ink?.hex)||colors[0];
+  useEffect(()=>{if(active)setSubTab(initialSubTab);},[initialSubTab]);
 
   return (
     <div className="flex-1 flex flex-col h-full overflow-hidden">
@@ -74,9 +84,13 @@ export const AILab: React.FC<AILabProps> = ({
 
       {/* Main View Area */}
       <div className="flex-1 overflow-y-auto relative flex flex-col">
-        {subTab === 'ai' && <DoodleAI isDarkMode={isDarkMode} />}
+        <div className="flex flex-wrap items-center gap-2 px-4 py-2 text-xs font-bold">
+          <label>Drawing ink: <select aria-label="Drawing ink" className="border-2 border-black px-2 py-1 bg-white text-black" value={labInk?.hex||''} onChange={e=>{const c=colors.find(c=>c.hex===e.target.value);if(c)onInk?.(c);}}>{colors.map(c=><option key={c.id} value={c.hex}>{c.name}</option>)}</select></label>
+          <button onClick={onCraft} className="border-2 border-black px-2 py-1 bg-yellow-300 text-black">Craft</button><button onClick={onStudio} className="border-2 border-black px-2 py-1 bg-white text-black">Studio</button>
+        </div>
+        <div hidden={subTab!=='ai'} className="flex-1"><DoodleAI isDarkMode={isDarkMode} active={active&&subTab==='ai'} ink={labInk?.hex}/></div>
 
-        {subTab === 'challenge' && <DoodleChallenge isDarkMode={isDarkMode} />}
+        <div hidden={subTab!=='challenge'} className="flex-1"><DoodleChallenge isDarkMode={isDarkMode} active={active&&subTab==='challenge'} ink={labInk?.hex}/></div>
       </div>
     </div>
   );

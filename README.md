@@ -140,3 +140,7 @@ Built with these open-source projects — thank you:
 Concept inspired by [neal.fun's Infinite Craft](https://neal.fun/infinite-craft). Color names referenced from public color-name lists and Wikipedia. All audio is synthesized at runtime with the browser's Web Audio API — no third-party audio assets are used.
 
 Licensed under the [MIT License](LICENSE).
+
+## AI Lab and Grimoire fixes
+
+See [the implementation and verification report](docs/AI-GRIMOIRE-FIXES.md) for session rules, saved-data migration, tested flows and screenshots. Checks: `npm test`, `npm run test:e2e`, `npm run lint`.

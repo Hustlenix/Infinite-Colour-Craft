@@ -1,17 +1,14 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { ColorItem, BoardTile, ActiveTab, Palette, Quest, DailyChallengeState, QuestReward } from './types';
-import { BASE_COLORS, hexToRgb, rgbToHsl } from './utils/colorEngine';
-import { generateDailyChallenge, getTodayDateString, checkColorMatchesChallenge } from './utils/dailyChallengeEngine';
+import { ColorItem, BoardTile, ActiveTab, Palette, Quest } from './types';
+import { BASE_COLORS } from './utils/colorEngine';
+import { generateDailyChallenge } from './utils/dailyChallengeEngine';
 import {
   safeGetItem,
   safeSetItem,
   safeRemoveItem,
   safeParseJSON,
-  normalizeUnlockedColors,
   normalizeBoardTiles,
   normalizePalettes,
-  normalizeDailyChallengeState,
-  normalizeStringArray,
 } from './utils/storage';
 import { audioSynth } from './utils/audioSynth';
 import { Navbar } from './components/Navbar';
@@ -28,9 +25,17 @@ import { HackTheArtsModal } from './components/HackTheArtsModal';
 import { AILab } from './components/AILab';
 import { CollaborationModal } from './components/CollaborationModal';
 import { CollabStatusBar } from './components/CollabStatusBar';
+import {useProgression,craftedEvidence} from './hooks/useProgression';
+import {GrimoireNav} from './components/GrimoireNav';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<ActiveTab>('board');
+  const [labVisited,setLabVisited]=useState(false),[studioVisited,setStudioVisited]=useState(false);
+  const [labEntry,setLabEntry]=useState<'ai'|'challenge'>('ai');
+  const [grimoireVisited,setGrimoireVisited]=useState(false);
+  const [paletteSeed,setPaletteSeed]=useState<{color:ColorItem;key:number}>();
+  const isGrimoire=['recipes','palettes','quests','daily'].includes(activeTab),isLab=activeTab==='ai'||activeTab==='challenge';
+  useEffect(()=>{if(isLab){setLabVisited(true);setLabEntry(activeTab==='challenge'?'challenge':'ai');}if(isGrimoire)setGrimoireVisited(true);if(activeTab==='studio')setStudioVisited(true);},[activeTab]);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     const savedTheme = safeGetItem('theme');
@@ -161,18 +166,9 @@ export default function App() {
   const [isTrashOver, setIsTrashOver] = useState<boolean>(false);
   const [newlyUnlockedColor, setNewlyUnlockedColor] = useState<ColorItem | null>(null);
 
-  // Unlocked Colors state with LocalStorage persistence
-  const [unlockedColors, setUnlockedColors] = useState<ColorItem[]>(() => {
-    const saved = safeGetItem('icc_unlocked_colors');
-    if (saved) {
-      const normalized = normalizeUnlockedColors(safeParseJSON<unknown>(saved, null));
-      if (normalized) {
-        return normalized;
-      }
-    }
-    return BASE_COLORS;
-  });
-
+  const progression=useProgression();
+  const unlockedColors=progression.state.colors;
+  const crafted=useMemo(()=>craftedEvidence(progression.state),[progression.state.colors,progression.state.recipes]);
   // Board Tiles state
   const [boardTiles, setBoardTiles] = useState<BoardTile[]>(() => {
     const saved = safeGetItem('icc_board_tiles');
@@ -204,115 +200,18 @@ export default function App() {
     ];
   });
 
-  // Daily Challenge state
-  const todayStr = getTodayDateString();
-  const todayChallenge = useMemo(() => generateDailyChallenge(todayStr), [todayStr]);
-
-  const [dailyState, setDailyState] = useState<DailyChallengeState>(() => {
-    const saved = safeGetItem('icc_daily_challenge_state');
-    const stored = saved
-      ? normalizeDailyChallengeState(safeParseJSON<unknown>(saved, null))
-      : null;
-    if (stored && stored.lastDate === todayStr) {
-      return stored;
-    }
-    // New day (or unreadable state) — compute streak from the stored history
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-
-    const keepStreak = stored !== null && stored.lastCompletedDate === yStr;
-    return {
-      lastDate: todayStr,
-      completed: false,
-      claimed: false,
-      progress: 0,
-      streak: keepStreak ? stored.streak : 0,
-      lastCompletedDate: stored?.lastCompletedDate || '',
-    };
-  });
-
-  // Save daily state
-  useEffect(() => {
-    safeSetItem('icc_daily_challenge_state', JSON.stringify(dailyState));
-  }, [dailyState]);
-
-  // Claim Daily Challenge Reward
-  const handleClaimDailyReward = (reward: QuestReward) => {
-    if (dailyState.claimed) return;
-
-    setDailyState((prev) => ({ ...prev, claimed: true }));
-
-    const rgb = hexToRgb(reward.hex);
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-    const rewardColorItem: ColorItem = {
-      id: reward.hex,
-      name: reward.pigmentName,
-      hex: reward.hex,
-      rgb,
-      hsl,
-      emoji: reward.emoji,
-      discoveredAt: Date.now(),
-      rarity: reward.rarity,
-      category: reward.category,
-      description: reward.description,
-    };
-
-    handleDiscoverNewColor(rewardColorItem);
-  };
-
-  // Claimed Quests state
-  const [claimedQuestIds, setClaimedQuestIds] = useState<string[]>(() => {
-    const saved = safeGetItem('icc_claimed_quests');
-    if (saved) {
-      const normalized = normalizeStringArray(safeParseJSON<unknown>(saved, null));
-      if (normalized) {
-        return normalized;
-      }
-    }
-    return [];
-  });
-
-  // Save claimed quests
-  useEffect(() => {
-    safeSetItem('icc_claimed_quests', JSON.stringify(claimedQuestIds));
-  }, [claimedQuestIds]);
-
-  // Handle quest reward claim
-  const handleClaimReward = (quest: Quest) => {
-    if (claimedQuestIds.includes(quest.id) || !quest.rewardPigment) return;
-
-    setClaimedQuestIds((prev) => [...prev, quest.id]);
-
-    const rgb = hexToRgb(quest.rewardPigment.hex);
-    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-    const rewardColorItem: ColorItem = {
-      id: quest.rewardPigment.hex,
-      name: quest.rewardPigment.pigmentName,
-      hex: quest.rewardPigment.hex,
-      rgb,
-      hsl,
-      emoji: quest.rewardPigment.emoji,
-      discoveredAt: Date.now(),
-      rarity: quest.rewardPigment.rarity,
-      category: quest.rewardPigment.category,
-      description: quest.rewardPigment.description,
-    };
-
-    handleDiscoverNewColor(rewardColorItem);
-  };
-
+  const dailyState=progression.state.daily,claimedQuestIds=progression.state.claims;
+  const todayStr=dailyState.lastDate;
+  const todayChallenge=useMemo(()=>generateDailyChallenge(todayStr),[todayStr]);
+  const handleClaimDailyReward=()=>{const color=progression.claimDaily();if(color){setNewlyUnlockedColor(color);audioSynth.playUnlock();}};
+  const handleClaimReward=(quest:Quest)=>{const color=progression.claimQuest(quest.id);if(color){setNewlyUnlockedColor(color);audioSynth.playUnlock();}};
   // Active Brush Color for Paint Studio
   const [activeBrushColor, setActiveBrushColor] = useState<ColorItem>(
     unlockedColors[0] || BASE_COLORS[0]
   );
 
   // Save state changes to LocalStorage
-  useEffect(() => {
-    safeSetItem('icc_unlocked_colors', JSON.stringify(unlockedColors));
-  }, [unlockedColors]);
+
 
   useEffect(() => {
     safeSetItem('icc_board_tiles', JSON.stringify(boardTiles));
@@ -332,31 +231,8 @@ export default function App() {
     return map;
   }, [unlockedColors]);
 
-  // Handle color discovery
-  const handleDiscoverNewColor = (color: ColorItem) => {
-    const existing = unlockedColorsMap.get(color.hex.toUpperCase());
-    if (!existing) {
-      setUnlockedColors((prev) => [color, ...prev]);
-      setNewlyUnlockedColor(color);
-      audioSynth.playUnlock();
-    }
-
-    // Evaluate Daily Challenge Progress
-    if (!dailyState.completed && checkColorMatchesChallenge(color, todayChallenge)) {
-      setDailyState((prev) => {
-        const newProgress = Math.min(todayChallenge.requiredAmount, prev.progress + 1);
-        const isDone = newProgress >= todayChallenge.requiredAmount;
-        return {
-          ...prev,
-          progress: newProgress,
-          completed: isDone || prev.completed,
-          streak: isDone && !prev.completed ? prev.streak + 1 : prev.streak,
-          lastCompletedDate: isDone ? todayStr : prev.lastCompletedDate,
-        };
-      });
-    }
-  };
-
+  // PIGMENTS_COMBINED records provenance and progression; reward claims do not enter here.
+  const handleDiscoverNewColor=(color:ColorItem)=>{if(progression.discover(color)){setNewlyUnlockedColor(color);audioSynth.playUnlock();}};
   // Spawn base 5 spectrum elements onto workspace board
   const spawnBaseSpectrum = () => {
     const startX = 80;
@@ -400,30 +276,12 @@ export default function App() {
     setSoundEnabled(enabled);
   };
 
-  // Reset progress
-  const handleResetProgress = () => {
-    if (window.confirm('Are you sure you want to reset all discovered pigments and clear board?')) {
-      setUnlockedColors(BASE_COLORS);
-      setBoardTiles([]);
-      setClaimedQuestIds([]);
-      setDailyState({
-        lastDate: todayStr,
-        completed: false,
-        claimed: false,
-        progress: 0,
-        streak: 0,
-        lastCompletedDate: '',
-      });
-      safeRemoveItem('icc_unlocked_colors');
-      safeRemoveItem('icc_board_tiles');
-      safeRemoveItem('icc_claimed_quests');
-      safeRemoveItem('icc_daily_challenge_state');
-    }
-  };
+  const handleResetProgress=()=>{if(window.confirm('Are you sure you want to reset all discovered pigments and clear board?')){progression.reset();setBoardTiles([]);safeRemoveItem('icc_board_tiles');}};
 
   return (
     <div className={`w-full h-screen flex flex-col font-sans overflow-hidden select-none ${isDarkMode ? 'bg-slate-950 text-white' : 'bg-[#F3F3EF] text-black'}`}>
       {/* Top Navbar */}
+      <div className="w-full shrink-0 overflow-x-auto" aria-label="Main navigation scroll area">
        <Navbar
          activeTab={activeTab}
          setActiveTab={setActiveTab}
@@ -440,13 +298,15 @@ export default function App() {
          isDarkMode={isDarkMode}
          onToggleTheme={toggleTheme}
        />
+      </div>
 
       {/* Real-Time Collaboration Presence Status Bar */}
       <CollabStatusBar
         isDarkMode={isDarkMode}
-        onOpenSettings={() => setShowCollabModal(true)}
+        onOpenModal={() => setShowCollabModal(true)}
       />
 
+      {progression.warning&&<div role="alert" className="px-4 py-2 text-xs font-bold bg-red-200 text-black border-2 border-black">{progression.warning}<button onClick={progression.retry} className="ml-2 underline">Retry saving</button></div>}
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
@@ -466,19 +326,24 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'studio' && (
+        {(studioVisited||activeTab==='studio') && (<div className="flex-1 min-w-0 flex" style={{display:activeTab==='studio'?'flex':'none'}}>
           <PaintCanvas
             activeColor={activeBrushColor}
             unlockedColors={unlockedColors}
             onSelectColor={setActiveBrushColor}
             isDarkMode={isDarkMode}
-          />
+          /></div>
         )}
 
-        {activeTab === 'recipes' && (
+        {(grimoireVisited||isGrimoire)&&<div className="flex-1 min-w-0 flex flex-col overflow-hidden" style={{display:isGrimoire?'flex':'none'}}><GrimoireNav activeTab={activeTab} onNavigate={setActiveTab} isDarkMode={isDarkMode}/>
+        <div className="flex-1 min-h-0 overflow-y-auto">
+        <div style={{display:activeTab==='recipes'?'block':'none'}}>
+        {(
           <RecipeBook
             unlockedColors={unlockedColors}
-            onSpawnToBoard={spawnTileToBoard}
+            recipes={progression.state.recipes}
+            onAddToPalette={color=>{setPaletteSeed({color,key:Date.now()});setActiveTab('palettes');}}
+            onSpawnToBoard={color=>{spawnTileToBoard(color);setActiveTab('board');}}
             onSelectForStudio={(color) => {
               setActiveBrushColor(color);
               setActiveTab('studio');
@@ -487,26 +352,29 @@ export default function App() {
           />
         )}
 
-        {activeTab === 'palettes' && (
+        </div><div style={{display:activeTab==='palettes'?'block':'none'}}>
+        {(
           <PaletteBuilder
             unlockedColors={unlockedColors}
-            palettes={palettes}
-            onSavePalette={(p) => setPalettes((prev) => [p, ...prev])}
+            palettes={palettes} seed={paletteSeed} onStudio={color=>{setActiveBrushColor(color);setActiveTab('studio');}}
+            onSavePalette={(p) => setPalettes((prev) => [p, ...prev.filter(old=>old.id!==p.id)])}
             onDeletePalette={(id) => setPalettes((prev) => prev.filter((p) => p.id !== id))}
             isDarkMode={isDarkMode}
           />
         )}
 
-        {activeTab === 'quests' && (
+        </div><div style={{display:activeTab==='quests'?'block':'none'}}>
+        {(
           <QuestsModal
             unlockedColors={unlockedColors}
-            claimedQuestIds={claimedQuestIds}
+            claimedQuestIds={claimedQuestIds} crafted={crafted}
             onClaimReward={handleClaimReward}
             isDarkMode={isDarkMode}
           />
         )}
 
-        {activeTab === 'daily' && (
+        </div><div style={{display:activeTab==='daily'?'block':'none'}}>
+        {(
           <DailyChallengeModal
             challenge={todayChallenge}
             dailyState={dailyState}
@@ -516,13 +384,8 @@ export default function App() {
           />
         )}
 
-        {/* Unified AI Lab (Doodle Vision, Speed Challenge) */}
-        {(activeTab === 'ai' || activeTab === 'challenge') && (
-          <AILab
-            initialSubTab={activeTab === 'challenge' ? 'challenge' : 'ai'}
-            isDarkMode={isDarkMode}
-          />
-        )}
+        </div></div></div>}
+        {(labVisited||isLab)&&<div className="flex-1 min-w-0 min-h-0" style={{display:isLab?'flex':'none'}}><AILab initialSubTab={labEntry} isDarkMode={isDarkMode} active={isLab} colors={unlockedColors} ink={activeBrushColor} onInk={setActiveBrushColor} onCraft={()=>setActiveTab('board')} onStudio={()=>setActiveTab('studio')}/></div>}
 
         {/* Right Inventory Sidebar: only shown on 'board' and 'studio' to prevent clutter */}
         {(activeTab === 'board' || activeTab === 'studio') && (

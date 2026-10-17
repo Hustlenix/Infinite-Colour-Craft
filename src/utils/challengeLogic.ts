@@ -42,9 +42,13 @@ export function computeOutcome(
   const promptPred = preds.find((p) => p.label === prompt);
   const promptConfidence = correct && promptPred ? promptPred.pct : 0;
   const confidenceBonus = correct ? Math.round(promptConfidence * CONF_MAX_BONUS) : 0;
-  const timeBonus = Math.round((Math.max(0, timeLeft) / ROUND_SECONDS) * TIME_MAX_BONUS);
+  const timeBonus = Math.round((Math.min(ROUND_SECONDS, Math.max(0, timeLeft)) / ROUND_SECONDS) * TIME_MAX_BONUS);
   const streak = correct ? priorStreak + 1 : 0;
   const multiplier = correct ? 1 + Math.max(0, streak - 1) * 0.5 : 1;
   const earned = correct ? Math.round((BASE_SCORE + confidenceBonus + timeBonus) * multiplier) : 0;
   return { correct, promptConfidence, earned, streak };
+}
+
+export function remainingSeconds(deadline:number, now:number):number {
+  return Math.min(ROUND_SECONDS,Math.max(0,(deadline-now)/1000));
 }

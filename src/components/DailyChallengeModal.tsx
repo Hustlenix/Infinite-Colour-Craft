@@ -34,6 +34,7 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
 }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeRemainingUntilMidnight());
   const [showHint, setShowHint] = useState(false);
+  useEffect(() => setShowHint(false), [challenge.id]);
 
   // Live timer tick
   useEffect(() => {

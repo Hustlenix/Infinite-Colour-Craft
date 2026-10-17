@@ -1,262 +1,41 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { predict } from '../utils/doodleNet';
-import type { DoodleModel } from '../utils/doodleNet';
-import { computeOutcome, ROUNDS, ROUND_SECONDS } from '../utils/challengeLogic';
-import { preprocessCanvas } from '../utils/doodlePreprocess';
-import { Target, Eraser, Wand2, Loader2, Brain, Trophy, RefreshCw, Clock, CheckCircle2, XCircle, ArrowRight } from 'lucide-react';
-
-interface DoodleChallengeProps {
-  isDarkMode: boolean;
-}
-
-const CANVAS_SIZE = 480;
-const STROKE_WIDTH = 18;
-
-type Phase = 'idle' | 'playing' | 'feedback' | 'gameover';
-
-interface RoundResult {
-  prompt: string;
-  correct: boolean;
-  topLabel: string;
-  topPct: number;
-  score: number;
-  timeLeft: number;
-}
-
-interface Feedback {
-  correct: boolean;
-  topLabel: string;
-  topPct: number;
-  earned: number;
-  streak: number;
-}
-
-const shuffle = <T,>(arr: T[]): T[] => {
-  const a = [...arr];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-};
-
-export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [model, setModel] = useState<DoodleModel | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  const [phase, setPhase] = useState<Phase>('idle');
-  const [round, setRound] = useState(1);
-  const [prompt, setPrompt] = useState<string>('cat');
-  const [timeLeft, setTimeLeft] = useState(ROUND_SECONDS);
-  const [score, setScore] = useState(0);
-  const [streak, setStreak] = useState(0);
-  const [bestStreak, setBestStreak] = useState(0);
-  const [feedback, setFeedback] = useState<Feedback | null>(null);
-  const [results, setResults] = useState<RoundResult[]>([]);
-  const [guessing, setGuessing] = useState(false);
-
-  const promptQueueRef = useRef<string[]>([]);
-  const phaseRef = useRef<Phase>('idle');
-  phaseRef.current = phase;
-  const drawingRef = useRef(false);
-  const lastPosRef = useRef<{ x: number; y: number } | null>(null);
-
-  // Lazy-load model weights
-  useEffect(() => {
-    let cancelled = false;
-    (async () => {
-      try {
-        const raw = (await import('../data/doodle_weights.json')) as unknown as {
-          meta: { categories: string[]; val_acc?: number };
-          state: Record<string, number[][]>;
-        };
-        if (cancelled) return;
-        const categories = raw.meta.categories;
-        setModel({
-          categories,
-          state: raw.state as never,
-        });
-        promptQueueRef.current = shuffle(categories);
-        setLoading(false);
-      } catch {
-        if (!cancelled) {
-          setError('Could not load the doodle model.');
-          setLoading(false);
-        }
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // Initialize canvas
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    if (!ctx) return;
-    clearCanvas(ctx);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDarkMode]);
-
-  const clearCanvas = (ctx?: CanvasRenderingContext2D | null) => {
-    const canvas = canvasRef.current;
-    const c = ctx ?? canvas?.getContext('2d');
-    if (!c || !canvas) return;
-    c.fillStyle = isDarkMode ? '#0f172a' : '#ffffff';
-    c.fillRect(0, 0, canvas.width, canvas.height);
-  };
-
-  const getPos = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current!;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    return {
-      x: (e.clientX - rect.left) * scaleX,
-      y: (e.clientY - rect.top) * scaleY,
-    };
-  };
-
-  const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (phaseRef.current !== 'playing') return;
-    e.preventDefault();
-    (e.target as HTMLCanvasElement).setPointerCapture(e.pointerId);
-    drawingRef.current = true;
-    const p = getPos(e);
-    lastPosRef.current = p;
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (canvas && ctx) {
-      ctx.fillStyle = isDarkMode ? '#ffffff' : '#111827';
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, STROKE_WIDTH / 2, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  };
-
-  const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    if (!drawingRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    if (!canvas || !ctx) return;
-    e.preventDefault();
-    const p = getPos(e);
-    ctx.strokeStyle = isDarkMode ? '#ffffff' : '#111827';
-    ctx.lineWidth = STROKE_WIDTH;
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-    ctx.beginPath();
-    ctx.moveTo(lastPosRef.current ? lastPosRef.current.x : p.x, lastPosRef.current ? lastPosRef.current.y : p.y);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    lastPosRef.current = p;
-  };
-
-  const endDraw = (e: React.PointerEvent<HTMLCanvasElement>) => {
-    drawingRef.current = false;
-    lastPosRef.current = null;
-    try {
-      (e.target as HTMLCanvasElement).releasePointerCapture(e.pointerId);
-    } catch {
-      /* ignore */
-    }
-  };
-
-  const handleGuess = useCallback(
-    (timedOut = false) => {
-      if (!model || phaseRef.current !== 'playing' || guessing) return;
-      if (!timedOut) setGuessing(true);
-
-      const canvas = canvasRef.current;
-      if (!canvas) {
-        setGuessing(false);
-        return;
-      }
-
-      const { bitmap, hasStrokes } = preprocessCanvas(canvas, isDarkMode);
-
-      let topLabel = 'nothing';
-      let topPct = 0;
-      let earned = 0;
-      let correct = false;
-      let newStreak = 0;
-
-      if (hasStrokes) {
-        const preds = predict(bitmap, model);
-        topLabel = preds[0].label;
-        topPct = preds[0].pct;
-        const outcome = computeOutcome(prompt, preds, timeLeft, streak);
-        correct = outcome.correct;
-        earned = outcome.earned;
-        newStreak = outcome.streak;
-      } else {
-        // Blank canvas submission
-        correct = false;
-        newStreak = 0;
-        earned = 0;
-      }
-
-      setFeedback({ correct, topLabel, topPct, earned, streak: newStreak });
-      setResults((r) => [
-        ...r,
-        { prompt, correct, topLabel, topPct, score: earned, timeLeft },
-      ]);
-      setStreak(newStreak);
-      if (newStreak > bestStreak) setBestStreak(newStreak);
-      setScore((s) => s + earned);
-
-      if (round >= ROUNDS) {
-        setPhase('gameover');
-      } else {
-        setPhase('feedback');
-      }
-      setGuessing(false);
-    },
-    [model, prompt, round, timeLeft, streak, bestStreak, guessing, isDarkMode]
-  );
-
-  // Countdown Timer
-  useEffect(() => {
-    if (phase !== 'playing') return;
-    if (timeLeft <= 0) {
-      handleGuess(true);
-      return;
-    }
-    const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
-    return () => clearTimeout(t);
-  }, [phase, timeLeft, handleGuess]);
-
-  const startGame = () => {
-    if (!model) return;
-    promptQueueRef.current = shuffle(model.categories);
-    setResults([]);
-    setScore(0);
-    setStreak(0);
-    setBestStreak(0);
-    setRound(1);
-    setPrompt(promptQueueRef.current[0]);
-    setTimeLeft(ROUND_SECONDS);
-    setFeedback(null);
-    setPhase('playing');
-    setTimeout(() => clearCanvas(), 50);
-  };
-
-  const nextRound = () => {
-    const q = promptQueueRef.current;
-    const nextIdx = round;
-    clearCanvas();
-    setPrompt(q[nextIdx % q.length]);
-    setTimeLeft(ROUND_SECONDS);
-    setFeedback(null);
-    setRound((r) => r + 1);
-    setPhase('playing');
-  };
-
-  const pct = (p: number) => Math.round(p * 100);
+import React, { useEffect, useRef, useState } from 'react';
+import { useDoodleModel } from '../ai/modelService';
+import { useDoodleDrawing } from '../ai/useDoodleDrawing';
+import { recognizeDoodle } from '../ai/inference';
+import { computeOutcome, ROUNDS, ROUND_SECONDS, remainingSeconds } from '../utils/challengeLogic';
+import { beginEvaluation,finishRound,idleSession,nextRound as advanceRound,pauseSession,resumeSession,startSession,type SpeedSession } from '../ai/speedSession';
+import { Target,Eraser,Wand2,Loader2,Brain,Trophy,RefreshCw,Clock,CheckCircle2,XCircle,ArrowRight } from 'lucide-react';
+const CANVAS_SIZE=480;
+interface DoodleChallengeProps { isDarkMode:boolean;active?:boolean;ink?:string }
+export const DoodleChallenge:React.FC<DoodleChallengeProps>=({isDarkMode,active=true,ink})=>{
+ const {model,loading,error,retry}=useDoodleModel(active);
+ const [session,setSession]=useState(idleSession),current=useRef(session),[timeLeft,setTimeLeft]=useState(20),[evalError,setEvalError]=useState('');
+ const commit=(s:SpeedSession)=>{current.current=s;setSession(s);};
+ const drawing=useDoodleDrawing(ink||(isDarkMode?'#FFFFFF':'#111827'),active&&session.phase==='drawing');
+ const canvasRef=drawing.canvas,clearCanvas=drawing.clear;
+ const onPointerDown=drawing.handlers.onPointerDown,onPointerMove=drawing.handlers.onPointerMove,endDraw=drawing.handlers.onPointerUp;
+ const phase=session.phase==='results'?'gameover':['drawing','paused','evaluating'].includes(session.phase)?'playing':session.phase;
+ const paused=session.phase==='paused',guessing=session.phase==='evaluating';
+ const round=Math.min(ROUNDS,session.results.length+(session.phase==='feedback'?0:1)),last=session.results.at(-1);
+ const prompt=session.phase==='feedback'?last?.prompt:session.prompts[Math.min(session.results.length,4)];
+ const results=session.results.map(r=>({...r,topPct:r.topPct||0,timeLeft:r.seconds})),score=results.reduce((n,r)=>n+r.score,0),streak=session.streak;
+ const bestStreak=results.reduce((s,r)=>{s.run=r.correct?s.run+1:0;s.best=Math.max(s.best,s.run);return s;},{run:0,best:0}).best;
+ const feedback=last?{correct:last.correct,topLabel:last.topLabel,topPct:last.topPct||0,earned:last.score,streak}:null;
+ const evaluation=useRef<AbortController|null>(null),submitRef=useRef<()=>void>(()=>{});
+ useEffect(()=>()=>evaluation.current?.abort(),[]);
+ const handleGuess=async()=>{
+  const s=current.current;if(!model||s.phase!=='drawing')return;
+  const evaluating=beginEvaluation(s,performance.now());commit(evaluating);const controller=new AbortController();evaluation.current=controller;
+  try{const input=drawing.preprocess(),preds=input.hasStrokes?await recognizeDoodle(input.bitmap,model,controller.signal):[];
+   if(controller.signal.aborted)return;const next=finishRound(evaluating,preds);next.results[next.results.length-1].topPct=preds[0]?.pct||0;commit(next);setEvalError('');
+  }catch(e){if(!controller.signal.aborted){commit({...evaluating,phase:'paused'});setEvalError('Evaluation failed. Resume to try again: '+String(e));}}
+ };
+ submitRef.current=handleGuess;
+ useEffect(()=>{if(session.phase!=='drawing')return;const tick=()=>{if(current.current.phase!=='drawing')return;const seconds=remainingSeconds(current.current.deadline,performance.now());setTimeLeft(Math.ceil(seconds));if(!seconds)submitRef.current();};tick();const timer=setInterval(tick,100);return()=>clearInterval(timer);},[session.phase,session.deadline]);
+ useEffect(()=>{const pause=()=>{if(current.current.phase==='drawing'){const s=pauseSession(current.current,performance.now());if(!s.seconds)submitRef.current();else commit(s);}};if(!active)pause();const hide=()=>{if(document.hidden)pause();};document.addEventListener('visibilitychange',hide);return()=>document.removeEventListener('visibilitychange',hide);},[active]);
+ const startGame=()=>{if(!model||!['idle','results'].includes(current.current.phase))return;const q=[...model.categories];for(let i=q.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[q[i],q[j]]=[q[j],q[i]];}clearCanvas();commit(startSession(q,performance.now()));};
+ const nextRound=()=>{if(current.current.phase!=='feedback')return;clearCanvas();commit(advanceRound(current.current,performance.now()));};
+ const pct=(p:number)=>Math.round(p*100);
 
   return (
     <div className="flex-1 flex items-center justify-center p-4 md:p-6 overflow-y-auto h-full">
@@ -291,7 +70,10 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
           </div>
         )}
 
-        {error && <p className="text-sm text-rose-500">{error}</p>}
+        {error && <div role="alert" className="text-sm text-rose-500">{error}<button onClick={retry} className="border-2 border-black px-3 py-2 ml-2 bg-yellow-300 text-black">Retry model</button></div>}
+        <p className="text-xs font-bold text-center">Five rounds · 20 seconds each. Pauses when you leave this section or hide the browser tab. Reload starts a new session.</p>
+        {paused && <div role="status" className="border-2 border-black p-3 bg-yellow-300 text-black font-bold">Paused · {Math.ceil(session.seconds)} seconds remain. <button className="border-2 border-black px-3 py-2 bg-white" onClick={()=>commit(resumeSession(current.current,performance.now()))}>Resume round</button></div>}
+        {evalError && <p role="alert">{evalError}</p>}
 
         {/* Phase: Idle */}
         {!loading && !error && phase === 'idle' && (
@@ -366,7 +148,9 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
                     onPointerDown={onPointerDown}
                     onPointerMove={onPointerMove}
                     onPointerUp={endDraw}
-                    onPointerCancel={endDraw}
+                    onPointerCancel={drawing.handlers.onPointerCancel}
+                    onLostPointerCapture={drawing.handlers.onLostPointerCapture}
+                    aria-label="Speed Challenge canvas"
                     className="touch-none block cursor-crosshair rounded-xs w-full h-full"
                   />
                 </div>
@@ -374,14 +158,14 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
                 <div className="flex gap-2 w-full justify-between">
                   <button
                     onClick={() => clearCanvas()}
-                    disabled={phase !== 'playing'}
+                    disabled={session.phase !== 'drawing'}
                     className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-slate-200 text-black hover:bg-slate-100 disabled:opacity-40 transition-colors"
                   >
                     <Eraser className="w-4 h-4" /> Clear
                   </button>
                   <button
                     onClick={() => handleGuess()}
-                    disabled={phase !== 'playing' || guessing}
+                    disabled={session.phase !== 'drawing'}
                     className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 border-2 border-black font-black uppercase text-xs shadow-[2px_2px_0px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none bg-emerald-300 text-black hover:bg-emerald-400 disabled:opacity-50 transition-colors"
                   >
                     <Wand2 className="w-4 h-4" /> {guessing ? 'Judging…' : 'Submit'}
@@ -413,9 +197,9 @@ export const DoodleChallenge: React.FC<DoodleChallengeProps> = ({ isDarkMode }) 
                     </div>
 
                     <p className="text-xs mb-3 opacity-80 leading-snug">
-                      Target was <strong className="uppercase">{prompt}</strong>. The neural model was{' '}
-                      <strong>{pct(feedback.topPct)}%</strong> confident you drew a{' '}
-                      <strong className="uppercase">{feedback.topLabel}</strong>.
+                      Target was <strong className="uppercase">{prompt}</strong>. The model guessed{' '}
+                      <strong className="uppercase">{feedback.topLabel}</strong> with a{' '}
+                      <strong>{pct(feedback.topPct)}%</strong> model score. This is not guaranteed accuracy.
                     </p>
 
                     <div className="h-3 w-full border-2 border-black bg-slate-100 dark:bg-slate-800 overflow-hidden mb-3 rounded-xs">
