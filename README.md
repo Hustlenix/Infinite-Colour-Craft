@@ -1,46 +1,56 @@
 # INFINITE COLOUR CRAFT
 
-My idea is pretty simple: start with five colours, mix them, find something new, and actually paint with what you found.
+My idea was to make something like [Infinite Craft](https://neal.fun/infinite-craft/), but with colours. You start with red, green, blue, white and black, and you gotta mix them to discover more colours.
 
-I got the idea from [Infinite Craft](https://neal.fun/infinite-craft/). That game lets you combine objects; mine is about colours, with a painting studio behind it. You can spend ages mixing stuff and then realise you still haven't drawn anything🤣
+But then what do you do with all those colours?
 
-**[Play](https://hustlenix.github.io/Infinite-Colour-Craft/)** · **[Latest fixes](https://github.com/Hustlenix/Infinite-Colour-Craft/tree/codex/ai-grimoire-fixes)**
+Paint with them. There is a whole painting studio in the game too.
 
-The live game follows `main`. The latest AI Lab and Grimoire fixes are on the linked branch, so those two versions can be different.
+My idea in play: **[game](https://hustlenix.github.io/Infinite-Colour-Craft/)**
 
-![Mixing colours on the crafting board](docs/screenshots/discovery.png)
+![Mixing colours](docs/screenshots/discovery.png)
 
 ## Play
 
-You start with Red, Green, Blue, White and Black. Drag one colour onto another and see what happens. Some pairs have set recipes, and other pairs use the colour-mixing code.
+I published it on GitHub Pages, and am using github for version control.
 
-This is colour alchemy, BTW. There are some surprising recipes, so don't treat it as a physically accurate paint simulator.
+**[Play](https://hustlenix.github.io/Infinite-Colour-Craft/)** · **[Latest work](https://github.com/Hustlenix/Infinite-Colour-Craft/tree/codex/ai-grimoire-fixes)**
 
-Once you have a colour you like, take it into **Studio**. There are brushes, a pen, marker, spray, chisel, smudge, rainbow, stamps, fill, colour picker and eraser. You also get symmetry, smoothing, blend modes, outlines, undo/redo and PNG export. Yeah, there is a bit more behind the canvas than it first looks✌🏻
+The latest fixes are on that branch, they aren't on the live game yet.
 
-![The painting studio](docs/screenshots/studio.png)
+Drag one colour onto another to mix them. Find a colour you like, open Studio, and draw something with it. You can save your drawing as a PNG.
 
-## AI Lab and Grimoire
+**TRY THE STUDIO TOO!** Mixing is only half the game✌🏻
 
-**AI Lab** tries to recognise your doodles, or gives you five timed drawing rounds. The model runs in your browser. You don't need an AI API key for it.
+![Painting studio](docs/screenshots/studio.png)
 
-It only knows **cat, dog, bird, fish, flower, tree, star, clock, car and book**. Draw something else and it'll still try to fit it into one of those ten. The recorded **88.68% validation accuracy** came from training; it isn't a promise about your drawing.
+## The other stuff
 
-**Grimoire** keeps the other stuff together: recipes, editable palettes, quests and a daily challenge. You can reorder palette colours and export HEX, CSS, Tailwind v4 or JSON. Daily goals follow your local date.
+I also added **AI Lab** and **Grimoire**.
 
-Discoveries and palettes are saved in your browser. AI Lab sketches and challenge sessions survive navigation, but a reload starts them fresh. Export paintings you want to keep; the committed version doesn't restore artwork after a reload yet.
+AI Lab guesses your doodles, and there is a five-round drawing challenge. The model runs in your browser, no API key needed. It only knows these ten things: cat, dog, bird, fish, flower, tree, star, clock, car and book. So if you draw something else, dont expect it to magically know🤣
+
+Grimoire has your recipes, palettes, quests and the daily challenge. You can edit your palettes and copy the colours out as HEX, CSS, Tailwind or JSON.
+
+The mixes are game recipes and colour maths, so this isn't a science lesson about how real paint behaves.
 
 ## Verified status
 
-Don't just take my word for it. Here are the [checks, screenshots and remaining limits](docs/AI-GRIMOIRE-FIXES.md).
+Want to see what was actually checked?
 
-For the AI Lab and Grimoire fix commit `44dae94`, the recorded checks passed: **112 unit tests, 20 browser tests and 3 browser checks against the production build**, plus TypeScript and both builds.
+See: [test results, screenshots and the remaining limits](docs/AI-GRIMOIRE-FIXES.md).
 
-That covers Chromium and emulated touch. Physical stylus hardware and other browser engines still need checking. The next visual refinement is local work in progress, not part of those results.
+The AI Lab and Grimoire fixes passed 112 unit tests, 20 browser tests and 3 production browser checks at commit `44dae94`. The newer visual changes are still being worked on locally.
+
+Your discovered colours and palettes stay in browser storage. **Export paintings you want to keep** — the version pushed here doesn't recover paintings after a refresh yet.
 
 ## Run it yourself
 
-Use a current Node.js LTS release and npm. This project was checked locally with Node.js 24.
+**Dependency**
+
+Node.js and npm. I used Node.js 24 for the local checks.
+
+**Command**
 
 ```sh
 git clone https://github.com/Hustlenix/Infinite-Colour-Craft.git
@@ -50,11 +60,9 @@ npm ci
 npm run dev
 ```
 
-Open **http://localhost:3000/**. No paid service is needed for solo mixing, painting or doodle recognition.
+Open http://localhost:3000/.
 
-Collaboration needs a running WebSocket relay or a configured Supabase project. The local development server includes a relay. GitHub Pages can't run that server, so don't assume opening the static site means multiplayer is connected.
-
-## Build and checks
+For checks and a build:
 
 ```sh
 npm run lint
@@ -64,23 +72,16 @@ npm run test:e2e
 npm run build
 ```
 
-For the GitHub Pages path:
+For the GitHub Pages build, use `npm run build:pages`. You can check that build with `npm run test:pages`.
 
-```sh
-npm run build:pages
-npm run test:pages
-```
+Multiplayer needs a running relay or a configured Supabase project. The local server includes a relay; GitHub Pages only hosts the static game.
 
-The second command checks the build produced by the first. The [deployment workflow](.github/workflows/deploy.yml) publishes pushes to `main`; pushing this feature branch doesn't deploy it.
+## Built with
 
-## What is behind it?
+React, TypeScript, Vite, Tailwind, Canvas 2D and Web Audio. The doodle model uses ten categories from Google's [Quick, Draw! dataset](https://github.com/googlecreativelab/quickdraw-dataset). AI coding tools helped with the implementation and fixes too.
 
-React, TypeScript, Vite and Tailwind for the app. Canvas 2D for drawing, Web Audio for synthesised sounds, and a trained CNN exported as weights for doodle recognition. The model uses ten categories from Google's [Quick, Draw! dataset](https://github.com/googlecreativelab/quickdraw-dataset).
-
-AI coding tools have helped with implementation and fixes. The code and test evidence are here so you can see what actually works.
-
-Thanks to [React](https://react.dev/), [Vite](https://vite.dev/), [Tailwind](https://tailwindcss.com/), [Lucide](https://lucide.dev/), [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) and [canvas-confetti](https://github.com/catdad/canvas-confetti). The colour dictionary references public colour-name lists and Wikipedia; sounds are synthesised in the browser.
+Icons are from [Lucide](https://lucide.dev/), celebrations use [canvas-confetti](https://github.com/catdad/canvas-confetti), and the sounds are made in the browser. Thanks to the people behind those projects.
 
 ## Licence
 
-[MIT](LICENSE). Third-party dependencies and datasets keep their own licences.
+[MIT](LICENSE). Dependencies and datasets have their own licences.
